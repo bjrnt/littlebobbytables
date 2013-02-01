@@ -106,13 +106,16 @@ private:
 
 //
 	// change
-	gui::slider music_slider_, sound_slider_, UI_sound_slider_, bell_slider_,
+	gui::slider gaze_length_slider_, music_slider_, sound_slider_, UI_sound_slider_, bell_slider_,
 	            scroll_slider_, chat_lines_slider_,
 	  buffer_size_slider_, idle_anim_slider_, autosavemax_slider_, advanced_slider_;
 	gui::list_slider<double> turbo_slider_;
 	gui::button fullscreen_button_, turbo_button_, show_ai_moves_button_,
 			interrupt_when_ally_sighted_button_,
 			show_grid_button_, save_replays_button_, delete_saves_button_,
+			interaction_dwell_button_,
+			interaction_blink_button_,
+			interaction_switch_button_,
 			show_lobby_joins_button1_,
 			show_lobby_joins_button2_,
 			show_lobby_joins_button3_,
@@ -135,7 +138,7 @@ private:
 			standing_anim_button_,
 			animate_map_button_;
 	gui::label music_label_, sound_label_, UI_sound_label_, bell_label_,
-	           scroll_label_, chat_lines_label_,
+	           scroll_label_, chat_lines_label_, gaze_length_label_,
 	           turbo_slider_label_, sample_rate_label_, buffer_size_label_,
 			   idle_anim_slider_label_, autosavemax_slider_label_,
 			   advanced_slider_label_;
@@ -161,6 +164,7 @@ public:
 preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	: gui::preview_pane(disp.video()),
 	  friends_names_(),
+	  gaze_length_slider_(disp.video()),
 	  music_slider_(disp.video()), sound_slider_(disp.video()),
 	  UI_sound_slider_(disp.video()), bell_slider_(disp.video()),
 	  scroll_slider_(disp.video()),
@@ -177,6 +181,11 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	  show_grid_button_(disp.video(), _("Show grid"), gui::button::TYPE_CHECK),
 	  save_replays_button_(disp.video(), _("Save replay on SP/MP victory or MP defeat"), gui::button::TYPE_CHECK),
 	  delete_saves_button_(disp.video(), _("Delete auto-saves on SP/MP victory or MP defeat"), gui::button::TYPE_CHECK),
+
+	  interaction_blink_button_(disp.video(), _("Enable interaction by blinking"), gui::button::TYPE_CHECK),
+	  interaction_dwell_button_(disp.video(), _("Enable interaction by dwelling"), gui::button::TYPE_CHECK),
+      interaction_switch_button_(disp.video(), _("Enable interaction by pressing a switch"), gui::button::TYPE_CHECK),
+
 	  show_lobby_joins_button1_(disp.video(), _("Do not show lobby joins"), gui::button::TYPE_CHECK),
 	  show_lobby_joins_button2_(disp.video(), _("Show lobby joins of friends only"), gui::button::TYPE_CHECK),
 	  show_lobby_joins_button3_(disp.video(), _("Show all lobby joins"), gui::button::TYPE_CHECK),
@@ -240,6 +249,8 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	  advanced_selection_(-1),
 	  friends_selection_(-1),
 
+      gaze_length_label_(disp.video(), _("Gaze length:"), font::SIZE_SMALL),
+
 	  tab_(EYETRACKING_TAB), disp_(disp), game_cfg_(game_cfg), adv_preferences_cfg_(), parent(NULL)
 {
 	sort_advanced_preferences();
@@ -261,6 +272,11 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	music_slider_.set_max(128);
 	music_slider_.set_value(music_volume());
 	music_slider_.set_help_string(_("Change the music volume"));
+
+    gaze_length_slider_.set_min(0);
+    gaze_length_slider_.set_max(128);
+    gaze_length_slider_.set_value(music_volume());
+    gaze_length_slider_.set_help_string(_("Change the length of gaze"));
 
 	// bell volume slider
 	bell_slider_.set_min(0);
@@ -374,6 +390,10 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	show_grid_button_.set_check(grid());
 	show_grid_button_.set_help_string(_("Overlay a grid onto the map"));
 
+    interaction_dwell_button_.set_check(1);
+    interaction_blink_button_.set_check(0);
+    interaction_switch_button_.set_check(0);
+
 	sort_list_by_group_button_.set_check(sort_list());
 	sort_list_by_group_button_.set_help_string(_("Sort the player list in the lobby by player groups"));
 
@@ -434,6 +454,8 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	hotkeys_button_.set_help_string(_("View and configure keyboard shortcuts"));
     bobby_button_.set_help_string(_("Enable awesomeness"));
 
+    gaze_length_label_.set_help_string(_("Set the gaze length"));
+
 	set_advanced_menu();
 	set_friends_menu();
 }
@@ -441,7 +463,12 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 handler_vector preferences_dialog::handler_members()
 {
 	handler_vector h;
+	h.push_back(&interaction_blink_button_);
+	h.push_back(&interaction_dwell_button_);
+	h.push_back(&interaction_switch_button_);
 	h.push_back(&music_slider_);
+	h.push_back(&gaze_length_label_);
+	h.push_back(&gaze_length_slider_);
 	h.push_back(&sound_slider_);
 	h.push_back(&bell_slider_);
 	h.push_back(&UI_sound_slider_);
@@ -531,8 +558,28 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	const int item_interline = 40;
 	const int bottom_row_y = rect.y + rect.h - bottom_border;
 
+    // Eyetracking tab
+    int ypos = rect.y + top_border;
+
+    interaction_dwell_button_.set_location(rect.x + horizontal_padding, ypos);
+    ypos += item_interline;
+
+    gaze_length_label_.set_location(rect.x + horizontal_padding, ypos);
+    ypos += short_interline;
+    const SDL_Rect gaze_slider_rect = create_rect(rect.x + horizontal_padding,
+                                                  ypos,
+                                                  rect.w - right_border - 200,
+                                                  0);
+
+    gaze_length_slider_.set_location(gaze_slider_rect);
+    ypos += item_interline + gaze_slider_rect.h;
+    interaction_blink_button_.set_location(rect.x + horizontal_padding, ypos);
+    ypos += short_interline;
+
+    interaction_switch_button_.set_location(rect.x + horizontal_padding, ypos);
+
 	// General tab
-	int ypos = rect.y + top_border;
+	ypos = rect.y + top_border;
 	scroll_label_.set_location(rect.x, ypos);
 	SDL_Rect scroll_rect = create_rect(rect.x + scroll_label_.width()
 			, ypos
@@ -726,6 +773,8 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 			, 0);
 	advanced_slider_.set_location(advanced_slider_rect);
 
+
+
 	set_selection(tab_);
 }
 
@@ -736,6 +785,38 @@ void preferences_dialog::process_event()
             show_hotkeys_dialog(disp_);
             parent->clear_buttons();
 		}
+
+        if (interaction_blink_button_.pressed()) {
+            if(interaction_dwell_button_.checked() == 0 && interaction_switch_button_.checked() == 0)
+                interaction_blink_button_.set_check(1); // Makes sure that at least one button is checked
+            interaction_dwell_button_.set_check(0);
+            interaction_switch_button_.set_check(0);
+            gaze_length_slider_.enable(false);
+        }
+        if (interaction_dwell_button_.pressed()) {
+            if(interaction_blink_button_.checked() == 0 && interaction_switch_button_.checked() == 0)
+                interaction_dwell_button_.set_check(1);
+            interaction_blink_button_.set_check(0);
+            interaction_switch_button_.set_check(0);
+            gaze_length_slider_.enable(true);
+        }
+        if (interaction_switch_button_.pressed()) {
+            if(interaction_dwell_button_.checked() == 0 && interaction_blink_button_.checked() == 0)
+                interaction_switch_button_.set_check(1);
+            interaction_blink_button_.set_check(0);
+            interaction_dwell_button_.set_check(0);
+            gaze_length_slider_.enable(false);
+        }
+
+        set_music_volume(gaze_length_slider_.value());
+
+
+		std::stringstream buffer_els;
+		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
+		gaze_length_label_.set_text(buffer_els.str());
+
+
+
     }
 
 	if (tab_ == GENERAL_TAB) {
@@ -1255,6 +1336,12 @@ void preferences_dialog::set_selection(int index)
 
 	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
     bobby_button_.hide(hide_eyetracking);
+    gaze_length_slider_.hide(hide_eyetracking);
+    gaze_length_slider_.enable(music_on());
+    gaze_length_label_.hide(hide_eyetracking);
+    interaction_blink_button_.hide(hide_eyetracking);
+    interaction_dwell_button_.hide(hide_eyetracking);
+    interaction_switch_button_.hide(hide_eyetracking);
 }
 
 }
@@ -1276,6 +1363,9 @@ void show_preferences_dialog(display& disp, const config& game_cfg)
 	for(;;) {
 		try {
 			preferences_dialog dialog(disp,game_cfg);
+            dialog.set_width(800); // Björn: Ändra så att man hämtar skärmstorleken istället av att sätta med magic number
+            dialog.set_height(600);
+
 			dialog.parent.assign(new preferences_parent_dialog(disp));
 			dialog.parent->set_menu(items);
 			dialog.parent->add_pane(&dialog);

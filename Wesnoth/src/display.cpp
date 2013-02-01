@@ -60,7 +60,7 @@ static lg::log_domain log_display("display");
 #define DBG_DP LOG_STREAM(debug, log_display)
 
 namespace {
-	const int DefaultZoom = 72;
+	const int DefaultZoom = 110;
 	const int SmallZoom   = DefaultZoom / 2;
 
 	const int MinZoom = 4;

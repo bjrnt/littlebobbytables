@@ -184,7 +184,6 @@ bool dialog::option_checked(unsigned int option_index)
 
 void dialog::add_button(dialog_button *const btn, BUTTON_LOCATION loc)
 {
-    std::cerr << "1st one\n";
  	std::pair<dialog_button *, BUTTON_LOCATION> new_pair(btn,loc);
 	button_pool_.push_back(new_pair);
 	switch(loc)
@@ -211,7 +210,6 @@ void dialog::add_button(dialog_button *const btn, BUTTON_LOCATION loc)
 
 void dialog::add_button(dialog_button_info btn_info, BUTTON_LOCATION loc)
 {
-    std::cerr << "2nd one\n";
 	dialog_button *btn = new dialog_button(disp_.video(), btn_info.label, button::TYPE_PRESS, CONTINUE_DIALOG, btn_info.handler);
 	add_button(btn, loc);
 }

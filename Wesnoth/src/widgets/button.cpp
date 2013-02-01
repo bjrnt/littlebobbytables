@@ -45,6 +45,8 @@ button::button(CVideo& video, const std::string& label, button::TYPE type,
 	  button_(true), state_(NORMAL), pressed_(false),
 	  spacing_(spacing), base_height_(0), base_width_(0)
 {
+    timer_id = NULL;
+
 	if(button_image_name.empty() && type == TYPE_PRESS) {
 		button_image_name = "button";
 	} else if(button_image_name.empty() && type == TYPE_CHECK) {
@@ -277,18 +279,65 @@ void button::set_label(const std::string& val)
 void button::mouse_motion(SDL_MouseMotionEvent const &event)
 {
 	if (hit(event.x, event.y)) {
+		button::start_timer();
+
 		// the cursor is over the widget
-		if (state_ == NORMAL)
+		if (state_ == NORMAL) {
 			state_ = ACTIVE;
+        }
 		else if (state_ == PRESSED && type_ == TYPE_CHECK)
 			state_ = PRESSED_ACTIVE;
 	} else {
 		// the cursor is not over the widget
+        button::stop_timer();
+
 		if (state_ == PRESSED_ACTIVE)
 			state_ = PRESSED;
-		else if ((type_ != TYPE_CHECK && type_ != TYPE_IMAGE) || state_ != PRESSED)
+		else if ((type_ != TYPE_CHECK && type_ != TYPE_IMAGE) || state_ != PRESSED) {
 			state_ = NORMAL;
+		}
 	}
+}
+
+/*
+Fires a button-click event when timer has run through its time.
+*/
+static Uint32 callback(Uint32 interval, void* button) {
+    gui::button* b = (gui::button*) button;
+    interval = 0; // Björn: kan ta bort detta sen
+    SDL_Event fake_event;
+    fake_event.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.button = SDL_BUTTON_LEFT;
+    fake_event.button.state = SDL_PRESSED;
+    fake_event.button.which = 0;
+    SDL_Rect rect = (*b).location();
+    fake_event.button.x = rect.x + rect.w / 2;
+    fake_event.button.y = rect.y + rect.h / 2;
+    SDL_PushEvent(&fake_event);
+    fake_event.type = SDL_MOUSEBUTTONUP;
+    fake_event.button.type = SDL_MOUSEBUTTONUP;
+    SDL_PushEvent(&fake_event);
+    (*b).stop_timer();
+    return 0;
+}
+
+/*
+Adds a timer for a button-click event.
+*/
+void button::start_timer() {
+    if(timer_id == NULL)
+        timer_id = SDL_AddTimer(1000, gui::callback, (void*) this); // Björn: Gaze length should be here
+}
+
+/*
+Removes the timer for a button-click-event.
+*/
+void button::stop_timer() {
+    if(timer_id != NULL) {
+
+        SDL_RemoveTimer(timer_id);
+        timer_id = NULL;
+    }
 }
 
 void button::mouse_down(SDL_MouseButtonEvent const &event)
@@ -364,8 +413,8 @@ bool button::pressed()
 		const bool res = pressed_;
 		pressed_ = false;
 		return res;
-	} else
-		return state_ == PRESSED || state_ == PRESSED_ACTIVE;
+	}
+    return state_ == PRESSED || state_ == PRESSED_ACTIVE;
 }
 
 }
