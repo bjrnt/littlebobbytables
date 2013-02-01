@@ -1,0 +1,9 @@
+#textdomain wesnoth-lib
+###
+### Definition of the window to ask for the savegame filename
+###
+
+[window]
+	
+
+[/window]
