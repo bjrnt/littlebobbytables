@@ -292,6 +292,25 @@ void tscrollbar_::load_config_extra()
 		tmp.set_variable("offset_after", variant(offset_after()));
 	}
 }
+Uint32 myCallBackFunc(Uint32 interval,void *param){
+
+	int mousex, mousey;
+	Uint8 mouse_flags = SDL_GetMouseState(&mousex, &mousey);
+
+    SDL_Event fake_event;
+    fake_event.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.button = SDL_BUTTON_LEFT;
+    fake_event.button.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.state = SDL_PRESSED;
+    fake_event.button.which = 0;
+    fake_event.button.x = mousex;
+    fake_event.button.y = mousey;
+    SDL_PushEvent(&fake_event);
+    fake_event.type=SDL_MOUSEBUTTONUP;
+    fake_event.button.type=SDL_MOUSEBUTTONUP;
+    SDL_PushEvent(&fake_event);
+    return 1000;
+}
 
 void tscrollbar_::signal_handler_mouse_enter(
 		const event::tevent event, bool& handled, bool& halt)
@@ -300,6 +319,7 @@ void tscrollbar_::signal_handler_mouse_enter(
 
 	// Send the motion under our event id to make debugging easier.
 	signal_handler_mouse_motion(event, handled, halt, get_mouse_position());
+    tid = SDL_AddTimer(1000,myCallBackFunc,NULL);
 }
 
 void tscrollbar_::signal_handler_mouse_motion(
@@ -356,6 +376,7 @@ void tscrollbar_::signal_handler_mouse_leave(
 		set_state(ENABLED);
 	}
 	handled = true;
+	SDL_RemoveTimer(tid);
 }
 
 

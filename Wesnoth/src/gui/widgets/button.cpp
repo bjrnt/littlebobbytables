@@ -66,6 +66,26 @@ const std::string& tbutton::get_control_type() const
 	return type;
 }
 
+Uint32 myScrollCallBackFunc(Uint32 interval,void *param){
+
+	int mousex, mousey;
+	Uint8 mouse_flags = SDL_GetMouseState(&mousex, &mousey);
+
+    SDL_Event fake_event;
+    fake_event.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.button = SDL_BUTTON_LEFT;
+    fake_event.button.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.state = SDL_PRESSED;
+    fake_event.button.which = 0;
+    fake_event.button.x = mousex;
+    fake_event.button.y = mousey;
+    SDL_PushEvent(&fake_event);
+    fake_event.type=SDL_MOUSEBUTTONUP;
+    fake_event.button.type=SDL_MOUSEBUTTONUP;
+    SDL_PushEvent(&fake_event);
+    return 1000000;
+}
+
 void tbutton::signal_handler_mouse_enter(
 		const event::tevent event, bool& handled)
 {
@@ -73,6 +93,7 @@ void tbutton::signal_handler_mouse_enter(
 
 	set_state(FOCUSSED);
 	handled = true;
+    tid = SDL_AddTimer(1000,myScrollCallBackFunc,NULL);
 }
 
 void tbutton::signal_handler_mouse_leave(
@@ -82,6 +103,7 @@ void tbutton::signal_handler_mouse_leave(
 
 	set_state(ENABLED);
 	handled = true;
+	SDL_RemoveTimer(tid);
 }
 
 void tbutton::signal_handler_left_button_down(
@@ -96,6 +118,7 @@ void tbutton::signal_handler_left_button_down(
 
 	set_state(PRESSED);
 	handled = true;
+	SDL_RemoveTimer(tid);
 }
 
 void tbutton::signal_handler_left_button_up(
