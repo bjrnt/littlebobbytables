@@ -25,6 +25,7 @@
 #include "log.hpp"
 #include "serialization/string_utils.hpp"
 #include "sound.hpp"
+#include "game_preferences.hpp"
 #include "video.hpp"
 #include "wml_separators.hpp"
 
@@ -245,7 +246,7 @@ void button::draw_contents()
 		clipArea.y += offset;
 		clipArea.w -= 2*offset;
 		clipArea.h -= 2*offset;
-		font::draw_text(&video(), clipArea, font_size, button_color, label_ + " G1", textx, texty);
+		font::draw_text(&video(), clipArea, font_size, button_color, label_, textx, texty); // Björn: Text G1
 	}
 
 	update_rect(loc);
@@ -326,7 +327,7 @@ Adds a timer for a button-click event.
 */
 void button::start_timer() {
     if(timer_id == NULL)
-        timer_id = SDL_AddTimer(1000, gui::callback, (void*) this); // Björn: Gaze length should be here
+        timer_id = SDL_AddTimer(preferences::gaze_length(), gui::callback, (void*) this); // Björn: Gaze length should be here
 }
 
 /*

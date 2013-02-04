@@ -61,7 +61,7 @@ void combo::set_selected_internal(int val)
 	const size_t index = size_t(val);
 	if (val == selected_ || index >= items_.size())
 		return;
-	set_label(items_[index] + " G1");
+	set_label(items_[index]); // Björn: text G1
 	oldSelected_ = selected_;
 	selected_ = val;
 }

@@ -1316,7 +1316,7 @@ void ttext::draw(surface& canvas
 	// We first need to determine the size of the text which need the rendered
 	// text. So resolve and render the text first and then start to resolve
 	// the other formulas.
-	const t_string text = text_(variables) + " C";
+	const t_string text = text_(variables); // Björn: Add text to canvas labels here
 
 	if(text.empty()) {
 		DBG_GUI_D << "Text: no text to render, leave.\n";

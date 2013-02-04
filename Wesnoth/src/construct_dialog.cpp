@@ -117,27 +117,27 @@ dialog::dialog(display &disp, const std::string& title, const std::string& messa
 	default:
 		break;
 	case OK_ONLY:
-		add_button(new standard_dialog_button(screen,_("OK G1"),0,true), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("OK"),0,true), BUTTON_STANDARD);
 		break;
 	case YES_NO:
-		add_button(new standard_dialog_button(screen,_("Yes G1"),0,false), BUTTON_STANDARD);
-		add_button(new standard_dialog_button(screen,_("No G1"),1,true), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("Yes"),0,false), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("No"),1,true), BUTTON_STANDARD);
 		break;
 	case OK_CANCEL:
-		add_button(new standard_dialog_button(screen,_("OK G1"),0,false), BUTTON_STANDARD);
-		add_button(new standard_dialog_button(screen,_("Cancel G1"),1,true), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("OK"),0,false), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("Cancel"),1,true), BUTTON_STANDARD);
 		break;
 	case CANCEL_ONLY:
-		add_button(new standard_dialog_button(screen,_("Cancel G1"),0,true), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("Cancel"),0,true), BUTTON_STANDARD);
 		break;
 	case CLOSE_ONLY:
-		add_button(new standard_dialog_button(screen,_("Close G1"),0,true), BUTTON_STANDARD);
+		add_button(new standard_dialog_button(screen,_("Close"),0,true), BUTTON_STANDARD);
 		break;
 	}
 	//dialog creator should catch(button::error&) ?
 
 	try {
-		std::string msg = font::word_wrap_text(message + " G1", message_font_size, screen.getx() / 2, screen.gety() / 2);
+		std::string msg = font::word_wrap_text(message, message_font_size, screen.getx() / 2, screen.gety() / 2); // Björn: Add text here for G1 labels
 		message_ = new label(screen, msg, message_font_size, font::NORMAL_COLOR, false);
 	} catch(utils::invalid_utf8_exception&) {
 		ERR_DP << "Problem handling utf8 in message '" << message << "'\n";

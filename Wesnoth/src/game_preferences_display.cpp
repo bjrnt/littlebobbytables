@@ -274,8 +274,8 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	music_slider_.set_help_string(_("Change the music volume"));
 
     gaze_length_slider_.set_min(0);
-    gaze_length_slider_.set_max(128);
-    gaze_length_slider_.set_value(music_volume());
+    gaze_length_slider_.set_max(2500);
+    gaze_length_slider_.set_value(gaze_length());
     gaze_length_slider_.set_help_string(_("Change the length of gaze"));
 
 	// bell volume slider
@@ -736,7 +736,6 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	friends_list_button_.set_location(rect.x, bottom_row_y - friends_list_button_.height());
 
 	mp_server_search_button_.set_location(rect.x + 10 + friends_list_button_.width(), bottom_row_y - mp_server_search_button_.height());
-
 	//Friends tab
 	ypos = rect.y + top_border;
 	friends_input_.set_location(rect.x,ypos);
@@ -808,15 +807,13 @@ void preferences_dialog::process_event()
             gaze_length_slider_.enable(false);
         }
 
-        set_music_volume(gaze_length_slider_.value());
+
+        set_gaze_length(gaze_length_slider_.value());
 
 
 		std::stringstream buffer_els;
 		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
 		gaze_length_label_.set_text(buffer_els.str());
-
-
-
     }
 
 	if (tab_ == GENERAL_TAB) {

@@ -102,6 +102,9 @@ namespace preferences {
 	bool music_on();
 	bool set_music(bool ison);
 
+    int gaze_length(); // Björn all up in here
+    void set_gaze_length(int length);
+
 	int music_volume();
 	void set_music_volume(int vol);
 

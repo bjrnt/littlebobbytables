@@ -292,7 +292,7 @@ SDL_Rect dialog_frame::draw_title(CVideo* video)
 	rect = screen_area();
 	// Björn: Doesn't seem to be used?
 	return font::draw_text(video, rect, font::SIZE_LARGE, font::TITLE_COLOR,
-	                       title_ + " G1", dim_.title.x, dim_.title.y, false, TTF_STYLE_BOLD);
+	                       title_, dim_.title.x, dim_.title.y, false, TTF_STYLE_BOLD);
 }
 
 void dialog_frame::draw()

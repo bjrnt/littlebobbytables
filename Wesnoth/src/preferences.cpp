@@ -311,6 +311,16 @@ void save_sound_buffer_size(const size_t size)
 	sound::reset_sound();
 }
 
+int gaze_length()
+{
+    return prefs["gaze_length"];
+}
+
+void set_gaze_length(int length)
+{
+    prefs["gaze_length"] = length;
+}
+
 int music_volume()
 {
 	return prefs["music_volume"].to_int(100);
