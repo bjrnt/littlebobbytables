@@ -441,6 +441,8 @@ static int do_gameloop(int argc, char** argv)
 
 	LOG_CONFIG << "time elapsed: "<<  (SDL_GetTicks() - start_ticks) << " ms\n";
 
+    // Björn: starta eyetracker här
+
 	for (;;)
 	{
 		// reset the TC, since a game can modify it, and it may be used
