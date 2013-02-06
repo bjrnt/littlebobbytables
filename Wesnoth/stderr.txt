@@ -1,5 +1,5 @@
 Battle for Wesnoth v1.10.5
-Started on Wed Feb 06 14:43:50 2013
+Started on Wed Feb 06 14:57:22 2013
 
 Automatically found a possible data directory at C:/littlebobbytables2/Wesnoth
 
