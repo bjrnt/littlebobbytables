@@ -1,0 +1,77 @@
+Battle for Wesnoth v1.10.5
+Started on Wed Feb 06 11:22:35 2013
+
+Automatically found a possible data directory at C:/wesnoth-1.10.5
+
+Data directory: C:/wesnoth-1.10.5
+User configuration directory: C:/wesnoth-1.10.5/userdata
+User data directory: C:/wesnoth-1.10.5/userdata
+Cache directory: C:/wesnoth-1.10.5/userdata/cache
+Checking video mode: 1440x847x32...
+setting mode to 1440x847x32
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:29 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:24:58 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
+20130206 11:25:34 error gui/layout: ttext::set_text text '·𐑖𐑭𐑝𐑾𐑯 ·𐑰𐑙𐑜𐑤𐑦𐑖 (Shavian English)' contains invalid utf-8, trimmed the invalid parts.
