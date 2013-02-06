@@ -15,6 +15,8 @@
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
+#include "game_preferences.hpp"
+
 #include "gui/widgets/button.hpp"
 
 #include "gui/auxiliary/log.hpp"
@@ -93,7 +95,7 @@ void tbutton::signal_handler_mouse_enter(
 
 	set_state(FOCUSSED);
 	handled = true;
-    tid = SDL_AddTimer(1000,myScrollCallBackFunc,NULL);
+    tid = SDL_AddTimer(preferences::gaze_length(),myScrollCallBackFunc,NULL);
 }
 
 void tbutton::signal_handler_mouse_leave(

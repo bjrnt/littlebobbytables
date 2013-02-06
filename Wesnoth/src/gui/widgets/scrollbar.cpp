@@ -15,6 +15,8 @@
 
 #define GETTEXT_DOMAIN "wesnoth-lib"
 
+#include "game_preferences.hpp"
+
 #include "gui/widgets/scrollbar.hpp"
 
 #include "gui/auxiliary/log.hpp"
@@ -319,7 +321,7 @@ void tscrollbar_::signal_handler_mouse_enter(
 
 	// Send the motion under our event id to make debugging easier.
 	signal_handler_mouse_motion(event, handled, halt, get_mouse_position());
-    tid = SDL_AddTimer(1000,myCallBackFunc,NULL);
+    tid = SDL_AddTimer(preferences::gaze_length(),myCallBackFunc,NULL);
 }
 
 void tscrollbar_::signal_handler_mouse_motion(
