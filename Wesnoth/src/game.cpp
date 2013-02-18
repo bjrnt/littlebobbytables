@@ -14,6 +14,8 @@
 */
 
 #include "global.hpp"
+#include "eyetracker/App.h"
+#include <tobii/sdk/cpp/Library.hpp>
 
 #include "about.hpp"
 #include "addon/manager.hpp"
@@ -60,6 +62,8 @@ static lg::log_domain log_config("config");
 
 static lg::log_domain log_preprocessor("preprocessor");
 #define LOG_PREPROC LOG_STREAM(info,log_preprocessor)
+
+namespace tetio = tobii::sdk::cpp;
 
 // this is needed to allow identical functionality with clean refactoring
 // play_game only returns on an error, all returns within play_game can
@@ -443,6 +447,12 @@ static int do_gameloop(int argc, char** argv)
 
     // Björn: starta eyetracker här
 
+	tetio::Library::init();
+	MainLoopRunner runner;
+    tetio::EyeTracker::pointer_t tracker;
+    App app = App();
+	app.run(&preferences::resolution(),&runner,&tracker);
+
 	for (;;)
 	{
 		// reset the TC, since a game can modify it, and it may be used
@@ -507,7 +517,8 @@ static int do_gameloop(int argc, char** argv)
 
 		const font::floating_label_context label_manager;
 
-		cursor::set(cursor::NORMAL);
+        cursor::set(cursor::NORMAL);
+
 		if(res == gui2::ttitle_screen::NOTHING) {
 			const hotkey::basic_handler key_handler(&game->disp());
 			gui2::ttitle_screen dlg;
@@ -519,6 +530,7 @@ static int do_gameloop(int argc, char** argv)
 		game_controller_abstract::RELOAD_GAME_DATA should_reload = game_controller_abstract::RELOAD_DATA;
 
 		if(res == gui2::ttitle_screen::QUIT_GAME) {
+            app.exitEyeTracker(&tracker,&runner);
 			LOG_GENERAL << "quitting game...\n";
 			return 0;
 		} else if(res == gui2::ttitle_screen::LOAD_GAME) {
