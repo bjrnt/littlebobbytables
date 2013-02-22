@@ -158,6 +158,10 @@ public:
 	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	~menu();
 
+    void stop_timer();
+
+    void click_last_item();
+
 	int selection() const;
 
 	void move_selection(size_t id);
@@ -214,6 +218,13 @@ protected:
 	style *style_;
 	bool silent_;
 private:
+
+    SDL_TimerID timer_id;
+    int last_item_;
+
+    static Uint32 callback(Uint32 interval, void* button);
+    void start_timer();
+
 	size_t max_items_onscreen() const;
 
 	size_t heading_height() const;
