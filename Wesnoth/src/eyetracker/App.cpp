@@ -102,7 +102,8 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
             if(debug_)cout << "Current Pos: " << gazePosX << " " << gazePosY << endl;
             //Send mousebutton down event
             /*while (-1 == SDL_PushEvent(&ev))
-            {}*/
+            {}
+            */
             SDL_WarpMouse(gazePosX,gazePosY);
             prevXGazePos = gazePosX;
             prevYGazePos = gazePosY;
@@ -111,7 +112,8 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 
             //Send mousebutton up event
             while (-1 == SDL_PushEvent(&ev))
-            {}*/
+            {}
+            */
         }
         if(debug_)cout << data->timestamp << "\t" << data->leftGazePoint2d.x << " " << data->leftGazePoint2d.y << "\t" << data->rightGazePoint2d.x << " " << data->rightGazePoint2d.y << "\t" << endl;
 	}
