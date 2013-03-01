@@ -1259,6 +1259,7 @@ void command_executor::show_menu(const std::vector<std::string>& items_arg, int 
 			gui::MESSAGE, gui::dialog::hotkeys_style);
 			mmenu.set_menu(menu);
 			res = mmenu.show(xloc, yloc);
+
 		} // this will kill the dialog
 		if (res < 0 || size_t(res) >= items.size())
 			return;

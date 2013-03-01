@@ -326,5 +326,20 @@ void widget::process_help_string(int mousex, int mousey)
 		help_string_ = 0;
 	}
 }
+void widget::click()
+{
+    SDL_Event fake_event;
+    fake_event.type = SDL_MOUSEBUTTONDOWN;
+    fake_event.button.button = SDL_BUTTON_LEFT;
+    fake_event.button.state = SDL_PRESSED;
+    fake_event.button.which = 0;
+    SDL_Rect rect = location();
+    fake_event.button.x = rect.x + rect.w / 2;
+    fake_event.button.y = rect.y + rect.h / 2;
+    SDL_PushEvent(&fake_event);
+    fake_event.type = SDL_MOUSEBUTTONUP;
+    fake_event.button.type = SDL_MOUSEBUTTONUP;
+    SDL_PushEvent(&fake_event);
+}
 
 }
