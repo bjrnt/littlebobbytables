@@ -34,46 +34,9 @@ App::App() :
 int App::run(std::pair<int,int> * res, MainLoopRunner* runner, EyeTracker::pointer_t* tracker)//int argc, char *argv[])
 {
 	resolution = res;
-	/*
-	int dataLimit = 100;
-	int gazePosX = 0;
-	int gazePosY = 0;
-	SDL_Event ev;
-	*/
-	//resolution.insert(resolution.begin(),xRes);
-	//resolution.insert(resolution.begin()+1,yRes);
-
-	//SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE);
 
 	startEyeTracker(tracker,runner);
-	if(debug_)cout << "Alright, lets sleep some." << endl;
 
-    /*
-	// sleep for a while. gaze data will be delivered on the MainloopRunner's thread.
-	//boost::this_thread::sleep(boost::posix_time::seconds(3));
-	while (dataLimit > 0 && SDL_WaitEvent(&ev))
-	{
-		dataLimit--;
-		switch (ev.type)
-		{
-			case SDL_MOUSEBUTTONDOWN:
-				gazePosX = ev.button.x;
-				gazePosY = ev.button.y;
-				cout << gazePosX << "," << gazePosY << endl;
-				break;
-
-			case SDL_QUIT:
-				exit(0); // this isn't supposed to happen
-				break;
-
-			default:
-				break;
-		}
-	}
-
-	if(debug_)cout << "Yawn, now we have slept...lets quit now - I'm tired." << endl;
-	exitEyeTracker(&tracker, &runner);
-    */
 	return 0;
 }
 
@@ -128,14 +91,15 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
             ev.motion.y = gazePosY;
             ev.motion.state = SDL_MOUSEBUTTONDOWN;
             ev.motion.xrel = 0;
-            ev.motion.yrel = 0;*/
-            //ev.button.button = SDL_BUTTON_LEFT;
-            //ev.button.type = SDL_MOUSEBUTTONDOWN;
-            //ev.button.state = SDL_PRESSED;
-            //ev.button.which = 0;
-            //ev.button.x = gazePosX;
-            //ev.button.y = gazePosY;
-            cout << "Current Pos: " << gazePosX << " " << gazePosY << endl;
+            ev.motion.yrel = 0;
+            ev.button.button = SDL_BUTTON_LEFT;
+            ev.button.type = SDL_MOUSEBUTTONDOWN;
+            ev.button.state = SDL_PRESSED;
+            ev.button.which = 0;
+            ev.button.x = gazePosX;
+            ev.button.y = gazePosY;
+            */
+            if(debug_)cout << "Current Pos: " << gazePosX << " " << gazePosY << endl;
             //Send mousebutton down event
             /*while (-1 == SDL_PushEvent(&ev))
             {}*/
@@ -217,9 +181,15 @@ void App::startEyeTracker(EyeTracker::pointer_t* tracker, MainLoopRunner* runner
 // tracker : Pointer to EyeTracker
 // runner  : Thread that EyeTracker uses
 // Author  : Andreas & Christoffer
-// Version : 15-02-2013
+// Version : 01-03-2013
 void App::exitEyeTracker(EyeTracker::pointer_t* tracker, MainLoopRunner* runner)
 {
-	(*(tracker))->stopTracking();
+    //If we didn't have any Eyetracker conncected, do not try to stop it
+	if(*tracker != NULL)
+    {
+        (*tracker)->stopTracking();
+    }
+    if(debug_)cerr << "Eyetracker was shut down" << endl;
 	runner->stop();
+	if(debug_)cerr << "RunnerThread was shut down" << endl;
 }
