@@ -27,6 +27,7 @@
 #include "sound.hpp"
 #include "video.hpp"
 #include "wml_separators.hpp"
+#include "game_preferences.hpp"
 
 #include <numeric>
 
@@ -207,6 +208,9 @@ menu::menu(CVideo& video, const std::vector<std::string>& items,
 	  last_was_doubleclick_(false), use_ellipsis_(false),
 	  sorter_(sorter_obj), sortby_(-1), sortreversed_(false), highlight_heading_(-1)
 {
+    timer_id = NULL;
+    last_item_ = -1; // Selected with mouse over
+
 	style_ = (menu_style) ? menu_style : &default_style;
 	style_->init();
 	fill_items(items, true);
@@ -705,9 +709,22 @@ void menu::handle_event(const SDL_Event& event)
 			}
 		}
 	} else if(!mouse_locked() && event.type == SDL_MOUSEMOTION) {
+	    const int item = hit(event.motion.x,event.motion.y);
+	    const bool out = (item == -1);
+
+	    if(item == last_item_ && !out){
+            menu::start_timer();
+        }
+        else if (!out) {
+            menu::stop_timer();
+            menu::start_timer();
+        }
+        else {
+            menu::stop_timer();
+        }
+        last_item_ = item;
+
 		if(click_selects_) {
-			const int item = hit(event.motion.x,event.motion.y);
-			const bool out = (item == -1);
 			if (out_ != out) {
 					out_ = out;
 					invalidate_row_pos(selected_);
@@ -812,7 +829,8 @@ SDL_Rect menu::style::item_size(const std::string& item) const {
 			const SDL_Rect font_size =
 				font::draw_text(NULL,area,get_font_size(),font::NORMAL_COLOR,str,0,0);
 			res.w += font_size.w;
-			res.h = std::max<int>(font_size.h, res.h);
+			//res.h = std::max<int>(font_size.h, res.h);
+			res.h = 40; // Bobby : Dennis : bigger menu item
 		}
 	}
 	return res;
@@ -1230,4 +1248,49 @@ void menu::invalidate_heading()
 	invalid_.insert(-1);
 }
 
+/*
+Clicks on last selected item
+*/
+void menu::click_last_item() {
+    set_focus(true);
+    move_selection_to(last_item_);
+
+    if(click_selects_) {
+        show_result_ = true;
+    }
 }
+
+/*
+Fires a button-click event when timer has run through its time.
+*/
+static Uint32 callback(Uint32 interval, void* menu) {
+    gui::menu* m = (gui::menu*) menu;
+    interval = 0; // Björn: kan ta bort detta sen
+
+    (*m).click_last_item();
+
+    (*m).stop_timer();
+    return 0;
+}
+
+/*
+Adds a timer for a button-click event.
+*/
+void menu::start_timer() {
+    if(timer_id == NULL)
+        timer_id = SDL_AddTimer(preferences::gaze_length(), gui::callback, (void*) this); // Björn: Gaze length should be here
+}
+
+/*
+Removes the timer for a button-click-event.
+*/
+void menu::stop_timer() {
+    if(timer_id != NULL) {
+
+        SDL_RemoveTimer(timer_id);
+        timer_id = NULL;
+    }
+}
+
+}
+
