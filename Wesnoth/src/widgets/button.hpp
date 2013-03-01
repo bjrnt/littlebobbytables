@@ -50,7 +50,6 @@ public:
 	bool hit(int x, int y) const;
 	virtual void enable(bool new_val=true);
 	void release();
-    void stop_timer();
 
 protected:
 	virtual void handle_event(const SDL_Event& event);
@@ -63,11 +62,6 @@ protected:
 
 
 private:
-    SDL_TimerID timer_id;
-
-    static Uint32 callback(Uint32 interval, void* button);
-    void start_timer();
-
 	void calculate_size();
 
 	std::string label_;

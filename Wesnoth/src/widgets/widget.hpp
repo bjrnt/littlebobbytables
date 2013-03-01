@@ -33,6 +33,8 @@ public:
 	void set_height(unsigned h);
 	void set_measurements(unsigned w, unsigned h);
 
+	void click();
+
 	unsigned width() const;
 	unsigned height() const;
 
