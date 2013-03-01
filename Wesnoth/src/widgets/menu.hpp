@@ -220,7 +220,7 @@ protected:
 private:
 
     SDL_TimerID timer_id;
-    int last_item_;
+    int last_item_; // Bobby : Kai : Spara undan senaste menu item.
 
     static Uint32 callback(Uint32 interval, void* button);
     void start_timer();
