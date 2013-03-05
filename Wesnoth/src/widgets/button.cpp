@@ -288,7 +288,7 @@ void button::mouse_motion(SDL_MouseMotionEvent const &event)
 			state_ = PRESSED_ACTIVE;
 	} else {
 		// the cursor is not over the widget
-        eyetracker::interaction_controller::mouse_leave(this);
+        eyetracker::interaction_controller::mouse_leave();
 
 		if (state_ == PRESSED_ACTIVE)
 			state_ = PRESSED;

@@ -25,6 +25,8 @@
 #include "gui/widgets/window.hpp"
 #include "sound.hpp"
 
+#include "eyetracker/interaction_controller.hpp"
+
 #include <boost/bind.hpp>
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
@@ -102,6 +104,8 @@ void trepeating_button::signal_handler_mouse_enter(
 
 	set_state(FOCUSSED);
 	handled = true;
+
+    eyetracker::interaction_controller::mouse_enter(this, eyetracker::interaction_controller::REPEATING_CLICK);
 }
 
 void trepeating_button::signal_handler_mouse_leave(
@@ -111,6 +115,7 @@ void trepeating_button::signal_handler_mouse_leave(
 
 	set_state(ENABLED);
 	handled = true;
+    eyetracker::interaction_controller::mouse_leave();
 }
 
 void trepeating_button::signal_handler_left_button_down(

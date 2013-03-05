@@ -50,6 +50,9 @@ public:
 	tlistbox(const bool has_minimum, const bool has_maximum,
 			const tgenerator_::tplacement placement, const bool select);
 
+    void signal_handler_mouse_enter();
+    void signal_handler_mouse_leave();
+    void signal_handler_mouse_move();
 	/***** ***** ***** ***** Row handling. ***** ***** ****** *****/
 	/**
 	 * When an item in the list is selected by the user we need to
