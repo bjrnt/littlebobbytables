@@ -17,7 +17,6 @@ public:
 	App();
 	int run(std::pair<int,int> * res, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker);//(int argc, char *argv[]);
     void exitEyeTracker(tetio::EyeTracker::pointer_t* tracker, MainLoopRunner* runner);
-
 private:
 	void startEyeTracker(tetio::EyeTracker::pointer_t* tracker, MainLoopRunner* runner);
 

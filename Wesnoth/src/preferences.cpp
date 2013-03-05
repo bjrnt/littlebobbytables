@@ -51,6 +51,8 @@ config prefs;
 }
 
 namespace preferences {
+std::pair<int,int> resolutionDim(0,0); //BOBBY | Christoffer | Store a resolution variable so that we can adjust to res. changes
+
 
 base_manager::base_manager()
 {
@@ -195,16 +197,31 @@ std::pair<int,int> resolution()
 	const std::string postfix = fullscreen() ? "resolution" : "windowsize";
 	std::string x = prefs['x' + postfix], y = prefs['y' + postfix];
 	if (!x.empty() && !y.empty()) {
+            resolutionDim.first  = std::max(atoi(x.c_str()), min_allowed_width());
+            resolutionDim.second = std::max(atoi(y.c_str()), min_allowed_height());
+        /*
 		std::pair<int,int> res(std::max(atoi(x.c_str()), min_allowed_width()),
 		                       std::max(atoi(y.c_str()), min_allowed_height()));
-
+		                       */
 		// Make sure resolutions are always divisible by 4
 		//res.first &= ~3;
 		//res.second &= ~3;
-		return res;
+		//return res;
+		return resolutionDim;
 	} else {
-		return std::pair<int,int>(1024,768);
+	    resolutionDim.first = 1024;
+	    resolutionDim.second = 768;
+		//return std::pair<int,int>(1024,768);
+		return resolutionDim;
 	}
+}
+
+// Returns the pointer to the resolution.
+//
+// Authors: Andreas & Christoffer
+// Version: 05.03.2013
+std::pair<int,int>* getResolutionPointer(){
+    return &resolutionDim;
 }
 
 bool turbo()

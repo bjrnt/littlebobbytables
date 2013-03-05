@@ -78,6 +78,7 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 	//Only accept valid data (see table in SDK manual for more info)
 	if(data->leftValidity<2 && data->rightValidity<2){
 		//Preserve a bit of the old gaze pos (will handle a bit of the noise)
+		if(debug_) cerr << "Res: " << resolution->first << " " << resolution->second << endl;
 		int gazePosX = (int)(0.2*(resolution->first*(data->leftGazePoint2d.x + data->rightGazePoint2d.x)/2));
 		int gazePosY = (int)(0.2*(resolution->second*(data->leftGazePoint2d.y + data->rightGazePoint2d.y)/2));
         gazePosX += (int)(0.8*prevXGazePos);
@@ -183,15 +184,15 @@ void App::startEyeTracker(EyeTracker::pointer_t* tracker, MainLoopRunner* runner
 // tracker : Pointer to EyeTracker
 // runner  : Thread that EyeTracker uses
 // Author  : Andreas & Christoffer
-// Version : 01-03-2013
+// Version : 05-03-2013
 void App::exitEyeTracker(EyeTracker::pointer_t* tracker, MainLoopRunner* runner)
 {
     //If we didn't have any Eyetracker conncected, do not try to stop it
 	if(*tracker != NULL)
     {
         (*tracker)->stopTracking();
+        if(debug_)cerr << "Eyetracker was shut down" << endl;
     }
-    if(debug_)cerr << "Eyetracker was shut down" << endl;
 	runner->stop();
 	if(debug_)cerr << "RunnerThread was shut down" << endl;
 }

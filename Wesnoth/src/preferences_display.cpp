@@ -156,8 +156,7 @@ void set_resolution(const std::pair<int,int>& resolution)
 	}
 }
 
-bool set_resolution(CVideo& video
-		, const unsigned width, const unsigned height)
+bool set_resolution(CVideo& video, const unsigned width, const unsigned height)
 {
 	SDL_Rect rect;
 	SDL_GetClipRect(video.getSurface(), &rect);

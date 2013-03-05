@@ -62,6 +62,7 @@ namespace preferences {
 	int min_allowed_height();
 
 	std::pair<int,int> resolution();
+	std::pair<int,int>* getResolutionPointer(); //BOBBY | Christoffer | Prototype to new function
 	void _set_resolution(const std::pair<int,int>& res);
 
 	bool turbo();
