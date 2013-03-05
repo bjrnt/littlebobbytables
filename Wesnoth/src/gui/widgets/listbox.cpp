@@ -29,6 +29,8 @@
 
 #include <boost/bind.hpp>
 
+#include "eyetracker/interaction_controller.hpp"
+
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
 
@@ -47,6 +49,31 @@ void callback_list_item_clicked(twidget* caller)
 
 } // namespace
 
+void tlistbox::signal_handler_mouse_enter() {
+    std::cerr << "Entered listbox\n";
+}
+
+void tlistbox::signal_handler_mouse_move() {
+    int mx, my;
+    static twidget* previous_widget = NULL;
+    SDL_GetMouseState(&mx,&my);
+    tpoint* mouse_point = new tpoint(mx,my);
+    twidget* res = generator_->find_at(*mouse_point,false);
+    if(res != NULL && res != previous_widget) {
+            for(unsigned i=0; i < generator_->get_item_count(); i++) {
+                    if(generator_->item(i).has_widget(res)) {
+                            generator_->toggle_item(i);
+                            eyetracker::interaction_controller::mouse_enter(res, eyetracker::interaction_controller::DOUBLE_CLICK);
+                            previous_widget = res;
+                    }
+            }
+    }
+}
+
+void tlistbox::signal_handler_mouse_leave() {
+    eyetracker::interaction_controller::mouse_leave();
+}
+
 tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
 		const tgenerator_::tplacement placement, const bool select)
 	: tscrollbar_container(2) // FIXME magic number
@@ -57,6 +84,9 @@ tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
 {
 	generator_ = tgenerator_::build(
 			has_minimum, has_maximum, placement, select);
+    connect_signal<event::MOUSE_ENTER>(boost::bind(&tlistbox::signal_handler_mouse_enter,this), front_pre_child);
+    connect_signal<event::MOUSE_MOTION>(boost::bind(&tlistbox::signal_handler_mouse_move,this), front_pre_child);
+    connect_signal<event::MOUSE_LEAVE>(boost::bind(&tlistbox::signal_handler_mouse_leave,this), front_pre_child);
 }
 
 void tlistbox::add_row(const string_map& item, const int index)
