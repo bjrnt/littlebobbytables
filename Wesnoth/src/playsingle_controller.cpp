@@ -710,6 +710,8 @@ void playsingle_controller::play_human_turn() {
 	execute_gotos();
 
 	gui_->enable_menu("endturn", true);
+	gui_->enable_menu("select", true);
+	gui_->enable_menu("right", true);
 	while(!end_turn_) {
 		play_slice();
 		check_end_level();
@@ -833,6 +835,8 @@ void playsingle_controller::after_human_turn(){
 void playsingle_controller::play_ai_turn(){
 	LOG_NG << "is ai...\n";
 	gui_->enable_menu("endturn", false);
+	gui_->enable_menu("select", false);
+	gui_->enable_menu("right", false);
 	browse_ = true;
 	gui_->recalculate_minimap();
 
