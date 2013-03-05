@@ -15,10 +15,16 @@ void interaction_controller::set_interaction_method(interaction_controller::INTE
 {
     interaction_method_ = interaction_method;
 }
+// REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
+// Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event)
 {
+    std::cerr << "entered\n";
     if(timer_id_ != NULL)
         stop_timer();
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL){
+        reset();
+    }
     /*
     When the mouse enters over a widget a timer (or something else, depending on interaction method) will be started.
     When the timer runs out widget.click() will be called, so the widget must implement this method.
@@ -39,10 +45,18 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
         break;
     }
 }
+
+
+// REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
+// Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_controller::EVENT_TO_SEND event)
 {
+    std::cerr << "entered\n";
     if(timer_id_ != NULL)
         stop_timer();
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL){
+        reset();
+    }
 
     selected_widget_g2_ = widget;
 
@@ -59,33 +73,32 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
         break;
     }
 }
+// REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
+// Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave()
 {
-    /*if(widget != selected_widget_g2_) {
-        return;
-    }*/
-
+    std::cerr << "left\n";
     switch (interaction_method_)
     {
     case interaction_controller::BLINK:
         // Blink is selected
         break;
     case interaction_controller::DWELL:
-        stop_timer();
+        if(timer_id_ != NULL)
+            stop_timer();
         break;
     case interaction_controller::SWITCH:
         // Switch
         break;
     }
 
-    selected_widget_g1_ = NULL;
-    selected_widget_g2_ = NULL;
+    reset();
 }
-void interaction_controller::click(int mousex, int mousey)
+void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
 {
     SDL_Event fake_event;
     fake_event.type = SDL_MOUSEBUTTONDOWN;
-    fake_event.button.button = SDL_BUTTON_LEFT;
+    fake_event.button.button = mousebutton;
     fake_event.button.type = SDL_MOUSEBUTTONDOWN;
     fake_event.button.state = SDL_PRESSED;
     fake_event.button.which = 0;
@@ -101,6 +114,12 @@ void interaction_controller::double_click(int mousex, int mousey)
     click(mousex, mousey);
     click(mousex, mousey);
 }
+
+void interaction_controller::reset() {
+    selected_widget_g1_ = NULL;
+    selected_widget_g2_ = NULL;
+}
+
 Uint32 interaction_controller::callback(Uint32 interval, void* param)
 {
     (void)interval;
@@ -133,19 +152,8 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     }
     else if(event == REPEATING_CLICK)
     {
-        // Does not work
         click(x,y);
-        if(selected_widget_g1_ != NULL) {
-            gui::widget* selected_widget_temp_g1 = selected_widget_g1_;
-            mouse_leave();
-            mouse_enter(selected_widget_temp_g1, REPEATING_CLICK);
-        }
-        else if(selected_widget_g2_ != NULL) {
-            gui2::twidget* selected_widget_temp_g2 = selected_widget_g2_;
-            mouse_leave();
-            mouse_enter(selected_widget_temp_g2, REPEATING_CLICK);
-        }
-        return 0;
+        return interval; // returning interval to next click
     }
 
     mouse_leave();
@@ -153,12 +161,11 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 }
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
-    if(timer_id_ == NULL)
+    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL))
     {
-        if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
-        {
-            timer_id_ = SDL_AddTimer(preferences::gaze_length(), callback, (void*) event);
-        }
+        timer_id_ = SDL_AddTimer(preferences::gaze_length(), callback, (void*) event);
+    } else {
+        throw "Trying to start timer without stopping last timer or without selected widget";
     }
 }
 

@@ -271,6 +271,9 @@ private:
 	 */
 	tgenerator_* generator_;
 
+	// needed to emulate mouse_enter and mouse_leave efficiently
+    twidget * previous_widget;
+
 	/** Contains the builder for the new items. */
 	tbuilder_grid_const_ptr list_builder_;
 

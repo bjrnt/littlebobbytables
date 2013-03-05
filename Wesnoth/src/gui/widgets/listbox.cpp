@@ -50,12 +50,12 @@ void callback_list_item_clicked(twidget* caller)
 } // namespace
 
 void tlistbox::signal_handler_mouse_enter() {
-    std::cerr << "Entered listbox\n";
+    previous_widget = NULL;
 }
 
 void tlistbox::signal_handler_mouse_move() {
+    // TODO make sure that the element selected really gets focus
     int mx, my;
-    static twidget* previous_widget = NULL;
     SDL_GetMouseState(&mx,&my);
     tpoint* mouse_point = new tpoint(mx,my);
     twidget* res = generator_->find_at(*mouse_point,false);
@@ -71,6 +71,7 @@ void tlistbox::signal_handler_mouse_move() {
 }
 
 void tlistbox::signal_handler_mouse_leave() {
+    previous_widget = NULL;
     eyetracker::interaction_controller::mouse_leave();
 }
 
@@ -87,6 +88,9 @@ tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
     connect_signal<event::MOUSE_ENTER>(boost::bind(&tlistbox::signal_handler_mouse_enter,this), front_pre_child);
     connect_signal<event::MOUSE_MOTION>(boost::bind(&tlistbox::signal_handler_mouse_move,this), front_pre_child);
     connect_signal<event::MOUSE_LEAVE>(boost::bind(&tlistbox::signal_handler_mouse_leave,this), front_pre_child);
+    // needed to emulate mouse enter and leave efficiently
+    previous_widget = NULL;
+
 }
 
 void tlistbox::add_row(const string_map& item, const int index)
