@@ -63,7 +63,7 @@ void tlistbox::signal_handler_mouse_move() {
             for(unsigned i=0; i < generator_->get_item_count(); i++) {
                     if(generator_->item(i).has_widget(res)) {
                             generator_->toggle_item(i);
-                            eyetracker::interaction_controller::mouse_enter(res, eyetracker::interaction_controller::DOUBLE_CLICK);
+                            eyetracker::interaction_controller::mouse_enter(res);
                             previous_widget = res;
                     }
             }

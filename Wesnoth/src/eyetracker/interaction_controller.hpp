@@ -19,7 +19,7 @@ private:
     static gui::widget* selected_widget_g1_;
     static gui2::twidget* selected_widget_g2_;
 
-    static void click(int mousex, int mousey,Uint8 mousebutton = SDL_BUTTON_LEFT);
+    static void click(int mousex, int mousey, Uint8 mousebutton = SDL_BUTTON_LEFT);
     static void double_click(int mousex, int mousey);
 
     static Uint32 callback(Uint32 interval, void* widget); // Called after a timer has expired
