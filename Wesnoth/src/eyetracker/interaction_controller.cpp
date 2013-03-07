@@ -19,7 +19,7 @@ void interaction_controller::set_interaction_method(interaction_controller::INTE
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event)
 {
-    std::cerr << "Entered GUI1\n";
+//    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
     if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
@@ -52,7 +52,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_controller::EVENT_TO_SEND event)
 {
-    std::cerr << "Entered GUI2\n";
+//    std::cerr << "Entered GUI2\n";
     if(timer_id_ != NULL)
         stop_timer();
     if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
@@ -79,11 +79,11 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave()
 {
-    if(selected_widget_g1_ != NULL)
+/*    if(selected_widget_g1_ != NULL)
         std::cerr << "Left GUI1\n";
     else if(selected_widget_g2_ != NULL)
         std::cerr << "Left GUI2\n";
-
+*/
     switch (interaction_method_)
     {
     case interaction_controller::DWELL:
@@ -177,7 +177,6 @@ void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND e
         throw "Trying to start timer without stopping last timer or without selected widget";
     }
 }
-
 void interaction_controller::stop_timer()
 {
     SDL_RemoveTimer(timer_id_);

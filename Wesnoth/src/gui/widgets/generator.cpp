@@ -214,6 +214,7 @@ twidget* thorizontal_list::find_at(
 				grid.find_at(coordinate, must_be_active);
 
 		if(widget) {
+            std::cerr << "Found widget at: X: " << coordinate.x << " Y: " << coordinate.y << "\n";
 			return widget;
 		}
 	}
