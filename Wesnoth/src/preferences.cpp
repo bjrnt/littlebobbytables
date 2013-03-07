@@ -207,6 +207,7 @@ std::pair<int,int> resolution()
 		//res.first &= ~3;
 		//res.second &= ~3;
 		//return res;
+		std::cerr << "Send address res pointer " << &resolutionDim << std::endl; //BOBBY | DEBUG
 		return resolutionDim;
 	} else {
 	    resolutionDim.first = 1024;
