@@ -3,6 +3,8 @@
 */
 #include "../widgets/widget.hpp"
 #include "../gui/widgets/widget.hpp"
+#include "map_location.hpp"
+#include "display.hpp"
 
 namespace eyetracker
 {
@@ -18,6 +20,8 @@ private:
     static SDL_TimerID timer_id_;
     static gui::widget* selected_widget_g1_;
     static gui2::twidget* selected_widget_g2_;
+    static map_location* map_loc_;
+    static display* disp;
 
     static void click(int mousex, int mousey, Uint8 mousebutton = SDL_BUTTON_LEFT);
     static void double_click(int mousex, int mousey);
@@ -32,6 +36,7 @@ public:
 
     static void mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI1 widgets when the mouse enters over it
     static void mouse_enter(gui2::twidget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI2 widgets when the mouse enters over it
+    static void mouse_enter(map_location* loc, display* d, interaction_controller::EVENT_TO_SEND event = CLICK); //Should be called by display when hex is selected
     static void mouse_leave();
 };
 }

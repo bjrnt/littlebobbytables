@@ -3,6 +3,8 @@
 */
 #include "interaction_controller.hpp"
 #include "../game_preferences.hpp"
+#include "map_location.hpp"
+#include "display.hpp"
 
 namespace eyetracker
 {
@@ -10,6 +12,8 @@ interaction_controller::INTERACTION_METHOD interaction_controller::interaction_m
 SDL_TimerID interaction_controller::timer_id_ = NULL;
 gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
+map_location* interaction_controller::map_loc_ = NULL;
+display* interaction_controller::disp = NULL;
 
 void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
 {
@@ -75,6 +79,27 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
         break;
     }
 }
+void interaction_controller::mouse_enter(map_location* loc, display* d, interaction_controller::EVENT_TO_SEND event)
+{
+    if(timer_id_ != NULL)
+        stop_timer();
+
+    map_loc_ = loc;
+    disp = d;
+
+    switch (interaction_method_)
+    {
+    case interaction_controller::DWELL:
+        start_timer(event);
+        break;
+    case interaction_controller::BLINK:
+        // Blink
+        break;
+    case interaction_controller::SWITCH:
+        // Switch
+        break;
+    }
+}
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave()
@@ -125,6 +150,7 @@ void interaction_controller::reset()
 {
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
+    map_loc_ = NULL;
 }
 
 Uint32 interaction_controller::callback(Uint32 interval, void* param)
@@ -143,6 +169,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     {
         x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
         y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+    }
+    else if(map_loc_ != NULL){
+        x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
+        y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
     }
     else
     {
@@ -168,7 +198,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 }
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
-    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL))
+    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL))
     {
         timer_id_ = SDL_AddTimer(preferences::gaze_length(), callback, (void*) event);
     }

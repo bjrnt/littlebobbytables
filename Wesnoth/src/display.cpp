@@ -37,6 +37,7 @@
 #include "arrow.hpp"
 #include "tod_manager.hpp"
 #include "resources.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include "SDL_image.h"
 
@@ -1175,8 +1176,26 @@ void display::select_hex(map_location hex)
 void display::highlight_hex(map_location hex)
 {
 	invalidate(mouseoverHex_);
-	mouseoverHex_ = hex;
-	invalidate(mouseoverHex_);
+    if(tile_nearly_on_screen(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
+        || get_location_y(hex) != get_location_y(mouseoverHex_))){
+        //BOBBY COMMENT: The hex highlighting seems to have a bug
+        //so that it highlights the top left hexes randomly, this is a check that will hopefully be removed
+        if(get_location_x(hex) < 100 && get_location_y(hex) < 100){
+            int x;
+            int y;
+            SDL_GetMouseState(&x,&y);
+            if(x > 100 || y > 100){
+                std::cerr << "HEX BUG OCURRED!" << " " << get_location_x(hex) << " " << get_location_y(hex) << "\n";
+                return;
+            }
+        }
+
+        eyetracker::interaction_controller::mouse_leave();
+        eyetracker::interaction_controller::mouse_enter(&hex, this);
+
+        mouseoverHex_ = hex;
+        invalidate(mouseoverHex_);
+    }
 }
 
 void display::set_diagnostic(const std::string& msg)
