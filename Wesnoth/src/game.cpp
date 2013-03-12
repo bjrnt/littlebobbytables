@@ -14,7 +14,7 @@
 */
 
 #include "global.hpp"
-#include "eyetracker/App.h"
+#include "eyetracker/eye_handler.h"
 #include <tobii/sdk/cpp/Library.hpp>
 
 #include "about.hpp"
@@ -357,7 +357,7 @@ static void init_locale() {
  * the titlescreen or game loops.
  */
  //BOBBY | Christoffer | Extended parameter to include app, runner and tracker so that we execute app.run.
-static int do_gameloop(int argc, char** argv, App* app, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker)
+static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker)
 {
 	srand(time(NULL));
 
@@ -641,7 +641,7 @@ int main(int argc, char** argv)
     tetio::Library::init();
     MainLoopRunner runner;
     tetio::EyeTracker::pointer_t tracker;
-    App app = App();
+    eye_handler app = eye_handler();
 
 	try {
 		std::cerr << "Battle for Wesnoth v" << game_config::revision << '\n';
