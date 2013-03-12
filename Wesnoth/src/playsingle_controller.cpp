@@ -141,6 +141,10 @@ void playsingle_controller::end_turn(){
 		browse_ = end_turn_;
 	}
 }
+//BOBBY Veronica
+void playsingle_controller::toggle_selectmode(){
+    gui_->toggle_selectmode();
+}
 
 void playsingle_controller::force_end_turn(){
 	skip_next_turn_ = true;
@@ -1018,7 +1022,11 @@ bool playsingle_controller::can_execute_command(hotkey::HOTKEY_COMMAND command, 
 			return (!browse_ || resources::whiteboard->is_active()) && !linger_ && !events::commands_disabled;
 		case hotkey::HOTKEY_ENDTURN:
 			return (!browse_ || linger_) && !events::commands_disabled;
-
+		//BOBBY Veronica
+		case hotkey::HOTKEY_SELECT_TILE:
+			return (!browse_ || linger_) && !events::commands_disabled;
+        case hotkey::HOTKEY_RIGHT_CLICK:
+			return (!browse_ || linger_) && !events::commands_disabled;
 		case hotkey::HOTKEY_DELAY_SHROUD:
 			return !linger_ && (teams_[gui_->viewing_team()].uses_fog() || teams_[gui_->viewing_team()].uses_shroud())
 			&& !events::commands_disabled;

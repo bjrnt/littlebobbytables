@@ -81,6 +81,11 @@ public:
 	virtual void highlight_hex(map_location hex);
 
 	/**
+	 * Function to toggle between select mode and look around mode
+	 */
+    virtual void toggle_selectmode();
+
+	/**
 	 * Change the unit to be displayed in the sidebar.
 	 *
 	 * This is used when selecting or highlighting is not wanted.
@@ -337,6 +342,9 @@ public:
 	void set_game_mode(const tgame_mode game_mode);
 
 private:
+    //BOBBY veronica
+    bool selectmode_;
+
 	game_display(const game_display&);
 	void operator=(const game_display&);
 
