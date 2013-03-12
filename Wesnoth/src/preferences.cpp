@@ -329,6 +329,31 @@ void save_sound_buffer_size(const size_t size)
 	sound::reset_sound();
 }
 
+//BOBBY | Christoffer | Options to save
+bool interaction_blink(){
+    return get("interaction_blink",false);
+}
+
+void set_interaction_blink(bool val){
+    preferences::set("interaction_blink", val);
+}
+
+bool interaction_dwell(){
+    return get("interaction_dwell",true);
+}
+
+void set_interaction_dwell(bool val){
+    preferences::set("interaction_dwell", val);
+}
+
+bool interaction_switch(){
+    return get("interaction_switch",false);
+}
+
+void set_interaction_switch(bool val){
+    preferences::set("interaction_switch", val);
+}
+
 int gaze_length()
 {
     return prefs["gaze_length"];

@@ -14,7 +14,6 @@ using ::std::endl;
 
 using namespace tetio;
 
-#define BLINK_ID (SDL_USEREVENT+1); //Use the event next after SDL_USEREVENT for Blink
 #define BLINK_BOUNDARY_X 0.2
 #define BLINK_BOUNDARY_Y 0.15
 time_t time_at_blink_;
@@ -83,14 +82,14 @@ void startEyeTrackerLookUp(EyeTrackerBrowser::pointer_t browser, std::string bro
 // Also check if a Blink event occured, if so send out a SDL_UserEvent.
 //
 // Author: Christoffer & Andreas
-// Version: 07-03-2013
+// Version: 12-03-2013
 void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 {
 	//Only accept valid data (see table in SDK manual for more info)
 	if(data->leftValidity<2 && data->rightValidity<2){
 		//Preserve a bit of the old gaze pos (will handle a bit of the noise)
-		if(debug_) cerr << "Res: " << resolution->first << " " << resolution->second << endl;
-		if(debug_) cerr << "Res address: " << resolution << endl;
+		//if(debug_) cerr << "Res: " << resolution->first << " " << resolution->second << endl;
+		//if(debug_) cerr << "Res address: " << resolution << endl;
 		int gazePosX = (int)(0.2*(resolution->first*(data->leftGazePoint2d.x + data->rightGazePoint2d.x)/2));
 		int gazePosY = (int)(0.2*(resolution->second*(data->leftGazePoint2d.y + data->rightGazePoint2d.y)/2));
         gazePosX += (int)(0.8*prevXGazePos_);
@@ -109,12 +108,17 @@ void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
                 //(so that our gaze point does not change too much)
                 if( (abs(prevXGazePos_-gazePosX) < BLINK_BOUNDARY_X*resolution->first) &&
                     (abs(prevYGazePos_-gazePosY) < BLINK_BOUNDARY_Y*resolution->second)){
+
                    SDL_Event blink_event;
-                   blink_event.type = SDL_USEREVENT;
-                   blink_event.user.type = BLINK_ID;
-                   blink_event.user.code = (static_cast<int>(round(difftime(time_after_blink_,time_at_blink_))));
-                   blink_event.user.data1 = 0;
-                   blink_event.user.data2 = 0;
+                   SDL_UserEvent data;
+                   data.type = BLINK_EVENT;
+                   data.code = (static_cast<int>(round(difftime(time_after_blink_,time_at_blink_))));
+                   data.data1 = NULL;
+                   data.data2 = NULL;
+
+                   blink_event.type = BLINK_EVENT;
+                   blink_event.user = data;
+
                    SDL_PushEvent(&blink_event);
                    if(debug_)cerr << "Pushed out Blink event" << endl;
                 }

@@ -17,6 +17,7 @@ display* interaction_controller::disp = NULL;
 
 void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
 {
+    std::cerr << "Entered set interaction method" << std::endl;
     interaction_method_ = interaction_method;
 }
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
@@ -100,6 +101,7 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
         break;
     }
 }
+
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave()
@@ -195,6 +197,37 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 
     mouse_leave();
     return 0;
+}
+// BOBBY TEMP
+void interaction_controller::blink(){
+    if(interaction_method_ == BLINK){
+        int x,y;
+
+        if(selected_widget_g1_ != NULL)
+        {
+            SDL_Rect rect = selected_widget_g1_->location();
+            x = rect.x + rect.w/2;
+            y = rect.y + rect.h/2;
+        }
+        else if(selected_widget_g2_ != NULL)
+        {
+            x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+            y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+        }
+        else if(map_loc_ != NULL){
+            x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
+            y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
+        }
+        else
+        {
+            return;
+        }
+
+        click(x,y);
+
+        mouse_leave();
+    }
+    return;
 }
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
