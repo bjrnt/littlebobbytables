@@ -8,12 +8,24 @@
 
 namespace eyetracker
 {
-interaction_controller::INTERACTION_METHOD interaction_controller::interaction_method_ = DWELL;
+interaction_controller::INTERACTION_METHOD interaction_controller::interaction_method_;
 SDL_TimerID interaction_controller::timer_id_ = NULL;
 gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
 map_location* interaction_controller::map_loc_ = NULL;
 display* interaction_controller::disp = NULL;
+
+void interaction_controller::init(){
+    if(preferences::interaction_blink()){
+        interaction_method_ = BLINK;
+    }
+    else if(preferences::interaction_switch()){
+        interaction_method_ = SWITCH;
+    }
+    else{
+        interaction_method_ = DWELL;
+    }
+}
 
 void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
 {
