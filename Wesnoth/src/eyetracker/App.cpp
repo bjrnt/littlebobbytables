@@ -4,6 +4,9 @@
 #include "SDL.h"
 #include "SDL_thread.h"
 
+#include "time.h"
+#include "math.h"
+
 using ::std::string;
 using ::std::cout;
 using ::std::cerr;
@@ -11,14 +14,22 @@ using ::std::endl;
 
 using namespace tetio;
 
+#define BLINK_ID (SDL_USEREVENT+1); //Use the event next after SDL_USEREVENT for Blink
+#define BLINK_BOUNDARY_X 0.2
+#define BLINK_BOUNDARY_Y 0.15
+time_t time_at_blink_;
+time_t time_after_blink_;
+bool eyesFound_    = false;
+bool blinking_     = false;
+
 std::pair<int,int> * resolution;
-int prevXGazePos = 0;
-int prevYGazePos = 0;
+int prevXGazePos_  = 0;
+int prevYGazePos_  = 0;
 
 App::App() :
 	trackerId_(""),
 	trackerFound_(false),
-	debug_(false)
+	debug_(true)
 {
 }
 
@@ -70,22 +81,44 @@ void startEyeTrackerLookUp(EyeTrackerBrowser::pointer_t browser, std::string bro
 
 // On receive of GazeData, do the following:
 // Check if valid and within bounds.
+// Also check if a Blink event occured, if so send out a SDL_UserEvent.
 //
 // Author: Christoffer & Andreas
-// Version: 18-02-2013
+// Version: 07-03-2013
 void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 {
 	//Only accept valid data (see table in SDK manual for more info)
 	if(data->leftValidity<2 && data->rightValidity<2){
 		//Preserve a bit of the old gaze pos (will handle a bit of the noise)
 		if(debug_) cerr << "Res: " << resolution->first << " " << resolution->second << endl;
+		if(debug_) cerr << "Res address: " << resolution << endl;
 		int gazePosX = (int)(0.2*(resolution->first*(data->leftGazePoint2d.x + data->rightGazePoint2d.x)/2));
 		int gazePosY = (int)(0.2*(resolution->second*(data->leftGazePoint2d.y + data->rightGazePoint2d.y)/2));
-        gazePosX += (int)(0.8*prevXGazePos);
-        gazePosY += (int)(0.8*prevYGazePos);
+        gazePosX += (int)(0.8*prevXGazePos_);
+        gazePosY += (int)(0.8*prevYGazePos_);
+        eyesFound_ = true;
 
         //Check if current gaze is within the boundaries of the screen
         if(!(gazePosX < 0 || gazePosY < 0)){
+
+            //Currently blinking
+            if(blinking_){
+                blinking_ = false;
+                time(&time_after_blink_);
+                //Check that the blink was done inside of the blink boundary
+                //(so that our gaze point does not change too much)
+                if( (abs(prevXGazePos_-gazePosX) < BLINK_BOUNDARY_X*resolution->first) &&
+                    (abs(prevYGazePos_-gazePosY) < BLINK_BOUNDARY_Y*resolution->second)){
+                   SDL_Event blink_event;
+                   blink_event.type = SDL_USEREVENT;
+                   blink_event.user.type = BLINK_ID;
+                   blink_event.user.code = (static_cast<int>(round(difftime(time_after_blink_,time_at_blink_))));
+                   blink_event.user.data1 = 0;
+                   blink_event.user.data2 = 0;
+                   SDL_PushEvent(&blink_event);
+                   if(debug_)cerr << "Pushed out Blink event" << endl;
+                }
+            }
             /*SDL_Event ev;
             ev.type = SDL_MOUSEMOTION; //SDL_MOUSEBUTTONDOWN; //SDL_USEREVENT;
             ev.motion.x = gazePosX;
@@ -106,8 +139,8 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
             {}
             */
             SDL_WarpMouse(gazePosX,gazePosY);
-            prevXGazePos = gazePosX;
-            prevYGazePos = gazePosY;
+            prevXGazePos_ = gazePosX;
+            prevYGazePos_ = gazePosY;
             /*ev.type = SDL_MOUSEBUTTONUP;
             ev.button.type=SDL_MOUSEBUTTONUP;
 
@@ -117,6 +150,13 @@ void App::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
             */
         }
         if(debug_)cout << data->timestamp << "\t" << data->leftGazePoint2d.x << " " << data->leftGazePoint2d.y << "\t" << data->rightGazePoint2d.x << " " << data->rightGazePoint2d.y << "\t" << endl;
+	}
+	//Only detect blinks once the user has been detected
+	else if(eyesFound_ && !blinking_ && data->leftValidity==4 && data->rightValidity==4)
+	{
+	    eyesFound_ = false;   //Check that we have closed our eyes
+	    blinking_  = true;
+	    time(&time_at_blink_);
 	}
 }
 
