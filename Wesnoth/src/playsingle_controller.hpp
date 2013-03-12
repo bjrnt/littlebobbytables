@@ -37,6 +37,7 @@ public:
 	virtual void recall();
 	virtual bool can_execute_command(hotkey::HOTKEY_COMMAND command, int index=-1) const;
 	virtual void toggle_shroud_updates();
+	virtual void toggle_selectmode();
 	virtual void update_shroud_now();
 	virtual void end_turn();
 	virtual void force_end_turn();

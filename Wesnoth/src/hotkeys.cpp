@@ -77,6 +77,8 @@ const struct {
 	{ hotkey::HOTKEY_RECRUIT, "recruit", N_("Recruit"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_REPEAT_RECRUIT, "repeatrecruit", N_("Repeat Recruit"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_RECALL, "recall", N_("Recall"), false, hotkey::SCOPE_GAME },
+	{ hotkey::HOTKEY_SELECT_TILE, "select", N_("Select"), false, hotkey::SCOPE_GAME },
+	{ hotkey::HOTKEY_RIGHT_CLICK, "right", N_("Right Click"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_ENDTURN, "endturn", N_("End Turn"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_TOGGLE_ELLIPSES, "toggleellipses", N_("Toggle Ellipses"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_TOGGLE_GRID, "togglegrid", N_("Toggle Grid"), false, hotkey::SCOPE_GENERAL },
@@ -955,6 +957,12 @@ bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 		case HOTKEY_CYCLE_BACK_UNITS:
 			cycle_back_units();
 			break;
+        case HOTKEY_SELECT_TILE:
+			toggle_selectmode();
+			break;
+        case HOTKEY_RIGHT_CLICK:
+			end_turn();
+			break;
 		case HOTKEY_ENDTURN:
 			end_turn();
 			break;
@@ -1299,6 +1307,18 @@ std::vector<std::string> command_executor::get_menu_images(display &disp, const 
 			std::string desc = hk.get_description();
 			if (hk.get_id() == HOTKEY_ENDTURN) {
 				const theme::menu *b = disp.get_theme().get_menu_item("button-endturn");
+				if(b) {
+					desc = b->title();
+				}
+			}
+			else if (hk.get_id() == HOTKEY_SELECT_TILE) {
+				const theme::menu *b = disp.get_theme().get_menu_item("button-select");
+				if(b) {
+					desc = b->title();
+				}
+			}
+			else if (hk.get_id() == HOTKEY_RIGHT_CLICK) {
+				const theme::menu *b = disp.get_theme().get_menu_item("button-right");
 				if(b) {
 					desc = b->title();
 				}
