@@ -1961,6 +1961,13 @@ void display::draw(bool update,bool force) {
 			draw_invalidated();
 			invalidated_.clear();
 		}
+		// Johan (Bobby) - must add things to drawing buffer before drawing_buffer_commit()
+
+		// Johan (Bobby) - testing to make indicator
+        //surface surf = *(new surface(SDL_CreateRGBSurface(SDL_SWSURFACE,300,300,32,0,0,0,0)));
+        //drawing_buffer_add(LAYER_FOG_SHROUD,*(new map_location(100,100)),0,0,surf);
+
+
 		drawing_buffer_commit();
 		post_commit();
 		draw_sidebar();
@@ -2027,6 +2034,9 @@ void display::draw_hex(const map_location& loc) {
 	const bool on_map = get_map().on_board(loc);
 	const bool off_map_tile = (get_map().get_terrain(loc) == t_translation::OFF_MAP_USER);
 	const time_of_day& tod = get_time_of_day(loc);
+
+
+
 	if(!shrouded(loc)) {
 		// unshrouded terrain (the normal case)
 		drawing_buffer_add(LAYER_TERRAIN_BG, loc, xpos, ypos,
@@ -2059,6 +2069,8 @@ void display::draw_hex(const map_location& loc) {
 
 	// Paint mouseover overlays
 	if(loc == mouseoverHex_ && (on_map || (in_editor() && get_map().on_board_with_border(loc))) && mouseover_hex_overlay_ != NULL) {
+		// Johan (Bobby) Insert indicator here
+
 		drawing_buffer_add(LAYER_MOUSEOVER_OVERLAY, loc, xpos, ypos, mouseover_hex_overlay_);
 	}
 
