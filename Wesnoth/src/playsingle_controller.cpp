@@ -146,6 +146,10 @@ void playsingle_controller::toggle_selectmode(){
     gui_->toggle_selectmode();
 }
 
+void playsingle_controller::toggle_right_click(){
+    gui_->toggle_right_click();
+}
+
 void playsingle_controller::force_end_turn(){
 	skip_next_turn_ = true;
 	end_turn_ = true;

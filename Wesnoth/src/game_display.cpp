@@ -45,6 +45,7 @@ Growl_Delegate growl_obj;
 #include "tod_manager.hpp"
 #include "sound.hpp"
 #include "whiteboard/manager.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -250,6 +251,9 @@ void game_display::toggle_selectmode() {
     }
 }
 
+void game_display::toggle_right_click(){
+    eyetracker::interaction_controller::set_right_click();
+}
 
 void game_display::display_unit_hex(map_location hex)
 {

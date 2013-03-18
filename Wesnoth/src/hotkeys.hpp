@@ -285,6 +285,7 @@ public:
 	virtual void cycle_back_units() {}
 	virtual void end_turn() {}
 	virtual void toggle_selectmode() {}
+	virtual void toggle_right_click() {}
 	virtual void goto_leader() {}
 	virtual void unit_hold_position() {}
 	virtual void end_unit_turn() {}

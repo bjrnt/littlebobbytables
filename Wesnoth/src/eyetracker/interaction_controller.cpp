@@ -14,6 +14,7 @@ gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
 map_location* interaction_controller::map_loc_ = NULL;
 display* interaction_controller::disp = NULL;
+bool right_click_ = false;
 
 void interaction_controller::init(){
     if(preferences::interaction_blink()){
@@ -29,7 +30,6 @@ void interaction_controller::init(){
 
 void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
 {
-    std::cerr << "Entered set interaction method" << std::endl;
     interaction_method_ = interaction_method;
 }
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
@@ -141,6 +141,7 @@ void interaction_controller::mouse_leave()
 }
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
 {
+    std::cerr << "MOUSEBUTTON: " << mousebutton << std::endl;
     SDL_Event fake_event;
     fake_event.type = SDL_MOUSEBUTTONDOWN;
     fake_event.button.button = mousebutton;
@@ -185,8 +186,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
         y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
     }
     else if(map_loc_ != NULL){
-        x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
-        y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
+        SDL_GetMouseState(&x,&y);
     }
     else
     {
@@ -195,7 +195,13 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 
     if(event == CLICK)
     {
-        click(x,y);
+        if(right_click_){
+            click(x,y,SDL_BUTTON_RIGHT);
+            right_click_ = false;
+        }
+        else{
+            click(x,y);
+        }
     }
     else if(event == DOUBLE_CLICK)
     {
@@ -235,12 +241,23 @@ void interaction_controller::blink(){
             return;
         }
 
-        click(x,y);
+        if(right_click_){
+            click(x,y,SDL_BUTTON_RIGHT);
+            right_click_ = false;
+        }
+        else{
+            click(x,y);
+        }
 
         mouse_leave();
     }
     return;
 }
+
+void interaction_controller::set_right_click(){
+    right_click_ = true;
+}
+
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
     if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL))

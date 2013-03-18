@@ -85,6 +85,11 @@ public:
 	 */
     virtual void toggle_selectmode();
 
+    /**
+    *  Function to activate one right click
+    */
+    virtual void toggle_right_click();
+
 	/**
 	 * Change the unit to be displayed in the sidebar.
 	 *

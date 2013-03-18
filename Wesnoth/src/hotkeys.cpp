@@ -961,7 +961,7 @@ bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 			toggle_selectmode();
 			break;
         case HOTKEY_RIGHT_CLICK:
-			end_turn();
+			toggle_right_click();
 			break;
 		case HOTKEY_ENDTURN:
 			end_turn();
