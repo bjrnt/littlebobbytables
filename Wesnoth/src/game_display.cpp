@@ -79,6 +79,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		sidebarScaling_(1.0),
 		first_turn_(true),
 		selectmode_(false),
+		rightclickmode_(false),
 		in_game_(false),
 		observers_(),
 		chat_messages_(),
@@ -253,7 +254,15 @@ void game_display::toggle_selectmode() {
 }
 
 void game_display::toggle_right_click(){
-    eyetracker::interaction_controller::set_right_click();
+    if(rightclickmode_){
+        rightclickmode_ = false;
+        eyetracker::interaction_controller::toggle_right_click(false);
+    }
+    else{
+        selectmode_ = true;
+        rightclickmode_ = true;
+        eyetracker::interaction_controller::toggle_right_click(true);
+    }
 }
 
 void game_display::display_unit_hex(map_location hex)

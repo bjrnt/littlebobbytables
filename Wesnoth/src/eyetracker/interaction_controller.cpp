@@ -141,7 +141,6 @@ void interaction_controller::mouse_leave()
 }
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
 {
-    std::cerr << "MOUSEBUTTON: " << mousebutton << std::endl;
     SDL_Event fake_event;
     fake_event.type = SDL_MOUSEBUTTONDOWN;
     fake_event.button.button = mousebutton;
@@ -254,8 +253,8 @@ void interaction_controller::blink(){
     return;
 }
 
-void interaction_controller::set_right_click(){
-    right_click_ = true;
+void interaction_controller::toggle_right_click(bool value){
+    right_click_ = value;
 }
 
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
