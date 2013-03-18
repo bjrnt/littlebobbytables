@@ -279,6 +279,7 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
     gaze_length_slider_.set_max(2500);
     gaze_length_slider_.set_value(gaze_length());
     gaze_length_slider_.set_help_string(_("Change the length of gaze"));
+    gaze_length_slider_.enable(true);
 
 	// bell volume slider
 	bell_slider_.set_min(0);
@@ -788,46 +789,41 @@ void preferences_dialog::process_event()
 		}
 
         if (interaction_blink_button_.pressed()) {
+            // disabling other methods
             set_interaction_dwell(false);
             interaction_dwell_button_.set_check(false);
             set_interaction_switch(false);
             interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(false);
-
-            if(interaction_dwell() == false && interaction_switch() == false)
-            {
-                set_interaction_blink(true); // Makes sure that at least one button is checked
-                interaction_blink_button_.set_check(true);
-                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::BLINK);
-            }
+            // enabling blink
+            set_interaction_blink(true); // Makes sure that at least one button is checked
+            interaction_blink_button_.set_check(true);
+            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::BLINK);
 
         }
         if (interaction_dwell_button_.pressed()) {
+            // disabling other methods
             set_interaction_blink(false);
             interaction_blink_button_.set_check(false);
             set_interaction_switch(false);
             interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(true);
-
-            if(interaction_blink() == false && interaction_switch() == false)
-            {
-                set_interaction_dwell(true);
-                interaction_dwell_button_.set_check(true);
-                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::DWELL);
-            }
+            // enabling dwell
+            set_interaction_dwell(true);
+            interaction_dwell_button_.set_check(true);
+            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::DWELL);
         }
         if (interaction_switch_button_.pressed()) {
+            // disabling other methods
             set_interaction_blink(false);
             interaction_blink_button_.set_check(false);
             set_interaction_dwell(false);
             interaction_dwell_button_.set_check(false);
             gaze_length_slider_.enable(false);
-            if(interaction_dwell() == false && interaction_blink() == false)
-            {
-                set_interaction_switch(true);
-                interaction_switch_button_.set_check(true);
-                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::SWITCH);
-            }
+            // enabling switch
+            set_interaction_switch(true);
+            interaction_switch_button_.set_check(true);
+            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::SWITCH);
         }
 
         set_gaze_length(gaze_length_slider_.value());
@@ -1355,7 +1351,7 @@ void preferences_dialog::set_selection(int index)
 	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
     bobby_button_.hide(hide_eyetracking);
     gaze_length_slider_.hide(hide_eyetracking);
-    gaze_length_slider_.enable(hide_eyetracking);
+    gaze_length_slider_.enable(!hide_eyetracking);
     gaze_length_label_.hide(hide_eyetracking);
     interaction_blink_button_.hide(hide_eyetracking);
     interaction_dwell_button_.hide(hide_eyetracking);
