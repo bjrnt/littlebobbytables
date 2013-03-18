@@ -1,0 +1,13 @@
+Tobii Gaze SDK
+--------------
+
+The current implementation of the Tobii Gaze SDK is 
+based upon and very similar to the Tobii Analytics SDK, though 
+the Gaze SDK is only intended to be used for gaze interaction.
+
+There is no developer's guide for the Tobii Gaze SDK. 
+Instead we refer to the Tobii Analytics SDK Developer's Guide
+which is adequate also for the Tobii Gaze SDK.
+
+Be advised that the APIs provided by the Gaze SDK are 
+expected to change in the future.
