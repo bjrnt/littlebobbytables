@@ -245,6 +245,7 @@ void game_display::highlight_hex(map_location hex)
 void game_display::toggle_selectmode() {
     if(selectmode_ == true) {
         selectmode_ = false;
+        display::clear_invalidated_hex();
     }
     else {
         selectmode_ = true;

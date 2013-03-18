@@ -68,6 +68,8 @@ public:
 	 */
 	void reload_map();
 
+	void clear_invalidated_hex();
+
 	void change_map(const gamemap* m);
 
 	static Uint32 rgb(Uint8 red, Uint8 green, Uint8 blue)

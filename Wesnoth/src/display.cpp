@@ -1185,6 +1185,13 @@ void display::highlight_hex(map_location hex)
     }
 }
 
+void display::clear_invalidated_hex(){
+    invalidate(mouseoverHex_);
+	map_location loc = pixel_position_to_hex(-500,-500);
+	mouseoverHex_ = loc;
+	invalidate(mouseoverHex_);
+}
+
 void display::set_diagnostic(const std::string& msg)
 {
 	if(diagnostic_label_ != 0) {
