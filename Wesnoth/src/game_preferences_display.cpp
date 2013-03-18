@@ -29,6 +29,8 @@
 #include "widgets/slider.hpp"
 #include "formula_string_utils.hpp"
 
+#include "eyetracker/interaction_controller.hpp"
+
 #include <boost/foreach.hpp>
 
 namespace preferences {
@@ -390,9 +392,9 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	show_grid_button_.set_check(grid());
 	show_grid_button_.set_help_string(_("Overlay a grid onto the map"));
 
-    interaction_dwell_button_.set_check(1);
-    interaction_blink_button_.set_check(0);
-    interaction_switch_button_.set_check(0);
+    interaction_dwell_button_.set_check(interaction_dwell());
+    interaction_blink_button_.set_check(interaction_blink());
+    interaction_switch_button_.set_check(interaction_switch());
 
 	sort_list_by_group_button_.set_check(sort_list());
 	sort_list_by_group_button_.set_help_string(_("Sort the player list in the lobby by player groups"));
@@ -786,30 +788,49 @@ void preferences_dialog::process_event()
 		}
 
         if (interaction_blink_button_.pressed()) {
-            if(interaction_dwell_button_.checked() == 0 && interaction_switch_button_.checked() == 0)
-                interaction_blink_button_.set_check(1); // Makes sure that at least one button is checked
-            interaction_dwell_button_.set_check(0);
-            interaction_switch_button_.set_check(0);
+            set_interaction_dwell(false);
+            interaction_dwell_button_.set_check(false);
+            set_interaction_switch(false);
+            interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(false);
+
+            if(interaction_dwell() == false && interaction_switch() == false)
+            {
+                set_interaction_blink(true); // Makes sure that at least one button is checked
+                interaction_blink_button_.set_check(true);
+                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::BLINK);
+            }
+
         }
         if (interaction_dwell_button_.pressed()) {
-            if(interaction_blink_button_.checked() == 0 && interaction_switch_button_.checked() == 0)
-                interaction_dwell_button_.set_check(1);
-            interaction_blink_button_.set_check(0);
-            interaction_switch_button_.set_check(0);
+            set_interaction_blink(false);
+            interaction_blink_button_.set_check(false);
+            set_interaction_switch(false);
+            interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(true);
+
+            if(interaction_blink() == false && interaction_switch() == false)
+            {
+                set_interaction_dwell(true);
+                interaction_dwell_button_.set_check(true);
+                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::DWELL);
+            }
         }
         if (interaction_switch_button_.pressed()) {
-            if(interaction_dwell_button_.checked() == 0 && interaction_blink_button_.checked() == 0)
-                interaction_switch_button_.set_check(1);
-            interaction_blink_button_.set_check(0);
-            interaction_dwell_button_.set_check(0);
+            set_interaction_blink(false);
+            interaction_blink_button_.set_check(false);
+            set_interaction_dwell(false);
+            interaction_dwell_button_.set_check(false);
             gaze_length_slider_.enable(false);
+            if(interaction_dwell() == false && interaction_blink() == false)
+            {
+                set_interaction_switch(true);
+                interaction_switch_button_.set_check(true);
+                eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::SWITCH);
+            }
         }
 
-
         set_gaze_length(gaze_length_slider_.value());
-
 
 		std::stringstream buffer_els;
 		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
@@ -1334,7 +1355,7 @@ void preferences_dialog::set_selection(int index)
 	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
     bobby_button_.hide(hide_eyetracking);
     gaze_length_slider_.hide(hide_eyetracking);
-    gaze_length_slider_.enable(music_on());
+    gaze_length_slider_.enable(hide_eyetracking);
     gaze_length_label_.hide(hide_eyetracking);
     interaction_blink_button_.hide(hide_eyetracking);
     interaction_dwell_button_.hide(hide_eyetracking);

@@ -154,10 +154,10 @@ void set_resolution(const std::pair<int,int>& resolution)
 		preferences::set(
 				'y' + postfix, lexical_cast<std::string>(resolution.second));
 	}
+	preferences::resolution(); // BOBBY | Andreas | Update the resolution.
 }
 
-bool set_resolution(CVideo& video
-		, const unsigned width, const unsigned height)
+bool set_resolution(CVideo& video, const unsigned width, const unsigned height)
 {
 	SDL_Rect rect;
 	SDL_GetClipRect(video.getSurface(), &rect);
@@ -184,7 +184,7 @@ bool set_resolution(CVideo& video
 	const std::string postfix = fullscreen() ? "resolution" : "windowsize";
 	preferences::set('x' + postfix, lexical_cast<std::string>(width));
 	preferences::set('y' + postfix, lexical_cast<std::string>(height));
-
+    preferences::resolution(); // BOBBY | Andreas | Update the resolution.
 	return true;
 }
 

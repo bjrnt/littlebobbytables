@@ -3,26 +3,44 @@
 */
 #include "interaction_controller.hpp"
 #include "../game_preferences.hpp"
+#include "map_location.hpp"
+#include "display.hpp"
 
 namespace eyetracker
 {
-interaction_controller::INTERACTION_METHOD interaction_controller::interaction_method_ = DWELL;
+interaction_controller::INTERACTION_METHOD interaction_controller::interaction_method_;
 SDL_TimerID interaction_controller::timer_id_ = NULL;
 gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
+map_location* interaction_controller::map_loc_ = NULL;
+display* interaction_controller::disp = NULL;
+
+void interaction_controller::init(){
+    if(preferences::interaction_blink()){
+        interaction_method_ = BLINK;
+    }
+    else if(preferences::interaction_switch()){
+        interaction_method_ = SWITCH;
+    }
+    else{
+        interaction_method_ = DWELL;
+    }
+}
 
 void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
 {
+    std::cerr << "Entered set interaction method" << std::endl;
     interaction_method_ = interaction_method;
 }
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event)
 {
-    std::cerr << "entered\n";
+//    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL){
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
+    {
         reset();
     }
     /*
@@ -51,10 +69,11 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_controller::EVENT_TO_SEND event)
 {
-    std::cerr << "entered\n";
+//    std::cerr << "Entered GUI2\n";
     if(timer_id_ != NULL)
         stop_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL){
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
+    {
         reset();
     }
 
@@ -73,19 +92,45 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
         break;
     }
 }
+void interaction_controller::mouse_enter(map_location* loc, display* d, interaction_controller::EVENT_TO_SEND event)
+{
+    if(timer_id_ != NULL)
+        stop_timer();
+
+    map_loc_ = loc;
+    disp = d;
+
+    switch (interaction_method_)
+    {
+    case interaction_controller::DWELL:
+        start_timer(event);
+        break;
+    case interaction_controller::BLINK:
+        // Blink
+        break;
+    case interaction_controller::SWITCH:
+        // Switch
+        break;
+    }
+}
+
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave()
 {
-    std::cerr << "left\n";
+/*    if(selected_widget_g1_ != NULL)
+        std::cerr << "Left GUI1\n";
+    else if(selected_widget_g2_ != NULL)
+        std::cerr << "Left GUI2\n";
+*/
     switch (interaction_method_)
     {
-    case interaction_controller::BLINK:
-        // Blink is selected
-        break;
     case interaction_controller::DWELL:
         if(timer_id_ != NULL)
             stop_timer();
+        break;
+    case interaction_controller::BLINK:
+        // Blink is selected
         break;
     case interaction_controller::SWITCH:
         // Switch
@@ -115,9 +160,11 @@ void interaction_controller::double_click(int mousex, int mousey)
     click(mousex, mousey);
 }
 
-void interaction_controller::reset() {
+void interaction_controller::reset()
+{
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
+    map_loc_ = NULL;
 }
 
 Uint32 interaction_controller::callback(Uint32 interval, void* param)
@@ -136,6 +183,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     {
         x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
         y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+    }
+    else if(map_loc_ != NULL){
+        x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
+        y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
     }
     else
     {
@@ -159,16 +210,48 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     mouse_leave();
     return 0;
 }
+// BOBBY TEMP
+void interaction_controller::blink(){
+    if(interaction_method_ == BLINK){
+        int x,y;
+
+        if(selected_widget_g1_ != NULL)
+        {
+            SDL_Rect rect = selected_widget_g1_->location();
+            x = rect.x + rect.w/2;
+            y = rect.y + rect.h/2;
+        }
+        else if(selected_widget_g2_ != NULL)
+        {
+            x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+            y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+        }
+        else if(map_loc_ != NULL){
+            x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
+            y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
+        }
+        else
+        {
+            return;
+        }
+
+        click(x,y);
+
+        mouse_leave();
+    }
+    return;
+}
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
-    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL))
+    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL))
     {
         timer_id_ = SDL_AddTimer(preferences::gaze_length(), callback, (void*) event);
-    } else {
+    }
+    else
+    {
         throw "Trying to start timer without stopping last timer or without selected widget";
     }
 }
-
 void interaction_controller::stop_timer()
 {
     SDL_RemoveTimer(timer_id_);

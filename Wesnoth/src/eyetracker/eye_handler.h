@@ -1,5 +1,5 @@
-#ifndef __APP_H__
-#define __APP_H__
+#ifndef __EYEHANDLER_H_
+#define __EYEHANDLER_H_
 
 #include <string>
 #include <tobii/sdk/cpp/EyeTracker.hpp>
@@ -8,16 +8,16 @@
 #include <tobii/sdk/cpp/EyeTrackerInfo.hpp>
 #include "MainLoopRunner.h"
 
+#define BLINK_EVENT (SDL_USEREVENT+6) //Use the event next after the last defined USER_EVENT
+
 namespace tetio = tobii::sdk::cpp;
 
-// Main class for this sample application.
-class App
+class eye_handler
 {
 public:
-	App();
-	int run(std::pair<int,int> * res, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker);//(int argc, char *argv[]);
+	eye_handler();
+	int run(std::pair<int,int> * res, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker);
     void exitEyeTracker(tetio::EyeTracker::pointer_t* tracker, MainLoopRunner* runner);
-
 private:
 	void startEyeTracker(tetio::EyeTracker::pointer_t* tracker, MainLoopRunner* runner);
 
@@ -30,4 +30,4 @@ private:
 	bool debug_;
 };
 
-#endif // __APP_H__
+#endif // __EYEHANDLER_H_

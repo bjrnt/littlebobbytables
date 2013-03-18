@@ -62,6 +62,7 @@ namespace preferences {
 	int min_allowed_height();
 
 	std::pair<int,int> resolution();
+	std::pair<int,int>* getResolutionPointer(); //BOBBY | Christoffer | Prototype to new function
 	void _set_resolution(const std::pair<int,int>& res);
 
 	bool turbo();
@@ -101,6 +102,15 @@ namespace preferences {
 
 	bool music_on();
 	bool set_music(bool ison);
+
+    bool interaction_blink();
+    void set_interaction_blink(bool val);
+
+    bool interaction_dwell();
+    void set_interaction_dwell(bool val);
+
+    bool interaction_switch();
+    void set_interaction_switch(bool val);
 
     int gaze_length(); // Björn all up in here
     void set_gaze_length(int length);

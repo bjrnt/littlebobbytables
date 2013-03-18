@@ -27,6 +27,9 @@
 #include "hotkeys.hpp"
 #include "video.hpp"
 
+#include "eyetracker/eye_handler.h"
+#include "eyetracker/interaction_controller.hpp"
+
 #include <boost/foreach.hpp>
 
 #include <cassert>
@@ -327,6 +330,12 @@ void thandler::handle_event(const SDL_Event& event)
 		case HOVER_REMOVE_POPUP_EVENT:
 //			remove_popup();
 			break;
+
+        //BOBBY | Robert | Added case for BLINK_EVENT
+        case BLINK_EVENT:
+            std::cerr<<"Catched blink event" << std::endl;
+            eyetracker::interaction_controller::blink();
+            break;
 
 		case DRAW_EVENT:
 			draw(false);

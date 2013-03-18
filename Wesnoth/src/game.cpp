@@ -14,7 +14,8 @@
 */
 
 #include "global.hpp"
-#include "eyetracker/App.h"
+#include "eyetracker/interaction_controller.hpp"
+#include "eyetracker/eye_handler.h"
 #include <tobii/sdk/cpp/Library.hpp>
 
 #include "about.hpp"
@@ -356,7 +357,8 @@ static void init_locale() {
  * Setups the game environment and enters
  * the titlescreen or game loops.
  */
-static int do_gameloop(int argc, char** argv)
+ //BOBBY | Christoffer | Extended parameter to include app, runner and tracker so that we execute app.run.
+static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* runner, tetio::EyeTracker::pointer_t* tracker)
 {
 	srand(time(NULL));
 
@@ -446,13 +448,8 @@ static int do_gameloop(int argc, char** argv)
 	LOG_CONFIG << "time elapsed: "<<  (SDL_GetTicks() - start_ticks) << " ms\n";
 
     // Björn: starta eyetracker här
-
-	tetio::Library::init();
-	MainLoopRunner runner;
-    tetio::EyeTracker::pointer_t tracker;
-    App app = App();
-	app.run(&preferences::resolution(),&runner,&tracker);
-
+	app->run(preferences::getResolutionPointer(),runner,tracker);
+    eyetracker::interaction_controller::init();
 	for (;;)
 	{
 		// reset the TC, since a game can modify it, and it may be used
@@ -530,7 +527,7 @@ static int do_gameloop(int argc, char** argv)
 		game_controller_abstract::RELOAD_GAME_DATA should_reload = game_controller_abstract::RELOAD_DATA;
 
 		if(res == gui2::ttitle_screen::QUIT_GAME) {
-            app.exitEyeTracker(&tracker,&runner);
+            //app.exitEyeTracker(&tracker,&runner);
 			LOG_GENERAL << "quitting game...\n";
 			return 0;
 		} else if(res == gui2::ttitle_screen::LOAD_GAME) {
@@ -641,9 +638,16 @@ int main(int argc, char** argv)
 		return(1);
 	}
 
+    //BOBBY | CHRISTOFFER | Initialize tetio library
+    tetio::Library::init();
+    MainLoopRunner runner;
+    tetio::EyeTracker::pointer_t tracker;
+    eye_handler app = eye_handler();
+
 	try {
 		std::cerr << "Battle for Wesnoth v" << game_config::revision << '\n';
 		const time_t t = time(NULL);
+
 		std::cerr << "Started on " << ctime(&t) << "\n";
 
 		const std::string exe_dir = get_exe_dir();
@@ -653,7 +657,8 @@ int main(int argc, char** argv)
 			game_config::path = exe_dir;
 		}
 
-		const int res = do_gameloop(argc,argv);
+		const int res = do_gameloop(argc,argv,&app,&runner,&tracker);
+		app.exitEyeTracker(&tracker,&runner); //BOBBY | Christoffer | Exit the EyeTracker & thread correctly
 		safe_exit(res);
 	} catch(boost::program_options::error& e) {
 		std::cerr << "Error in command line: " << e.what() << '\n';

@@ -77,6 +77,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		activeTeam_(0),
 		sidebarScaling_(1.0),
 		first_turn_(true),
+		selectmode_(false),
 		in_game_(false),
 		observers_(),
 		chat_messages_(),
@@ -216,25 +217,37 @@ void game_display::select_hex(map_location hex)
 
 void game_display::highlight_hex(map_location hex)
 {
-	wb::future_map future; //< Lasts for whole method.
+    if(selectmode_ == true) {
+        wb::future_map future; //< Lasts for whole method.
 
-	const unit *u = get_visible_unit(hex, teams_[viewing_team()], !viewpoint_);
-	if (u) {
-		displayedUnitHex_ = hex;
-		invalidate_unit();
-	} else {
-		u = get_visible_unit(mouseoverHex_, teams_[viewing_team()], !viewpoint_);
-		if (u) {
-			// mouse moved from unit hex to non-unit hex
-			if (units_.count(selectedHex_)) {
-				displayedUnitHex_ = selectedHex_;
-				invalidate_unit();
-			}
-		}
-	}
+        const unit *u = get_visible_unit(hex, teams_[viewing_team()], !viewpoint_);
+        if (u) {
+            displayedUnitHex_ = hex;
+            invalidate_unit();
+        } else {
+            u = get_visible_unit(mouseoverHex_, teams_[viewing_team()], !viewpoint_);
+        if (u) {
+        // mouse moved from unit hex to non-unit hex
+                if (units_.count(selectedHex_)) {
+                    displayedUnitHex_ = selectedHex_;
+                    invalidate_unit();
+                }
+            }
+        }
 
-	display::highlight_hex(hex);
-	invalidate_game_status();
+        display::highlight_hex(hex);
+        invalidate_game_status();
+    }
+}
+
+// BOBBY veronica
+void game_display::toggle_selectmode() {
+    if(selectmode_ == true) {
+        selectmode_ = false;
+    }
+    else {
+        selectmode_ = true;
+    }
 }
 
 
@@ -332,7 +345,7 @@ void game_display::draw_hex(const map_location& loc)
 	image::TYPE image_type = get_image_type(loc);
 
 	display::draw_hex(loc);
-	
+
 	if(on_map && loc == mouseoverHex_) {
 		tdrawing_layer hex_top_layer = LAYER_MOUSEOVER_BOTTOM;
 		if( get_visible_unit(loc, teams_[viewing_team()] ) != NULL ) {
