@@ -3,6 +3,7 @@
 #include <boost/thread.hpp>
 #include "SDL.h"
 #include "SDL_thread.h"
+#include "preferences.hpp"
 
 #include "time.h"
 #include "math.h"
@@ -16,8 +17,7 @@ using namespace tetio;
 
 #define BLINK_BOUNDARY_X 0.2
 #define BLINK_BOUNDARY_Y 0.15
-time_t time_at_blink_;
-time_t time_after_blink_;
+clock_t time_at_blink_;
 bool eyesFound_    = false;
 bool blinking_     = false;
 
@@ -82,7 +82,7 @@ void startEyeTrackerLookUp(EyeTrackerBrowser::pointer_t browser, std::string bro
 // Also check if a Blink event occured, if so send out a SDL_UserEvent.
 //
 // Author: Christoffer & Andreas
-// Version: 12-03-2013
+// Version: 18-03-2013
 void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 {
 	//Only accept valid data (see table in SDK manual for more info)
@@ -102,20 +102,24 @@ void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
             //Currently blinking
             if(blinking_){
                 blinking_ = false;
-                time(&time_after_blink_); //Set time when the blink ended
+                int current_blink_length = round(1000*((float)(clock() - time_at_blink_))/(CLOCKS_PER_SEC)); //Calculate nr of ms that blink lasted
+                int blink_length_original = preferences::blink_length();
+
+                if(debug_)cerr << "Diff-time: " << current_blink_length  << endl;
+                if(debug_)cerr << "Blink-length: " << blink_length_original << endl;
 
                 //Check that the blink was done inside of the blink boundary
-                //(so that our gaze point does not change too much)
-                if( (abs(prevXGazePos_-gazePosX) < BLINK_BOUNDARY_X*resolution->first) &&
-                    (abs(prevYGazePos_-gazePosY) < BLINK_BOUNDARY_Y*resolution->second)){
+                //(so that our gaze point does not change too much) and that it was long enough
+                if((abs(prevXGazePos_-gazePosX) < BLINK_BOUNDARY_X*resolution->first)  &&
+                    (abs(prevYGazePos_-gazePosY) < BLINK_BOUNDARY_Y*resolution->second) &&
+                     current_blink_length >= blink_length_original){
 
                    SDL_Event blink_event;
                    SDL_UserEvent data;
                    data.type = BLINK_EVENT;
-                   data.code = (static_cast<int>(round(difftime(time_after_blink_,time_at_blink_))));
+                   data.code = 0;
                    data.data1 = NULL;
                    data.data2 = NULL;
-
                    blink_event.type = BLINK_EVENT;
                    blink_event.user = data;
 
@@ -131,13 +135,13 @@ void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
         }
         if(debug_)cout << data->timestamp << "\t" << data->leftGazePoint2d.x << " " << data->leftGazePoint2d.y << "\t" << data->rightGazePoint2d.x << " " << data->rightGazePoint2d.y << "\t" << endl;
 	}
-	//Only detect blinking once the user has been detected
+	//Only detect blinking if blinking mode is enabled and once the user has been detected
 	//(Validity = 4 == No eye present i.e. a potential blink)
-	else if(eyesFound_ && !blinking_ && data->leftValidity==4 && data->rightValidity==4)
+	else if(preferences::interaction_blink() && eyesFound_ && !blinking_ && data->leftValidity==4 && data->rightValidity==4)
 	{
 	    eyesFound_ = false;    //Set that we have closed our eyes
 	    blinking_  = true;
-	    time(&time_at_blink_); //Save the time when we started blinking
+	    time_at_blink_ = clock(); //Save the time when we started blinking
 	}
 }
 

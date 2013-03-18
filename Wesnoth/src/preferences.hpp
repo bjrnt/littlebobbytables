@@ -106,6 +106,9 @@ namespace preferences {
     bool interaction_blink();
     void set_interaction_blink(bool val);
 
+    int blink_length();
+    void set_blink_length(int val);
+
     bool interaction_dwell();
     void set_interaction_dwell(bool val);
 

@@ -338,6 +338,14 @@ void set_interaction_blink(bool val){
     preferences::set("interaction_blink", val);
 }
 
+int blink_length(){
+    return prefs["blink_length"].to_int(1000);
+}
+
+void set_blink_length(int val){
+    prefs["blink_length"] = val;
+}
+
 bool interaction_dwell(){
     return get("interaction_dwell",true);
 }

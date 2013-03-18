@@ -1,16 +1,18 @@
-UI_sound=""
+UI_sound=no
 UI_volume=""
+allow_observers=no
 ally_sighted_interrupts=""
 animate_map=""
 ask_delete=""
 auto_save_max=10
 bell_volume=""
+blink_length=1000
 campaign_server=""
 chat_lines=6
 chat_message_aging=""
 chat_timestamp=""
 client_type=""
-color_cursors=yes
+color_cursors=no
 completed_campaigns=""
 compress_saves=""
 confirm_end_turn=""
@@ -25,18 +27,21 @@ editor_draw_terrain_codes=""
 editor_g=""
 editor_r=""
 enable_planning_mode_on_start=no
-encountered_terrain_list="Ce, Ch, Cv, Ds, Ft, Gd^Fds, Gd^Fms, Gd^Fp, Gd, Gg^Efm, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg, Gll^Fds, Gll^Fp, Gll^Vh, Gs^Fds, Gs^Fms, Gs^Fp, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Kv, Rb^Fds, Rb^Vh, Re^Fds, Re^Gvs, Re, Rr, Vi, Wo, Ww^Bw/, Ww^Bw|, Ww, Wwf"
-encountered_units="Bandit_Peasant,Elder Mage,Elvish Archer,Elvish Champion,Elvish Fighter,Elvish Ranger,Elvish Scout,Elvish Shaman,Elvish Shyde,Fighter,Footpad_Peasant,Goblin Knight,Goblin Pillager,Orcish Assassin,Orcish Crossbowman,Orcish Slayer,Orcish Warlord,Orcish Warrior,Poacher_Peasant,Thug_Peasant,Troll,Troll Warrior,Wolf Rider"
+encountered_terrain_list="Ce, Ch, Cud, Cv, Ds, Ft, Gd^Fds, Gd^Fms, Gd^Fp, Gd, Gg^Efm, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg, Gll^Fds, Gll^Fp, Gll^Vh, Gs^Fds, Gs^Fms, Gs^Fp, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Kud, Kv, Mm, Ql, Qt, Rb^Fds, Rb^Vh, Rd^Fp, Rd^Uf, Rd, Re^Fds, Re^Gvs, Re, Rp, Rr^Uf, Rr, Ss^Vhs, Ss, Uh^Emf, Uh, Ur^Emf, Ur^Fp, Ur, Uu^Uf, Uu^Vu, Uu, Vi, Wo, Ww^Bw/, Ww^Bw|, Ww, Wwf, Xt, Xu, ^Uf"
+encountered_units="Bandit_Peasant,Bowman,Cavalryman,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Thunderer,Dwarvish Ulfserker,Elder Mage,Elvish Archer,Elvish Champion,Elvish Fighter,Elvish Ranger,Elvish Scout,Elvish Shaman,Elvish Shyde,Fencer,Fighter,Footpad,Footpad_Peasant,Goblin Knight,Goblin Pillager,Gryphon Rider,Heavy Infantryman,Horseman,Mage,Merman Fighter,Orcish Assassin,Orcish Crossbowman,Orcish Slayer,Orcish Warlord,Orcish Warrior,Poacher,Poacher_Peasant,Spearman,Thief,Thug_Peasant,Trapper,Troll,Troll Warrior,White Mage,Wolf Rider"
 flip_time=""
-floating_labels=""
+floating_labels=yes
 friends=""
 fullscreen=yes
-gaze_length=2500
+gaze_length=914
 grid=no
 hide_whiteboard=no
 iconize_list=""
 idle_anim=""
 idle_anim_rate=0
+interaction_blink=yes
+interaction_dwell=no
+interaction_switch=no
 joystick_cursor_deadzone=""
 joystick_cursor_threshold=""
 joystick_cursor_xaxis_num=""
@@ -51,9 +56,20 @@ lobby_sounds=""
 lobby_whisper_friends_only=""
 local_tod_lighting=""
 locale=""
-login=""
+login="@player@"
+login_is_wrapped=yes
 middle_click_scrolls=""
 mouse_scrolling=""
+mp_countdown=no
+mp_era=0
+mp_fog=""
+mp_map=6
+mp_random_start_time=""
+mp_shroud=""
+mp_turns=""
+mp_use_map_settings=yes
+mp_village_gold=""
+mp_xp_modifier=""
 music=""
 music_volume=""
 new_lobby=""
@@ -71,6 +87,7 @@ show_all_units_in_help=""
 show_combat=""
 show_haloes=yes
 show_side_colors=""
+shuffle_sides=no
 sort_list=""
 sound=""
 sound_buffer_size=""
@@ -500,4 +517,9 @@ ywindowsize=738
 	shift=no
 [/hotkey]
 [history]
+	[mp_user_name_history]
+		[line]
+			message="player"
+		[/line]
+	[/mp_user_name_history]
 [/history]
