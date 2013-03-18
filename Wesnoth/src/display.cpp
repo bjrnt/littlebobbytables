@@ -1973,8 +1973,8 @@ void display::draw(bool update,bool force) {
 		// Johan (Bobby) - must add things to drawing buffer before drawing_buffer_commit()
 
 		// Johan (Bobby) - testing to make indicator
-        surface surf = *(new surface(SDL_CreateRGBSurface(SDL_SWSURFACE,300,300,32,0,0,0,0)));
-        drawing_buffer_add(LAYER_FOG_SHROUD,*(new map_location(100,100)),0,0,surf);
+        //surface surf = *(new surface(SDL_CreateRGBSurface(SDL_SWSURFACE,300,300,32,0,0,0,0)));
+        //drawing_buffer_add(LAYER_FOG_SHROUD,*(new map_location(100,100)),0,0,surf);
 
 
 		drawing_buffer_commit();
