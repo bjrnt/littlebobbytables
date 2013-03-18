@@ -557,7 +557,7 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	// please also check 800x600 resolution if you change these spacings
 	const int top_border = disp_.video().gety() < 600 ? 10 : 28;
 	const int bottom_border = 10;
-	const int short_interline = 21; // Pixlar mellan varje slider/item
+	const int short_interline = 42; // Pixlar mellan varje slider/item (bobby)
 	const int item_interline = 40;
 	const int bottom_row_y = rect.y + rect.h - bottom_border;
 
@@ -1377,7 +1377,7 @@ void show_preferences_dialog(display& disp, const config& game_cfg)
 	for(;;) {
 		try {
 			preferences_dialog dialog(disp,game_cfg);
-            dialog.set_width(800); // Björn: Ändra så att man hämtar skärmstorleken istället av att sätta med magic number
+            dialog.set_width(800); // bobby - Björn: Ändra så att man hämtar skärmstorleken istället av att sätta med magic number
             dialog.set_height(600);
 
 			dialog.parent.assign(new preferences_parent_dialog(disp));
@@ -1398,8 +1398,8 @@ void show_preferences_dialog(display& disp, const config& game_cfg)
 				break;
 			}
 
-			if(items[1].empty() || items[1][0] != '*') {
-				items[1] = "*" + items[1];
+			if(items[2].empty() || items[2][0] != '*') {
+				items[2] = "*" + items[2];
 			}
 		}
 	}
