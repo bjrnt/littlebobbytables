@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "SDL_thread.h"
 #include "preferences.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include "time.h"
 #include "math.h"
@@ -82,7 +83,7 @@ void startEyeTrackerLookUp(EyeTrackerBrowser::pointer_t browser, std::string bro
 // Also check if a Blink event occured, if so send out a SDL_UserEvent.
 //
 // Author: Christoffer & Andreas
-// Version: 18-03-2013
+// Version: 22-03-2013
 void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 {
 	//Only accept valid data (see table in SDK manual for more info)
@@ -113,17 +114,7 @@ void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
                 if((abs(prevXGazePos_-gazePosX) < BLINK_BOUNDARY_X*resolution->first)  &&
                     (abs(prevYGazePos_-gazePosY) < BLINK_BOUNDARY_Y*resolution->second) &&
                      current_blink_length >= blink_length_original){
-
-                   SDL_Event blink_event;
-                   SDL_UserEvent data;
-                   data.type = BLINK_EVENT;
-                   data.code = 0;
-                   data.data1 = NULL;
-                   data.data2 = NULL;
-                   blink_event.type = BLINK_EVENT;
-                   blink_event.user = data;
-
-                   SDL_PushEvent(&blink_event);
+                   eyetracker::interaction_controller::blink();
                    if(debug_)cerr << "Pushed out Blink event" << endl;
                 }
             }

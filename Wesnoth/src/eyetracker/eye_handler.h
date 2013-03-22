@@ -8,8 +8,6 @@
 #include <tobii/sdk/cpp/EyeTrackerInfo.hpp>
 #include "MainLoopRunner.h"
 
-#define BLINK_EVENT (SDL_USEREVENT+6) //Use the event next after the last defined USER_EVENT
-
 namespace tetio = tobii::sdk::cpp;
 
 class eye_handler
