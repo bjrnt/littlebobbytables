@@ -219,7 +219,7 @@ void interaction_controller::blink(){
         }
         else
         {
-            SDL_GetMouseState(&x,&y);
+            return;
         }
 
         if(right_click_){
@@ -237,6 +237,10 @@ void interaction_controller::blink(){
 
 void interaction_controller::toggle_right_click(bool value){
     right_click_ = value;
+}
+
+bool interaction_controller::get_right_click(){
+    return right_click_;
 }
 
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)

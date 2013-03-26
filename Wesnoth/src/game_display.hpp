@@ -349,7 +349,6 @@ public:
 private:
     //BOBBY veronica
     bool selectmode_;
-    bool rightclickmode_;
 
 	game_display(const game_display&);
 	void operator=(const game_display&);

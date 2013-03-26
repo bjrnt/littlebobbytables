@@ -792,7 +792,6 @@ void preferences_dialog::process_event()
             // disabling other methods
             interaction_dwell_button_.set_check(false);
             interaction_switch_button_.set_check(false);
-            gaze_length_slider_.enable(false);
             // enabling blink
             set_interaction_method(BLINK); // Makes sure that at least one button is checked
             interaction_blink_button_.set_check(true);
@@ -801,7 +800,6 @@ void preferences_dialog::process_event()
             // disabling other methods
             interaction_blink_button_.set_check(false);
             interaction_switch_button_.set_check(false);
-            gaze_length_slider_.enable(true);
             // enabling dwell
             set_interaction_method(DWELL);
             interaction_dwell_button_.set_check(true);}
@@ -809,7 +807,6 @@ void preferences_dialog::process_event()
             // disabling other methods
             interaction_blink_button_.set_check(false);
             interaction_dwell_button_.set_check(false);
-            gaze_length_slider_.enable(false);
             // enabling switch
             set_interaction_method(SWITCH);
             interaction_switch_button_.set_check(true);
