@@ -28,6 +28,7 @@
 #include "video.hpp"
 #include "wml_separators.hpp"
 #include "game_preferences.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <numeric>
 
@@ -668,14 +669,15 @@ void menu::handle_event(const SDL_Event& event)
 			y = reinterpret_cast<long>(event.user.data2);
 		}
 
-		const int item = hit(x,y);
+		/*const int item = hit(x,y);
 		if(item != -1) {
 			set_focus(true);
 			move_selection_to(item);
 
 			if(click_selects_) {
 				show_result_ = true;
-			}
+			}*/
+        click_last_item(); // Bobby bobby bobby
 
 			if(event.type == DOUBLE_CLICK_EVENT) {
 				if (ignore_next_doubleclick_) {
@@ -699,7 +701,7 @@ void menu::handle_event(const SDL_Event& event)
 				}
 				last_was_doubleclick_ = false;
 			}
-		}
+
 
 
 		if(sorter_ != NULL) {
@@ -709,18 +711,15 @@ void menu::handle_event(const SDL_Event& event)
 			}
 		}
 	} else if(!mouse_locked() && event.type == SDL_MOUSEMOTION) {
-	    const int item = hit(event.motion.x,event.motion.y);
-	    const bool out = (item == -1);
+	    const int item = hit(event.motion.x,event.motion.y); // BOBBY: item we're looking at, -1 if none
+	    const bool out = (item == -1); // true if we're not looking at an item
 
-	    if(item == last_item_ && !out){
-            menu::start_timer();
+        if(last_item_ != -1 && out) {
+            eyetracker::interaction_controller::mouse_leave();
         }
-        else if (!out) {
-            menu::stop_timer();
-            menu::start_timer();
-        }
-        else {
-            menu::stop_timer();
+	    else if(item != last_item_){
+            eyetracker::interaction_controller::mouse_leave();
+            eyetracker::interaction_controller::mouse_enter(this);
         }
         last_item_ = item;
 
@@ -1252,45 +1251,14 @@ void menu::invalidate_heading()
 Clicks on last selected item
 */
 void menu::click_last_item() {
-    set_focus(true);
-    move_selection_to(last_item_);
+    if(last_item_ != -1) {
+        set_focus(true);
+        move_selection_to(last_item_);
 
-    if(click_selects_) {
-        show_result_ = true;
+        if(click_selects_) {
+            show_result_ = true;
+        }
     }
 }
-
-/*
-Fires a button-click event when timer has run through its time.
-*/
-static Uint32 callback(Uint32 interval, void* menu) {
-    gui::menu* m = (gui::menu*) menu;
-    interval = 0; // Björn: kan ta bort detta sen
-
-    (*m).click_last_item();
-
-    (*m).stop_timer();
-    return 0;
-}
-
-/*
-Adds a timer for a button-click event.
-*/
-void menu::start_timer() {
-    if(timer_id == NULL)
-        timer_id = SDL_AddTimer(preferences::gaze_length(), gui::callback, (void*) this); // Björn: Gaze length should be here
-}
-
-/*
-Removes the timer for a button-click-event.
-*/
-void menu::stop_timer() {
-    if(timer_id != NULL) {
-
-        SDL_RemoveTimer(timer_id);
-        timer_id = NULL;
-    }
-}
-
 }
 
