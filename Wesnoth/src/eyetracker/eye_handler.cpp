@@ -128,7 +128,7 @@ void eye_handler::onGazeDataReceived(tetio::GazeDataItem::pointer_t data)
 	}
 	//Only detect blinking if blinking mode is enabled and once the user has been detected
 	//(Validity = 4 == No eye present i.e. a potential blink)
-	else if(preferences::interaction_blink() && eyesFound_ && !blinking_ && data->leftValidity==4 && data->rightValidity==4)
+	else if(preferences::interaction_method() == preferences::BLINK && eyesFound_ && !blinking_ && data->leftValidity==4 && data->rightValidity==4)
 	{
 	    eyesFound_ = false;    //Set that we have closed our eyes
 	    blinking_  = true;

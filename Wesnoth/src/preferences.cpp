@@ -330,12 +330,12 @@ void save_sound_buffer_size(const size_t size)
 }
 
 //BOBBY | Christoffer | Options to save
-bool interaction_blink(){
-    return get("interaction_blink",false);
+enum INTERACTION_METHOD interaction_method(){
+    return (enum INTERACTION_METHOD)prefs["interaction"].to_int(DWELL);
 }
 
-void set_interaction_blink(bool val){
-    preferences::set("interaction_blink", val);
+void set_interaction_method(enum INTERACTION_METHOD val){
+    preferences::set("interaction", (int)val);
 }
 
 int blink_length(){
@@ -344,22 +344,6 @@ int blink_length(){
 
 void set_blink_length(int val){
     prefs["blink_length"] = val;
-}
-
-bool interaction_dwell(){
-    return get("interaction_dwell",true);
-}
-
-void set_interaction_dwell(bool val){
-    preferences::set("interaction_dwell", val);
-}
-
-bool interaction_switch(){
-    return get("interaction_switch",false);
-}
-
-void set_interaction_switch(bool val){
-    preferences::set("interaction_switch", val);
 }
 
 int gaze_length()

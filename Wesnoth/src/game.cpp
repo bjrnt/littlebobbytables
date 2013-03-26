@@ -449,7 +449,6 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 
     // Björn: starta eyetracker här
 	app->run(preferences::getResolutionPointer(),runner,tracker);
-    eyetracker::interaction_controller::init();
 	for (;;)
 	{
 		// reset the TC, since a game can modify it, and it may be used

@@ -393,9 +393,9 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	show_grid_button_.set_check(grid());
 	show_grid_button_.set_help_string(_("Overlay a grid onto the map"));
 
-    interaction_dwell_button_.set_check(interaction_dwell());
-    interaction_blink_button_.set_check(interaction_blink());
-    interaction_switch_button_.set_check(interaction_switch());
+    interaction_dwell_button_.set_check(interaction_method() == DWELL);
+    interaction_blink_button_.set_check(interaction_method() == BLINK);
+    interaction_switch_button_.set_check(interaction_method() == SWITCH);
 
 	sort_list_by_group_button_.set_check(sort_list());
 	sort_list_by_group_button_.set_help_string(_("Sort the player list in the lobby by player groups"));
@@ -790,40 +790,29 @@ void preferences_dialog::process_event()
 
         if (interaction_blink_button_.pressed()) {
             // disabling other methods
-            set_interaction_dwell(false);
             interaction_dwell_button_.set_check(false);
-            set_interaction_switch(false);
             interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(false);
             // enabling blink
-            set_interaction_blink(true); // Makes sure that at least one button is checked
+            set_interaction_method(BLINK); // Makes sure that at least one button is checked
             interaction_blink_button_.set_check(true);
-            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::BLINK);
-
         }
         if (interaction_dwell_button_.pressed()) {
             // disabling other methods
-            set_interaction_blink(false);
             interaction_blink_button_.set_check(false);
-            set_interaction_switch(false);
             interaction_switch_button_.set_check(false);
             gaze_length_slider_.enable(true);
             // enabling dwell
-            set_interaction_dwell(true);
-            interaction_dwell_button_.set_check(true);
-            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::DWELL);
-        }
+            set_interaction_method(DWELL);
+            interaction_dwell_button_.set_check(true);}
         if (interaction_switch_button_.pressed()) {
             // disabling other methods
-            set_interaction_blink(false);
             interaction_blink_button_.set_check(false);
-            set_interaction_dwell(false);
             interaction_dwell_button_.set_check(false);
             gaze_length_slider_.enable(false);
             // enabling switch
-            set_interaction_switch(true);
+            set_interaction_method(SWITCH);
             interaction_switch_button_.set_check(true);
-            eyetracker::interaction_controller::set_interaction_method(eyetracker::interaction_controller::SWITCH);
         }
 
         set_gaze_length(gaze_length_slider_.value());

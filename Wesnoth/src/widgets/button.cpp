@@ -43,7 +43,7 @@ button::button(CVideo& video, const std::string& label, button::TYPE type,
                std::string button_image_name, SPACE_CONSUMPTION spacing, const bool auto_join)
 	: widget(video, auto_join), type_(type), label_(label),
 	  image_(NULL), pressedImage_(NULL), activeImage_(NULL), pressedActiveImage_(NULL),
-	  button_(true), state_(NORMAL), pressed_(false),
+	  button_(true), state_(NORMAL), pressed_(false), mouse_entered_(false),
 	  spacing_(spacing), base_height_(0), base_width_(0)
 {
 	if(button_image_name.empty() && type == TYPE_PRESS) {
@@ -278,7 +278,10 @@ void button::set_label(const std::string& val)
 void button::mouse_motion(SDL_MouseMotionEvent const &event)
 {
 	if (hit(event.x, event.y)) {
-		eyetracker::interaction_controller::mouse_enter(this);
+        if(!mouse_entered_){
+            eyetracker::interaction_controller::mouse_enter(this);
+            mouse_entered_ = true;
+        }
 
 		// the cursor is over the widget
 		if (state_ == NORMAL) {
@@ -287,6 +290,7 @@ void button::mouse_motion(SDL_MouseMotionEvent const &event)
 		else if (state_ == PRESSED && type_ == TYPE_CHECK)
 			state_ = PRESSED_ACTIVE;
 	} else {
+	    mouse_entered_ = false;
 		// the cursor is not over the widget
         if(state_ == ACTIVE)
             eyetracker::interaction_controller::mouse_leave();

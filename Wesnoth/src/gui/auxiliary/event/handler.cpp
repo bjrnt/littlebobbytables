@@ -514,7 +514,6 @@ void thandler::video_resize(const tpoint& new_size)
 void thandler::mouse(const tevent event, const tpoint& position)
 {
 	DBG_GUI_E << "Firing: " << event << ".\n";
-
 	if(mouse_focus) {
 		mouse_focus->fire(event
 				, dynamic_cast<twidget&>(*mouse_focus)

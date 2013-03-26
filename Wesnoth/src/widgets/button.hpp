@@ -70,6 +70,8 @@ private:
 
 	bool button_;
 
+	bool mouse_entered_;
+
 	enum STATE { UNINIT, NORMAL, ACTIVE, PRESSED, PRESSED_ACTIVE };
 	STATE state_;
 

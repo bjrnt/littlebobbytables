@@ -8,7 +8,6 @@
 
 namespace eyetracker
 {
-interaction_controller::INTERACTION_METHOD interaction_controller::interaction_method_;
 SDL_TimerID interaction_controller::timer_id_ = NULL;
 gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
@@ -16,22 +15,6 @@ map_location* interaction_controller::map_loc_ = NULL;
 display* interaction_controller::disp = NULL;
 bool right_click_ = false;
 
-void interaction_controller::init(){
-    if(preferences::interaction_blink()){
-        interaction_method_ = BLINK;
-    }
-    else if(preferences::interaction_switch()){
-        interaction_method_ = SWITCH;
-    }
-    else{
-        interaction_method_ = DWELL;
-    }
-}
-
-void interaction_controller::set_interaction_method(interaction_controller::INTERACTION_METHOD interaction_method)
-{
-    interaction_method_ = interaction_method;
-}
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event)
@@ -50,15 +33,15 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
     */
     selected_widget_g1_ = widget;
 
-    switch (interaction_method_)
+    switch (preferences::interaction_method())
     {
-    case interaction_controller::DWELL:
+    case preferences::DWELL:
         start_timer(event);
         break;
-    case interaction_controller::BLINK:
+    case preferences::BLINK:
         // Blink
         break;
-    case interaction_controller::SWITCH:
+    case preferences::SWITCH:
         // Switch
         break;
     }
@@ -79,15 +62,15 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
 
     selected_widget_g2_ = widget;
 
-    switch (interaction_method_)
+    switch (preferences::interaction_method())
     {
-    case interaction_controller::DWELL:
+    case preferences::DWELL:
         start_timer(event);
         break;
-    case interaction_controller::BLINK:
+    case preferences::BLINK:
         // Blink
         break;
-    case interaction_controller::SWITCH:
+    case preferences::SWITCH:
         // Switch
         break;
     }
@@ -100,15 +83,15 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     map_loc_ = loc;
     disp = d;
 
-    switch (interaction_method_)
+    switch (preferences::interaction_method())
     {
-    case interaction_controller::DWELL:
+    case preferences::DWELL:
         start_timer(event);
         break;
-    case interaction_controller::BLINK:
+    case preferences::BLINK:
         // Blink
         break;
-    case interaction_controller::SWITCH:
+    case preferences::SWITCH:
         // Switch
         break;
     }
@@ -123,16 +106,16 @@ void interaction_controller::mouse_leave()
     else if(selected_widget_g2_ != NULL)
         std::cerr << "Left GUI2\n";
 */
-    switch (interaction_method_)
+    switch (preferences::interaction_method())
     {
-    case interaction_controller::DWELL:
+    case preferences::DWELL:
         if(timer_id_ != NULL)
             stop_timer();
         break;
-    case interaction_controller::BLINK:
+    case preferences::BLINK:
         // Blink is selected
         break;
-    case interaction_controller::SWITCH:
+    case preferences::SWITCH:
         // Switch
         break;
     }
@@ -217,7 +200,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 }
 // BOBBY TEMP
 void interaction_controller::blink(){
-    if(interaction_method_ == BLINK){
+    if(preferences::interaction_method() == preferences::BLINK){
         int x,y;
 
         if(selected_widget_g1_ != NULL)
@@ -232,12 +215,11 @@ void interaction_controller::blink(){
             y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
         }
         else if(map_loc_ != NULL){
-            x = disp->get_location_x(*map_loc_) + disp->hex_width() / 2;
-            y = disp->get_location_y(*map_loc_) + disp->hex_size() / 2;
+            SDL_GetMouseState(&x,&y);
         }
         else
         {
-            return;
+            SDL_GetMouseState(&x,&y);
         }
 
         if(right_click_){
