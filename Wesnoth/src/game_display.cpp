@@ -3,7 +3,8 @@
    Copyright (C) 2003 - 2012 by David White <dave@whitevine.net>
    Part of the Battle for Wesnoth Project http://www.wesnoth.org/
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software; yo
+   u can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
@@ -79,7 +80,6 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		sidebarScaling_(1.0),
 		first_turn_(true),
 		selectmode_(false),
-		rightclickmode_(false),
 		in_game_(false),
 		observers_(),
 		chat_messages_(),
@@ -254,13 +254,11 @@ void game_display::toggle_selectmode() {
 }
 
 void game_display::toggle_right_click(){
-    if(rightclickmode_){
-        rightclickmode_ = false;
+    if(eyetracker::interaction_controller::get_right_click()){
         eyetracker::interaction_controller::toggle_right_click(false);
     }
     else{
         selectmode_ = true;
-        rightclickmode_ = true;
         eyetracker::interaction_controller::toggle_right_click(true);
     }
 }

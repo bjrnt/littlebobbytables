@@ -34,6 +34,7 @@ public:
     static void blink();
 
     static void toggle_right_click(bool value);
+    static bool get_right_click();
 
     static void mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI1 widgets when the mouse enters over it
     static void mouse_enter(gui2::twidget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI2 widgets when the mouse enters over it
