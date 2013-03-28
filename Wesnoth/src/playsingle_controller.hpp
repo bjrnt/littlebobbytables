@@ -91,6 +91,7 @@ protected:
 	replay_network_sender replay_sender_;
 
 	bool end_turn_;
+	bool select_mode_;
 	bool player_type_changed_;
 	bool replaying_;
 	bool turn_over_;
