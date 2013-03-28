@@ -79,7 +79,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		activeTeam_(0),
 		sidebarScaling_(1.0),
 		first_turn_(true),
-		selectmode_(false),
+		selectmode_(true),
 		in_game_(false),
 		observers_(),
 		chat_messages_(),
@@ -91,6 +91,9 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 {
 	singleton_ = this;
 
+    if(preferences::interaction_method() == preferences::DWELL){
+        selectmode_ = false;
+    }
 	// Inits the flag list and the team colors used by ~TC
 	flags_.reserve(teams_.size());
 

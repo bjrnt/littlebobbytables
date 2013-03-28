@@ -728,8 +728,14 @@ void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
+
 	gui_->enable_menu("endturn", true);
-	gui_->enable_menu("select", true);
+	if(preferences::interaction_method() == preferences::DWELL){
+        gui_->enable_menu("select", true);
+	}
+	else{
+        gui_->enable_menu("select", false);
+	}
 	gui_->enable_menu("right", true);
 	while(!end_turn_) {
 		play_slice();
