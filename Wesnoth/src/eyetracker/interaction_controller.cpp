@@ -158,14 +158,18 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     interaction_controller::EVENT_TO_SEND event = (interaction_controller::EVENT_TO_SEND) tmp;
     if(selected_widget_g1_ != NULL)
     {
-        SDL_Rect rect = selected_widget_g1_->location();
-        x = rect.x + rect.w/2;
-        y = rect.y + rect.h/2;
+        //Potentiell Johan konflikt (Andreas & Christoffer)
+        //SDL_Rect rect = selected_widget_g1_->location();
+        //x = rect.x + rect.w/2;
+        //y = rect.y + rect.h/2;
+        SDL_GetMouseState(&x,&y);
     }
     else if(selected_widget_g2_ != NULL)
     {
-        x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
-        y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+        //Potentiell Johan konflikt (Andreas & Christoffer)
+        //x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+        //y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+        SDL_GetMouseState(&x,&y);
     }
     else if(map_loc_ != NULL){
         SDL_GetMouseState(&x,&y);
@@ -198,24 +202,34 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     mouse_leave();
     return 0;
 }
-// BOBBY TEMP
-void interaction_controller::blink(){
+
+// Functions like callback but with limited functionality.
+// Should be used to simulate a MouseClick event when a blink
+// occurs.
+//
+// x : X-position of where the click event should occur.
+// y : Y-position of where the click event should occur.
+//
+// Author: Robert, Christoffer, Andreas, Björn, Johan
+// Version: 28-03-2013
+void interaction_controller::blink(int x,int y){
     if(preferences::interaction_method() == preferences::BLINK){
-        int x,y;
+        //int x,y;
 
         if(selected_widget_g1_ != NULL)
         {
-            SDL_Rect rect = selected_widget_g1_->location();
-            x = rect.x + rect.w/2;
-            y = rect.y + rect.h/2;
+            //SDL_Rect rect = selected_widget_g1_->location();
+            //x = rect.x + rect.w/2;
+            //y = rect.y + rect.h/2;
         }
         else if(selected_widget_g2_ != NULL)
         {
-            x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
-            y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+          //  x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+          //  y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
         }
-        else if(map_loc_ != NULL){
-            SDL_GetMouseState(&x,&y);
+        else if(map_loc_ != NULL)
+        {
+           // SDL_GetMouseState(&x,&y);
         }
         else
         {

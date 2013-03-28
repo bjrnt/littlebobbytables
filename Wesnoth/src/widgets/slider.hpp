@@ -65,6 +65,7 @@ private:
 	int increment_;
 
 	bool value_change_;
+	bool mouse_entered_;
 
 	enum STATE { UNINIT, NORMAL, ACTIVE, CLICKED, DRAGGED };
 	STATE state_;

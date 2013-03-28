@@ -656,8 +656,7 @@ void menu::handle_event(const SDL_Event& event)
 		if (focus(&event))
 			key_press(event.key.keysym.sym);
 	} else if(!mouse_locked() && ((event.type == SDL_MOUSEBUTTONDOWN &&
-	         (event.button.button == SDL_BUTTON_LEFT || event.button.button == SDL_BUTTON_RIGHT)) ||
-	         event.type == DOUBLE_CLICK_EVENT)) {
+	         (event.button.button == SDL_BUTTON_LEFT || event.button.button == SDL_BUTTON_RIGHT)))) {
 
 		int x = 0;
 		int y = 0;
