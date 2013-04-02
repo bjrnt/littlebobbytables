@@ -31,7 +31,7 @@ private:
 
 public:
 
-    static void blink();
+    static void blink(int x, int y);
 
     static void toggle_right_click(bool value);
     static bool get_right_click();

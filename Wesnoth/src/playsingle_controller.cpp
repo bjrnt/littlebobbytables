@@ -62,6 +62,7 @@ playsingle_controller::playsingle_controller(const config& level,
 	textbox_info_(),
 	replay_sender_(recorder),
 	end_turn_(false),
+	select_mode_(false),
 	player_type_changed_(false),
 	replaying_(false),
 	turn_over_(false),
@@ -133,6 +134,10 @@ void playsingle_controller::update_shroud_now(){
 }
 
 void playsingle_controller::end_turn(){
+    if(select_mode_){
+        select_mode_ = false;
+        gui_->toggle_selectmode();
+    }
 	if (linger_)
 		end_turn_ = true;
 	else if (!browse_){
@@ -143,6 +148,12 @@ void playsingle_controller::end_turn(){
 }
 //BOBBY Veronica
 void playsingle_controller::toggle_selectmode(){
+    if(select_mode_){
+        select_mode_ = false;
+    }
+    else{
+        select_mode_ = true;
+    }
     gui_->toggle_selectmode();
 }
 
@@ -717,8 +728,14 @@ void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
+
 	gui_->enable_menu("endturn", true);
-	gui_->enable_menu("select", true);
+	if(preferences::interaction_method() == preferences::DWELL){
+        gui_->enable_menu("select", true);
+	}
+	else{
+        gui_->enable_menu("select", false);
+	}
 	gui_->enable_menu("right", true);
 	while(!end_turn_) {
 		play_slice();

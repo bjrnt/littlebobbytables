@@ -24,6 +24,8 @@
 #include "sound.hpp"
 #include "video.hpp"
 
+#include "eyetracker/interaction_controller.hpp"
+
 
 namespace {
 	const std::string slider_image = "buttons/slider.png";
@@ -36,7 +38,7 @@ slider::slider(CVideo &video)
 	: widget(video), image_(image::get_image(slider_image)),
 	  highlightedImage_(image::get_image(selected_image)),
 	  min_(-100000), max_(100000), value_(0),
-	  increment_(1), value_change_(false), state_(NORMAL)
+	  increment_(1), value_change_(false),mouse_entered_(false), state_(NORMAL)
 {
 }
 
@@ -175,6 +177,22 @@ void slider::set_slider_position(int x)
 
 void slider::mouse_motion(const SDL_MouseMotionEvent& event)
 {
+    //Is mouse over slider?
+    if(point_in_rect(event.x, event.y, location())){
+        //Bobby | Christoffer | Added eyetracker support
+        if(!mouse_entered_){
+            eyetracker::interaction_controller::mouse_enter(this);
+            mouse_entered_ = true;
+        }
+    }
+    else{
+        //If we were over an item, mark that we have left the slider
+        if(mouse_entered_){
+            eyetracker::interaction_controller::mouse_leave();
+            mouse_entered_ = false;
+        }
+    }
+
 	if (state_ == NORMAL || state_ == ACTIVE) {
 		bool on = point_in_rect(event.x, event.y, slider_area());
 		state_ = on ? ACTIVE : NORMAL;

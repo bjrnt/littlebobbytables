@@ -79,7 +79,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		activeTeam_(0),
 		sidebarScaling_(1.0),
 		first_turn_(true),
-		selectmode_(false),
+		selectmode_(true),
 		in_game_(false),
 		observers_(),
 		chat_messages_(),
@@ -91,6 +91,9 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 {
 	singleton_ = this;
 
+    if(preferences::interaction_method() == preferences::DWELL){
+        selectmode_ = false;
+    }
 	// Inits the flag list and the team colors used by ~TC
 	flags_.reserve(teams_.size());
 
@@ -363,10 +366,18 @@ void game_display::draw_hex(const map_location& loc)
 		if( get_visible_unit(loc, teams_[viewing_team()] ) != NULL ) {
 			hex_top_layer = LAYER_MOUSEOVER_TOP;
 		}
-		drawing_buffer_add( hex_top_layer,
+		if(eyetracker::interaction_controller::get_right_click()){
+            drawing_buffer_add( hex_top_layer,
+						   loc, xpos, ypos, image::get_image("misc/hover-hex-right.png", image::SCALED_TO_HEX));
+            drawing_buffer_add(LAYER_MOUSEOVER_BOTTOM,
+						   loc, xpos, ypos, image::get_image("misc/hover-hex-bottom-right.png", image::SCALED_TO_HEX));
+		}
+		else{
+            drawing_buffer_add( hex_top_layer,
 						   loc, xpos, ypos, image::get_image("misc/hover-hex-top.png", image::SCALED_TO_HEX));
-		drawing_buffer_add(LAYER_MOUSEOVER_BOTTOM,
+            drawing_buffer_add(LAYER_MOUSEOVER_BOTTOM,
 						   loc, xpos, ypos, image::get_image("misc/hover-hex-bottom.png", image::SCALED_TO_HEX));
+		}
 	}
 
 	if(!is_shrouded) {
