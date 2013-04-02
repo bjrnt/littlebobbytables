@@ -47,8 +47,8 @@ scrollbar::scrollbar(CVideo &video)
 	: widget(video)
 	, mid_scaled_(NULL)
 	, groove_scaled_(NULL)
-	, uparrow_(video, "", button::TYPE_TURBO, "uparrow-button")
-	, downarrow_(video, "", button::TYPE_TURBO, "downarrow-button")
+	, uparrow_(video, "", button::TYPE_TURBO, "uparrow-button", gui::button::DEFAULT_SPACE,true, true)
+	, downarrow_(video, "", button::TYPE_TURBO, "downarrow-button", gui::button::DEFAULT_SPACE,true, true)
 	, state_(NORMAL)
 	, minimum_grip_height_(0)
 	, mousey_on_grip_(0)
@@ -190,11 +190,12 @@ void scrollbar::scroll_up()
 
 void scrollbar::process_event()
 {
-	if (uparrow_.pressed())
+    // Bobby - Johan - I have moved this functionality to handle_event
+	/*if (uparrow_.pressed())
 		scroll_up();
 
 	if (downarrow_.pressed())
-		scroll_down();
+		scroll_down();*/
 }
 
 SDL_Rect scrollbar::groove_area() const
@@ -321,15 +322,21 @@ void scrollbar::handle_event(const SDL_Event& event)
 			mousey_on_grip_ = e.y - grip.y;
 			new_state = DRAGGED;
 		} else if (on_groove && e.button == SDL_BUTTON_LEFT && groove.h != grip.h) {
-			if (e.y < grip.y)
+			if (e.y < grip.y){
 				move_position(-static_cast<int>(grip_height_));
+			}
 			else
 				move_position(grip_height_);
 		} else if (on_groove && e.button == SDL_BUTTON_MIDDLE) {
 			int y_dep = e.y - grip.y - grip.h/2;
 			int dep = y_dep * int(full_height_ - grip_height_)/ int(groove.h - grip.h);
 			move_position(dep);
+		}else if (downarrow_.hit(e.x,e.y)) { // Bobby - This was previously handled in process_event
+            scroll_down();
+		}else if (uparrow_.hit(e.x,e.y)){
+            scroll_up();
 		}
+
 		break;
 	}
 	case SDL_MOUSEMOTION:

@@ -40,11 +40,11 @@ const int checkbox_horizontal_padding = font::SIZE_SMALL / 2;
 const int vertical_padding = font::SIZE_SMALL / 2;
 
 button::button(CVideo& video, const std::string& label, button::TYPE type,
-               std::string button_image_name, SPACE_CONSUMPTION spacing, const bool auto_join)
+               std::string button_image_name, SPACE_CONSUMPTION spacing, const bool auto_join, const bool repeating)
 	: widget(video, auto_join), type_(type), label_(label),
 	  image_(NULL), pressedImage_(NULL), activeImage_(NULL), pressedActiveImage_(NULL),
 	  button_(true), state_(NORMAL), pressed_(false), mouse_entered_(false),
-	  spacing_(spacing), base_height_(0), base_width_(0)
+	  spacing_(spacing), base_height_(0), base_width_(0), repeating_(repeating)
 {
 	if(button_image_name.empty() && type == TYPE_PRESS) {
 		button_image_name = "button";
@@ -98,6 +98,7 @@ button::button(CVideo& video, const std::string& label, button::TYPE type,
 		calculate_size();
 	}
 }
+
 
 button::~button()
 {
@@ -279,8 +280,13 @@ void button::mouse_motion(SDL_MouseMotionEvent const &event)
 {
 	if (hit(event.x, event.y)) {
         if(!mouse_entered_){
-            eyetracker::interaction_controller::mouse_enter(this);
+            if (!repeating_) {
+                eyetracker::interaction_controller::mouse_enter(this);
+            } else {
+                eyetracker::interaction_controller::mouse_enter(this,eyetracker::interaction_controller::REPEATING_CLICK);
+            }
             mouse_entered_ = true;
+            std::cerr << "GUI1 button at "<<location().x<<","<<location().y<<"sent mouse_enter to interaction_controller\n";
         }
 
 		// the cursor is over the widget
@@ -347,6 +353,7 @@ Removes the timer for a button-click-event.
 void button::mouse_down(SDL_MouseButtonEvent const &event)
 {
 	if (hit(event.x, event.y) && event.button == SDL_BUTTON_LEFT && type_ != TYPE_CHECK){
+        //std::cerr << "GUI1 button at "<<location().x<<","<<location().y<<" received mousebuttondown event\n";
 		state_ = PRESSED;
 		sound::play_UI_sound(game_config::sounds::button_press);
 	}

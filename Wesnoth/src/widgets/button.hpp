@@ -36,7 +36,7 @@ public:
 
 	button(CVideo& video, const std::string& label, TYPE type=TYPE_PRESS,
 	       std::string button_image="", SPACE_CONSUMPTION spacing=DEFAULT_SPACE,
-		   const bool auto_join=true);
+		   const bool auto_join=true, const bool repeating=false);
 
 	/** Default implementation, but defined out-of-line for efficiency reasons. */
 	virtual ~button();
@@ -67,6 +67,9 @@ private:
 	std::string label_;
 	surface image_, pressedImage_, activeImage_, pressedActiveImage_;
 	SDL_Rect textRect_;
+
+	// bobby
+    bool repeating_;
 
 	bool button_;
 
