@@ -19,6 +19,7 @@
 
 #include "play_controller.hpp"
 #include "replay.hpp"
+#include "preferences.hpp"
 
 class playsingle_controller : public play_controller
 {
@@ -63,6 +64,7 @@ public:
 	virtual void whiteboard_bump_down_action();
 	virtual void whiteboard_suppose_dead();
 	void linger();
+	void update_select_button();
 
 	virtual void force_end_level(LEVEL_RESULT res)
 	{ level_result_ = res; }
@@ -91,7 +93,7 @@ protected:
 	replay_network_sender replay_sender_;
 
 	bool end_turn_;
-	bool select_mode_;
+	enum preferences::INTERACTION_METHOD interaction_mode;
 	bool player_type_changed_;
 	bool replaying_;
 	bool turn_over_;
