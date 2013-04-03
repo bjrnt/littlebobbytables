@@ -62,7 +62,6 @@ playsingle_controller::playsingle_controller(const config& level,
 	textbox_info_(),
 	replay_sender_(recorder),
 	end_turn_(false),
-	select_mode_(false),
 	player_type_changed_(false),
 	replaying_(false),
 	turn_over_(false),
@@ -75,7 +74,6 @@ playsingle_controller::playsingle_controller(const config& level,
 		LOG_NG << "Setting linger mode.\n";
 		browse_ = linger_ = true;
 	}
-
 	ai::game_info ai_info;
 	ai::manager::set_ai_info(ai_info);
 	ai::manager::add_observer(this) ;
@@ -95,6 +93,13 @@ void playsingle_controller::init_gui(){
 		gui_->scroll_to_tile(map_.starting_position(first_human_team_ + 1), game_display::WARP);
 	}
 	gui_->scroll_to_tile(map_.starting_position(1), game_display::WARP);
+	interaction_mode = preferences::interaction_method();
+    if(preferences::interaction_method() == preferences::DWELL){
+        gui_->enable_menu("select", true);
+    }
+    else{
+        gui_->enable_menu("select", false);
+    }
 
 	update_locker lock_display(gui_->video(),recorder.is_skipping());
 	events::raise_draw_event();
@@ -134,8 +139,7 @@ void playsingle_controller::update_shroud_now(){
 }
 
 void playsingle_controller::end_turn(){
-    if(select_mode_){
-        select_mode_ = false;
+    if(gui_->select_mode()){
         gui_->toggle_selectmode();
     }
 	if (linger_)
@@ -148,12 +152,6 @@ void playsingle_controller::end_turn(){
 }
 //BOBBY Veronica
 void playsingle_controller::toggle_selectmode(){
-    if(select_mode_){
-        select_mode_ = false;
-    }
-    else{
-        select_mode_ = true;
-    }
     gui_->toggle_selectmode();
 }
 
@@ -724,22 +722,37 @@ void playsingle_controller::execute_gotos(){
 	menu_handler_.execute_gotos(mouse_handler_, player_number_);
 }
 
+void playsingle_controller::update_select_button(){
+    if(interaction_mode != preferences::interaction_method()){
+        interaction_mode = preferences::interaction_method();
+        if(interaction_mode == preferences::DWELL){
+            if(gui_->select_mode()){
+                gui_->toggle_selectmode();
+            }
+            gui_->enable_menu("select", true);
+        }
+        else{
+            if(!gui_->select_mode()){
+                gui_->toggle_selectmode();
+            }
+            gui_->enable_menu("select", false);
+        }
+    }
+}
+
 void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
-
+    if(!gui_->select_mode() && preferences::interaction_method() != preferences::DWELL){
+        gui_->toggle_selectmode();
+    }
 	gui_->enable_menu("endturn", true);
-	if(preferences::interaction_method() == preferences::DWELL){
-        gui_->enable_menu("select", true);
-	}
-	else{
-        gui_->enable_menu("select", false);
-	}
 	gui_->enable_menu("right", true);
 	while(!end_turn_) {
 		play_slice();
 		check_end_level();
+		update_select_button();
 		gui_->draw();
 	}
 }

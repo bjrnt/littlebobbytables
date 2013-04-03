@@ -256,6 +256,10 @@ void game_display::toggle_selectmode() {
     }
 }
 
+bool game_display::select_mode(){
+    return selectmode_;
+}
+
 void game_display::toggle_right_click(){
     if(eyetracker::interaction_controller::get_right_click()){
         eyetracker::interaction_controller::toggle_right_click(false);

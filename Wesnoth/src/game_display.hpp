@@ -90,6 +90,8 @@ public:
     */
     virtual void toggle_right_click();
 
+    virtual bool select_mode();
+
 	/**
 	 * Change the unit to be displayed in the sidebar.
 	 *
