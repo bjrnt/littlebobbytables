@@ -184,12 +184,12 @@ void _set_scroll_to_action(bool ison)
 
 int min_allowed_width()
 {
-	return 800;
+	return 1024;
 }
 
 int min_allowed_height()
 {
-	return 480;
+	return 768;
 }
 
 std::pair<int,int> resolution()
@@ -207,7 +207,6 @@ std::pair<int,int> resolution()
 		//res.first &= ~3;
 		//res.second &= ~3;
 		//return res;
-		std::cerr << "Send address res pointer " << &resolutionDim << std::endl; //BOBBY | DEBUG
 		return resolutionDim;
 	} else {
 	    resolutionDim.first = 1024;
@@ -339,7 +338,7 @@ void set_interaction_method(enum INTERACTION_METHOD val){
 }
 
 int blink_length(){
-    return prefs["blink_length"].to_int(1000);
+    return prefs["blink_length"].to_int(600);
 }
 
 void set_blink_length(int val){
@@ -348,7 +347,7 @@ void set_blink_length(int val){
 
 int gaze_length()
 {
-    return prefs["gaze_length"];
+    return prefs["gaze_length"].to_int(1500);
 }
 
 void set_gaze_length(int length)

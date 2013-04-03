@@ -37,6 +37,7 @@
 #include "serialization/parser.hpp"
 #include "serialization/validator.hpp"
 #include "version.hpp"
+#include "gui/dialogs/message.hpp"
 
 #include <cerrno>
 #include <clocale>
@@ -420,6 +421,14 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 	gui2::init();
 	const gui2::event::tmanager gui_event_manager;
 
+    // Björn: starta eyetracker här
+	app->run(preferences::getResolutionPointer(),runner,tracker);
+	//BOBBY: Show error message when the resolution cannot be set.
+    if(preferences::resolution().first < preferences::min_allowed_width() || preferences::resolution().second < preferences::min_allowed_height()){
+        gui2::show_error_message(game->disp().video(),"The video mode could not be set. Your display must support 1024x768x16 to run the game!\n");
+		std::cerr << "could not initialize resolution\n";
+		return 1;
+    }
 	loadscreen::start_stage("load config");
 	res = game->init_config();
 	if(res == false) {
@@ -447,8 +456,6 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 
 	LOG_CONFIG << "time elapsed: "<<  (SDL_GetTicks() - start_ticks) << " ms\n";
 
-    // Björn: starta eyetracker här
-	app->run(preferences::getResolutionPointer(),runner,tracker);
 	for (;;)
 	{
 		// reset the TC, since a game can modify it, and it may be used
