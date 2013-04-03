@@ -6,14 +6,21 @@
 #include "map_location.hpp"
 #include "display.hpp"
 
+#define DWELL_BOUNDARY_X 40
+#define DWELL_BOUNDARY_Y 40
+using ::std::cerr;
+
 namespace eyetracker
 {
 SDL_TimerID interaction_controller::timer_id_ = NULL;
 gui::widget* interaction_controller::selected_widget_g1_ = NULL;
 gui2::twidget* interaction_controller::selected_widget_g2_ = NULL;
+gui2::twindow* interaction_controller::selected_window_ = NULL;
 map_location* interaction_controller::map_loc_ = NULL;
 display* interaction_controller::disp = NULL;
 bool right_click_ = false;
+int dwell_startX_ = 0;
+int dwell_startY_ = 0;
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
@@ -22,7 +29,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
 //    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
     {
         reset();
     }
@@ -55,7 +62,7 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
 //    std::cerr << "Entered GUI2\n";
     if(timer_id_ != NULL)
         stop_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL)
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
     {
         reset();
     }
@@ -122,6 +129,69 @@ void interaction_controller::mouse_leave()
 
     reset();
 }
+//CheckStillDwelling BOBBY, Veronica, Andreas
+void interaction_controller::checkStillDwelling()
+{
+    if(selected_window_ != NULL){
+
+        int x;
+        int y;
+
+
+        SDL_GetMouseState(&x, &y);
+        cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
+        if(y<200)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
+        {
+            cerr<<"ENTERED IF\n";
+           // selected_window_ = NULL;
+            init_window(selected_window_);
+           // stop_timer();
+        }else{
+            stop_timer();
+        }
+    }
+}//End checkSTillDwelling
+
+//Init_window BOBBY Veronica, Andreas
+void interaction_controller::init_window(gui2::twindow* window, interaction_controller::EVENT_TO_SEND event)
+{
+//    std::cerr << "Entered GUI1\n";
+    if(timer_id_ != NULL)
+        stop_timer();
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
+    {
+        reset();
+    }
+    /*
+    When the mouse enters over a widget a timer (or something else, depending on interaction method) will be started.
+    When the timer runs out widget.click() will be called, so the widget must implement this method.
+    Also, widget.indicate() should produce a visible indicator over it, so that we can see how long time is left.
+    */
+    selected_window_ = window;
+    int x;
+    int y;
+    SDL_GetMouseState(&x, &y);
+    bool changedCord = false;
+    if(x!=dwell_startX_ || y !=dwell_startY_){
+        changedCord = true;
+        dwell_startX_ = x;
+        dwell_startY_ = y;
+    }
+    switch (preferences::interaction_method())
+    {
+    case preferences::DWELL:
+        if(changedCord){
+            start_timer(event);
+        }
+        break;
+    case preferences::BLINK:
+        // Blink
+        break;
+    case preferences::SWITCH:
+        // Switch
+        break;
+    }
+}//End init windoe
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
 {
     SDL_Event fake_event;
@@ -147,6 +217,7 @@ void interaction_controller::reset()
 {
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
+    selected_window_ = NULL;
     map_loc_ = NULL;
 }
 
@@ -173,6 +244,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     }
     else if(map_loc_ != NULL){
         SDL_GetMouseState(&x,&y);
+    }
+    else if(selected_window_ != NULL){
+        x = dwell_startX_;
+        y = dwell_startY_;
     }
     else
     {
@@ -231,6 +306,12 @@ void interaction_controller::blink(int x,int y){
         {
            // SDL_GetMouseState(&x,&y);
         }
+
+        else if(selected_window_ != NULL)
+        {
+            x = dwell_startX_;
+            y = dwell_startY_;
+        }
         else
         {
             return;
@@ -259,7 +340,7 @@ bool interaction_controller::get_right_click(){
 
 void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND event)
 {
-    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL))
+    if(timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL || selected_window_ != NULL))
     {
         timer_id_ = SDL_AddTimer(preferences::gaze_length(), callback, (void*) event);
     }

@@ -31,6 +31,8 @@
 #include <utility>
 #include <vector>
 
+#include "eyetracker/interaction_controller.hpp"
+
 #define ERR_GEN LOG_STREAM(err, lg::general)
 
 namespace events
@@ -327,6 +329,7 @@ void pump()
 				//always make sure a cursor is displayed if the
 				//mouse moves or if the user clicks
 				cursor::set_focus(true);
+                eyetracker::interaction_controller::checkStillDwelling();
 				raise_help_string_event(event.motion.x,event.motion.y);
 				break;
 			}

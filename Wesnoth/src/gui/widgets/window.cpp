@@ -44,6 +44,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
+#include "eyetracker/interaction_controller.hpp"
 
 #define LOG_SCOPE_HEADER get_control_type() + " [" + id() + "] " + __func__
 #define LOG_HEADER LOG_SCOPE_HEADER + ':'
@@ -541,6 +542,8 @@ int twindow::show(const bool restore, const unsigned auto_close_timeout)
 	 * Removes the old tip if one shown. The show_tip doesn't remove
 	 * the tip, since it's the tip.
 	 */
+
+    eyetracker::interaction_controller::init_window(this);
 	tip::remove();
 
 	show_mode_ = modal;
