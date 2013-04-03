@@ -466,11 +466,7 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 handler_vector preferences_dialog::handler_members()
 {
 	handler_vector h;
-	h.push_back(&interaction_blink_button_);
-	h.push_back(&interaction_dwell_button_);
-	h.push_back(&interaction_switch_button_);
 	h.push_back(&music_slider_);
-	h.push_back(&gaze_length_label_);
 	h.push_back(&gaze_length_slider_);
 	h.push_back(&sound_slider_);
 	h.push_back(&bell_slider_);
@@ -482,6 +478,9 @@ handler_vector preferences_dialog::handler_members()
 	h.push_back(&autosavemax_slider_);
 	h.push_back(&buffer_size_slider_);
 	h.push_back(&advanced_slider_);
+	h.push_back(&interaction_blink_button_);
+	h.push_back(&interaction_dwell_button_);
+	h.push_back(&interaction_switch_button_);
 	h.push_back(&fullscreen_button_);
 	h.push_back(&turbo_button_);
 	h.push_back(&idle_anim_button_);
@@ -529,6 +528,7 @@ handler_vector preferences_dialog::handler_members()
 	h.push_back(&sample_rate_button2_);
 	h.push_back(&sample_rate_button3_);
 	h.push_back(&confirm_sound_button_);
+	h.push_back(&gaze_length_label_);
 	h.push_back(&music_label_);
 	h.push_back(&sound_label_);
 	h.push_back(&bell_label_);
@@ -817,6 +817,7 @@ void preferences_dialog::process_event()
 		std::stringstream buffer_els;
 		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
 		gaze_length_label_.set_text(buffer_els.str());
+		return;
     }
 
 	if (tab_ == GENERAL_TAB) {
@@ -865,8 +866,10 @@ void preferences_dialog::process_event()
 	if (tab_ == DISPLAY_TAB) {
 		if (show_floating_labels_button_.pressed())
 			set_show_floating_labels(show_floating_labels_button_.checked());
-		if (video_mode_button_.pressed())
+		if (video_mode_button_.pressed()){
 			throw video_mode_change_exception(video_mode_change_exception::CHANGE_RESOLUTION);
+            set_selection(DISPLAY_TAB); //BOBBY - Added this so no that no remains of the eyetracker tab appears
+		}
 		if (theme_button_.pressed())
 			show_theme_dialog(disp_);
 			parent->clear_buttons();
@@ -1231,6 +1234,14 @@ void preferences_dialog::set_selection(int index)
 	set_dirty();
 	bg_restore();
 
+	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
+    bobby_button_.hide(hide_eyetracking);
+    gaze_length_slider_.hide(hide_eyetracking);
+    gaze_length_label_.hide(hide_eyetracking);
+    interaction_blink_button_.hide(hide_eyetracking);
+    interaction_dwell_button_.hide(hide_eyetracking);
+    interaction_switch_button_.hide(hide_eyetracking);
+
 	const bool hide_general = tab_ != GENERAL_TAB;
 	scroll_label_.hide(hide_general);
 	scroll_slider_.hide(hide_general);
@@ -1333,15 +1344,6 @@ void preferences_dialog::set_selection(int index)
 	advanced_button_.hide(hide_advanced_bool);
 	advanced_slider_label_.hide(hide_advanced_int);
 	advanced_slider_.hide(hide_advanced_int);
-
-	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
-    bobby_button_.hide(hide_eyetracking);
-    gaze_length_slider_.hide(hide_eyetracking);
-    gaze_length_slider_.enable(!hide_eyetracking);
-    gaze_length_label_.hide(hide_eyetracking);
-    interaction_blink_button_.hide(hide_eyetracking);
-    interaction_dwell_button_.hide(hide_eyetracking);
-    interaction_switch_button_.hide(hide_eyetracking);
 }
 
 }
@@ -1363,8 +1365,8 @@ void show_preferences_dialog(display& disp, const config& game_cfg)
 	for(;;) {
 		try {
 			preferences_dialog dialog(disp,game_cfg);
-            dialog.set_width(800); // bobby - Björn: Ändra så att man hämtar skärmstorleken istället av att sätta med magic number
-            dialog.set_height(600);
+            dialog.set_width(preferences::resolution().first*0.8); // bobby - Bobby: Resolution of the preference meny depends on the screen resolution
+            dialog.set_height(preferences::resolution().second*0.8);
 
 			dialog.parent.assign(new preferences_parent_dialog(disp));
 			dialog.parent->set_menu(items);
