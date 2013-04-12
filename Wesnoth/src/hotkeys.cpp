@@ -60,6 +60,7 @@ const struct {
 	{ hotkey::HOTKEY_END_UNIT_TURN, "endunitturn", N_("End Unit Turn"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_LEADER, "leader", N_("Leader"), false, hotkey::SCOPE_GAME },
 	{ hotkey::HOTKEY_UNDO, "undo", N_("Undo"), false, hotkey::SCOPE_GENERAL },
+	{ hotkey::HOTKEY_CANCEL_MENU, "cancelmenu", N_("Cancel Menu"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_REDO, "redo", N_("Redo"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_ZOOM_IN, "zoomin", N_("Zoom In"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_ZOOM_OUT, "zoomout", N_("Zoom Out"), false, hotkey::SCOPE_GENERAL },
@@ -978,6 +979,9 @@ bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 		case HOTKEY_UNDO:
 			undo();
 			break;
+        case HOTKEY_CANCEL_MENU:
+            undo();
+            break;
 		case HOTKEY_REDO:
 			redo();
 			break;

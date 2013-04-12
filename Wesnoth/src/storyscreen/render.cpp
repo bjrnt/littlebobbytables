@@ -156,9 +156,9 @@ void part_ui::prepare_geometry()
 		break;
 	}
 
-	back_button_.set_location(buttons_x_ - back_button_.width(), buttons_y_ - 50);
-	next_button_.set_location(buttons_x_ + play_button_.width() - next_button_.width(), buttons_y_ - 50);
-	play_button_.set_location(buttons_x_- (next_button_.width()/2), buttons_y_);
+	back_button_.set_location(buttons_x_ - back_button_.width(), buttons_y_ - 70);
+	next_button_.set_location(buttons_x_ + play_button_.width() - next_button_.width(), buttons_y_ - 70);
+	play_button_.set_location(buttons_x_- (next_button_.width()/2), buttons_y_ - 10);
 
 	next_button_.set_volatile(true);
 	play_button_.set_volatile(true);
