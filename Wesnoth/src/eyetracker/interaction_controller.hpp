@@ -29,6 +29,7 @@ private:
     static void stop_timer();
     static void reset(); // resets timer and internal state
     static void start_timer(interaction_controller::EVENT_TO_SEND event); // Sets the selected widget and timer id, starts a timer
+    static void mouse_leave_base();
 
 public:
     static void checkStillDwelling();
@@ -41,6 +42,7 @@ public:
     static void mouse_enter(gui2::twidget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI2 widgets when the mouse enters over it
     static void mouse_enter(map_location* loc, display* d, interaction_controller::EVENT_TO_SEND event = CLICK); //Should be called by display when hex is selected
     static void init_window(gui2::twindow* window, interaction_controller::EVENT_TO_SEND event = CLICK);
-    static void mouse_leave();
+    static void mouse_leave(gui::widget* widget);
+    static void mouse_leave(gui2::twidget* widget);
 };
 }

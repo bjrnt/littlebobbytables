@@ -130,7 +130,7 @@ private:
 			turn_dialog_button_, whiteboard_on_start_button_,
 			hide_whiteboard_button_, turn_bell_button_, show_team_colors_button_,
 			show_color_cursors_button_, show_haloing_button_, video_mode_button_,
-			theme_button_, hotkeys_button_, bobby_button_,
+			theme_button_, hotkeys_button_,
 			advanced_button_, sound_button_,
 			music_button_, chat_timestamp_button_,
 			advanced_sound_button_, normal_sound_button_,
@@ -212,7 +212,6 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	  video_mode_button_(disp.video(), _("Change Resolution")),
 	  theme_button_(disp.video(), _("Theme")),
 	  hotkeys_button_(disp.video(), _("Hotkeys")),
-	  bobby_button_(disp.video(), _("Bobby's button"), gui::button::TYPE_PRESS, "bobbybutton"),
 	  advanced_button_(disp.video(), "", gui::button::TYPE_CHECK),
 	  sound_button_(disp.video(), _("Sound effects"), gui::button::TYPE_CHECK),
 	  music_button_(disp.video(), _("Music"), gui::button::TYPE_CHECK),
@@ -455,7 +454,6 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	show_haloing_button_.set_help_string(_("Use graphical special effects (may be slower)"));
 
 	hotkeys_button_.set_help_string(_("View and configure keyboard shortcuts"));
-    bobby_button_.set_help_string(_("Enable awesomeness"));
 
     gaze_length_label_.set_help_string(_("Set the gaze length"));
 
@@ -517,7 +515,6 @@ handler_vector preferences_dialog::handler_members()
 	h.push_back(&video_mode_button_);
 	h.push_back(&theme_button_);
 	h.push_back(&hotkeys_button_);
-	h.push_back(&bobby_button_);
 	h.push_back(&advanced_button_);
 	h.push_back(&sound_button_);
 	h.push_back(&music_button_);
@@ -614,7 +611,6 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 
 	autosavemax_slider_.set_location(autosavemax_rect);
 	hotkeys_button_.set_location(rect.x, bottom_row_y - hotkeys_button_.height()/4);
-    bobby_button_.set_location(rect.x + hotkeys_button_.width() + 50, bottom_row_y - bobby_button_.height());
 
 	// Display tab
 	ypos = rect.y + top_border;
@@ -783,10 +779,6 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 void preferences_dialog::process_event()
 {
     if (tab_ == EYETRACKING_TAB) {
-        if (bobby_button_.pressed()) {
-            show_hotkeys_dialog(disp_);
-            parent->clear_buttons();
-		}
 
         if (interaction_blink_button_.pressed()) {
             // disabling other methods
@@ -1235,7 +1227,6 @@ void preferences_dialog::set_selection(int index)
 	bg_restore();
 
 	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
-    bobby_button_.hide(hide_eyetracking);
     gaze_length_slider_.hide(hide_eyetracking);
     gaze_length_label_.hide(hide_eyetracking);
     interaction_blink_button_.hide(hide_eyetracking);
@@ -1255,7 +1246,7 @@ void preferences_dialog::set_selection(int index)
 	whiteboard_on_start_button_.hide(hide_general);
 	hide_whiteboard_button_.hide(hide_general);
 	interrupt_when_ally_sighted_button_.hide(hide_general);
-	hotkeys_button_.hide(hide_general);
+	hotkeys_button_.hide(true);
 	save_replays_button_.hide(hide_general);
 	delete_saves_button_.hide(hide_general);
 	autosavemax_slider_label_.hide(hide_general);

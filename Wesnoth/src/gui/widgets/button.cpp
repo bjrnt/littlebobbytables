@@ -86,7 +86,7 @@ void tbutton::signal_handler_mouse_leave(
 
 	set_state(ENABLED);
 	handled = true;
-    eyetracker::interaction_controller::mouse_leave();
+    eyetracker::interaction_controller::mouse_leave(this);
 }
 
 void tbutton::signal_handler_left_button_down(

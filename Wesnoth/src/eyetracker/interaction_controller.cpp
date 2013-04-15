@@ -105,9 +105,22 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     }
 }
 
+void interaction_controller::mouse_leave(gui::widget *widget) {
+    if (widget == selected_widget_g1_)
+        mouse_leave_base();
+}
+
+void interaction_controller::mouse_leave(gui2::twidget *widget) {
+    if (widget == selected_widget_g2_)
+        mouse_leave_base();
+}
+
+
+
+
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
-void interaction_controller::mouse_leave()
+void interaction_controller::mouse_leave_base()
 {
 /*    if(selected_widget_g1_ != NULL)
         std::cerr << "Left GUI1\n";
@@ -278,7 +291,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
         return interval; // returning interval to next click
     }
 
-    mouse_leave();
+    reset();
     return 0;
 }
 
@@ -329,7 +342,7 @@ void interaction_controller::blink(int x,int y){
             click(x,y);
         }
 
-        mouse_leave();
+        reset();
     }
     return;
 }
