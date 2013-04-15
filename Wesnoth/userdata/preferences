@@ -12,12 +12,12 @@ chat_lines=6
 chat_message_aging=""
 chat_timestamp=""
 client_type=""
-color_cursors=no
+color_cursors=yes
 completed_campaigns=""
 compress_saves=""
 confirm_end_turn=""
 confirm_load_save_from_different_version=""
-delete_saves=""
+delete_saves=no
 disable_notifications=""
 editor_auto_update_transitions=""
 editor_b=""
@@ -27,18 +27,19 @@ editor_draw_terrain_codes=""
 editor_g=""
 editor_r=""
 enable_planning_mode_on_start=no
-encountered_terrain_list="Ce, Ch, Cud, Cv, Ds, Ft, Gd^Fds, Gd^Fms, Gd^Fp, Gd, Gg^Efm, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg, Gll^Fds, Gll^Fp, Gll^Vh, Gs^Fds, Gs^Fms, Gs^Fp, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Kud, Kv, Mm, Ql, Qt, Rb^Fds, Rb^Vh, Rd^Fp, Rd^Uf, Rd, Re^Fds, Re^Gvs, Re, Rp, Rr^Uf, Rr, Ss^Vhs, Ss, Uh^Emf, Uh, Ur^Emf, Ur^Fp, Ur, Uu^Uf, Uu^Vu, Uu, Vi, Wo, Ww^Bw/, Ww^Bw|, Ww, Wwf, Xt, Xu, ^Uf"
-encountered_units="Bandit_Peasant,Bowman,Cavalryman,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Thunderer,Dwarvish Ulfserker,Elder Mage,Elvish Archer,Elvish Champion,Elvish Fighter,Elvish Ranger,Elvish Scout,Elvish Shaman,Elvish Shyde,Fencer,Fighter,Footpad,Footpad_Peasant,Goblin Knight,Goblin Pillager,Gryphon Rider,Heavy Infantryman,Horseman,Mage,Merman Fighter,Orcish Assassin,Orcish Crossbowman,Orcish Slayer,Orcish Warlord,Orcish Warrior,Poacher,Poacher_Peasant,Spearman,Thief,Thug_Peasant,Trapper,Troll,Troll Warrior,White Mage,Wolf Rider"
+encountered_terrain_list="Ce, Ch, Chr, Chw, Co, Cud, Cv, Ds, Ft, Gd^Fds, Gd^Fms, Gd^Fp, Gd, Gg^Efm, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg^Vo, Gg, Gll^Fds, Gll^Fp, Gll^Vh, Gs^Fds, Gs^Fdw, Gs^Fms, Gs^Fp, Gs^Vh, Gs^Vo, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh^Vhh, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Khr, Ko, Kud, Kv, Mm^Vhh, Mm^Xm, Mm, Ql, Qt, Rb^Fds, Rb^Gvs, Rb^Vh, Rb, Rd^Fp, Rd^Uf, Rd, Re^Fds, Re^Fp, Re^Gvs, Re, Rp, Rr^Uf, Rr, Ss^Vhs, Ss, Uh^Emf, Uh, Ur^Emf, Ur^Fp, Ur, Uu^Uf, Uu^Vu, Uu, Vi, Wo, Ww^Bw/, Ww^Bw\, Ww^Bw|, Ww, Wwf, Xt, Xu, ^Uf"
+encountered_units="Ancient Lich,Bandit_Peasant,Bone Shooter,Bowman,Cavalryman,Dark Adept,Dark Sorcerer,Dwarvish Fighter,Dwarvish Guardsman,Dwarvish Thunderer,Dwarvish Ulfserker,Elder Mage,Elvish Archer,Elvish Champion,Elvish Fighter,Elvish Ranger,Elvish Scout,Elvish Shaman,Elvish Shyde,Fencer,Fighter,Fighteress,Footpad,Footpad_Peasant,Ghost,Ghoul,Goblin Knight,Goblin Pillager,Gryphon Rider,Heavy Infantryman,Horseman,Knight,Lich,Lieutenant,Mage,Merman Fighter,Orcish Archer,Orcish Assassin,Orcish Crossbowman,Orcish Grunt,Orcish Leader,Orcish Slayer,Orcish Warlord,Orcish Warrior,Poacher,Poacher_Peasant,Quintain,Red Mage,Revenant,Sergeant,Skeleton,Skeleton Archer,Spearman,Thief,Thug_Peasant,Trapper,Troll,Troll Warrior,Vampire Bat,Walking Corpse,White Mage,Wolf Rider"
 flip_time=""
 floating_labels=yes
-friends=""
+friends=no
 fullscreen=yes
-gaze_length=914
+gaze_length=1252
 grid=no
 hide_whiteboard=no
 iconize_list=""
 idle_anim=""
 idle_anim_rate=0
+interaction=""
 interaction_blink=yes
 interaction_dwell=no
 interaction_switch=no
@@ -55,7 +56,7 @@ lobby_playerlist_group_players=""
 lobby_sounds=""
 lobby_whisper_friends_only=""
 local_tod_lighting=""
-locale=""
+locale="el_GR"
 login="@player@"
 login_is_wrapped=yes
 middle_click_scrolls=""
@@ -65,6 +66,7 @@ mp_era=0
 mp_fog=""
 mp_map=6
 mp_random_start_time=""
+mp_server_program_name=""
 mp_shroud=""
 mp_turns=""
 mp_use_map_settings=yes
@@ -105,416 +107,300 @@ xwindowsize=1280
 yresolution=""
 ywindowsize=738
 [hotkey]
-	alt=no
-	cmd=no
+	command="leftmouseclick"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="cycle"
-	ctrl=no
-	key="n"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="cycleback"
-	ctrl=no
-	key="n"
-	shift=yes
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="holdposition"
-	ctrl=no
-	key="space"
-	shift=yes
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="endunitturn"
-	ctrl=no
-	key="space"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="leader"
-	ctrl=no
-	key="l"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="undo"
-	ctrl=no
-	key="u"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="redo"
-	ctrl=no
-	key="r"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="zoomin"
-	ctrl=no
-	key="+"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="zoomout"
-	ctrl=no
-	key="-"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="zoomdefault"
-	ctrl=no
-	key=0
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="fullscreen"
-	ctrl=yes
-	key="f"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="screenshot"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="accelerated"
-	ctrl=yes
-	key="a"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="describeunit"
-	ctrl=no
-	key="d"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="renameunit"
-	ctrl=yes
-	key="n"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="save"
-	ctrl=yes
-	key="s"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="savereplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="savemap"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="load"
-	ctrl=yes
-	key="o"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="recruit"
-	ctrl=yes
-	key="r"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="repeatrecruit"
-	ctrl=yes
-	key="r"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="recall"
-	ctrl=no
-	key="r"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="select"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="endturn"
-	ctrl=yes
-	key="space"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="toggleellipses"
-	ctrl=yes
-	key="e"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="togglegrid"
-	ctrl=yes
-	key="g"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="statustable"
-	ctrl=no
-	key="s"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="mute"
-	ctrl=yes
-	key="m"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="speak"
-	ctrl=no
-	key="m"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="createunit"
-	ctrl=no
-	key="c"
-	shift=yes
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="changeside"
-	ctrl=no
-	key="u"
-	shift=yes
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="preferences"
-	ctrl=yes
-	key="p"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="objectives"
-	ctrl=yes
-	key="j"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="unitlist"
-	ctrl=no
-	key="u"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="statistics"
-	ctrl=no
-	key="s"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="stopnetwork"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="startnetwork"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="quit"
-	ctrl=yes
-	key="q"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="labelteamterrain"
-	ctrl=yes
-	key="l"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="labelterrain"
-	ctrl=no
-	key="l"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="clearlabels"
-	ctrl=yes
-	key="c"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="showenemymoves"
-	ctrl=yes
-	key="v"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="bestenemymoves"
-	ctrl=yes
-	key="b"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="playreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="resetreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="stopreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replaynextturn"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replayshoweverything"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replayshoweach"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="wbtoggle"
-	ctrl=no
-	key="p"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbexecuteaction"
-	ctrl=no
-	key="y"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbexecuteallactions"
-	ctrl=yes
-	key="y"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbdeleteaction"
-	ctrl=no
-	key="h"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbbumpupaction"
-	ctrl=no
-	key="page up"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbbumpdownaction"
-	ctrl=no
-	key="page down"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="wbsupposedead"
-	ctrl=no
-	key="i"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="delayshroud"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="updateshroud"
-	ctrl=no
-	key="s"
-	shift=yes
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="continue"
-	ctrl=no
-	key="t"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="search"
-	ctrl=no
-	key="/"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="speaktoally"
-	ctrl=yes
-	key="m"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="speaktoall"
-	ctrl=no
-	key="m"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="help"
-	ctrl=no
-	key="f1"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=yes
-	cmd=no
 	command="chatlog"
-	ctrl=no
-	key="c"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="command"
-	ctrl=no
-	key=":"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="customcommand"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="aiformula"
-	ctrl=no
-	key="f"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="clearmessages"
-	ctrl=yes
-	key="x"
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="title_screen__next_tip"
-	ctrl=no
-	key="right"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
 	command="title_screen__previous_tip"
-	ctrl=no
-	key="left"
-	shift=no
+	key="__none__"
 [/hotkey]
 [hotkey]
-	alt=no
-	cmd=no
+	command="title_screen__campaign"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__credits"
+	key="__none__"
+[/hotkey]
+[hotkey]
 	command="global__helptip"
-	ctrl=no
-	key="f10"
-	shift=no
+	key="__none__"
 [/hotkey]
 [history]
 	[mp_user_name_history]

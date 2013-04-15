@@ -744,7 +744,7 @@ void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
-    gui_->enable_menu("select", true);
+    //gui_->enable_menu("select", true);
 	gui_->enable_menu("endturn", true);
 	gui_->enable_menu("right", true);
 	while(!end_turn_) {
