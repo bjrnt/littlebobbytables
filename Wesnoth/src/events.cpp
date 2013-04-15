@@ -22,6 +22,7 @@
 #include "preferences_display.hpp"
 #include "sound.hpp"
 #include "video.hpp"
+#include "preferences.hpp"
 
 #include "SDL.h"
 
@@ -368,6 +369,12 @@ void pump()
 
 			case SDL_QUIT: {
 				throw CVideo::quit();
+			}
+			case SDL_KEYUP: {
+                std::cerr << "Detected key up";
+                if (preferences::interaction_method() == preferences::SWITCH && event.key.keysym.sym == SDLK_SPACE) {
+                    eyetracker::interaction_controller::press_switch();
+                }
 			}
 		}
 

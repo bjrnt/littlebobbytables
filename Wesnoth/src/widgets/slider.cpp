@@ -188,7 +188,7 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
     else{
         //If we were over an item, mark that we have left the slider
         if(mouse_entered_){
-            eyetracker::interaction_controller::mouse_leave();
+            eyetracker::interaction_controller::mouse_leave(this);
             mouse_entered_ = false;
         }
     }

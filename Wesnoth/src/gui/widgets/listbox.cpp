@@ -79,7 +79,7 @@ void tlistbox::signal_handler_mouse_move()
 
 void tlistbox::signal_handler_mouse_leave()
 {
-    eyetracker::interaction_controller::mouse_leave();
+    eyetracker::interaction_controller::mouse_leave(this);
 }
 
 tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
