@@ -63,10 +63,12 @@ void tlistbox::signal_handler_mouse_move()
     SDL_GetMouseState(&mx,&my);
     tpoint* mouse_point = new tpoint(mx,my);
     twidget* res = generator_->find_at(*mouse_point,false);
-    if(res != NULL && res != previous_widget_)
+    if(res != NULL)
     {
-        eyetracker::interaction_controller::mouse_leave();
-        eyetracker::interaction_controller::mouse_enter(res);
+        if(res != previous_widget_) {
+            eyetracker::interaction_controller::mouse_enter(res);
+        }
+
         /*for(unsigned i=0; i < generator_->get_item_count(); i++)
         {
             if(generator_->item(i).has_widget(res))
@@ -77,6 +79,10 @@ void tlistbox::signal_handler_mouse_move()
             }
         }*/
     }
+    else {
+        eyetracker::interaction_controller::mouse_leave(previous_widget_);
+    }
+
     previous_widget_ = res;
 }
 
