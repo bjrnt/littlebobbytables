@@ -557,8 +557,8 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	// please also check 800x600 resolution if you change these spacings
 	const int top_border = disp_.video().gety() < 600 ? 10 : 28;
 	const int bottom_border = 10;
-	const int short_interline = 42; // Pixlar mellan varje slider/item (bobby)
-	const int item_interline = 40;
+	const int short_interline = 50; // Pixlar mellan varje slider/item (bobby)
+	const int item_interline = 46;
 	const int bottom_row_y = rect.y + rect.h - bottom_border;
 
     // Eyetracking tab
@@ -601,7 +601,7 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	turbo_slider_.set_location(turbo_rect);
 	ypos += item_interline; show_ai_moves_button_.set_location(rect.x, ypos);
 	ypos += short_interline; turn_dialog_button_.set_location(rect.x, ypos);
-	ypos += short_interline; whiteboard_on_start_button_.set_location(rect.x, ypos);
+	//ypos += short_interline; whiteboard_on_start_button_.set_location(rect.x, ypos);
 	ypos += short_interline; hide_whiteboard_button_.set_location(rect.x, ypos);
 	ypos += short_interline; interrupt_when_ally_sighted_button_.set_location(rect.x, ypos);
 	ypos += item_interline; save_replays_button_.set_location(rect.x, ypos);
@@ -613,7 +613,7 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 			, 0);
 
 	autosavemax_slider_.set_location(autosavemax_rect);
-	hotkeys_button_.set_location(rect.x, bottom_row_y - hotkeys_button_.height());
+	hotkeys_button_.set_location(rect.x, bottom_row_y - hotkeys_button_.height()/4);
     bobby_button_.set_location(rect.x + hotkeys_button_.width() + 50, bottom_row_y - bobby_button_.height());
 
 	// Display tab

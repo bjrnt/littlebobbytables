@@ -5,6 +5,7 @@
 #include "../game_preferences.hpp"
 #include "map_location.hpp"
 #include "display.hpp"
+#include <unistd.h>
 
 #define DWELL_BOUNDARY_X 40
 #define DWELL_BOUNDARY_Y 40
@@ -203,6 +204,9 @@ void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
     fake_event.button.x = mousex;
     fake_event.button.y = mousey;
     SDL_PushEvent(&fake_event);
+    if(right_click_){
+        usleep(100000);         //sleep uses microseconds
+    }
     fake_event.type=SDL_MOUSEBUTTONUP;
     fake_event.button.type=SDL_MOUSEBUTTONUP;
     SDL_PushEvent(&fake_event);

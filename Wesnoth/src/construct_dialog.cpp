@@ -478,7 +478,7 @@ dialog::dimension_measurements dialog::layout(int xloc, int yloc)
 					right_preview_pane_width += rect.w;
 				}
 			} else {
-				above_preview_pane_height = std::max<size_t>(rect.h,above_preview_pane_height);
+				above_preview_pane_height = std::max<size_t>(rect.h+10,above_preview_pane_height);
 				if(pane->left_side()) {
 					above_left_preview_pane_width += rect.w;
 				} else {
