@@ -651,8 +651,8 @@ void ui::layout_children(const SDL_Rect& /*rect*/)
 	users_menu_.set_location(xscale(856), yscale(42));
 	users_menu_.set_height(yscale(715));
 	users_menu_.set_max_height(yscale(715));
-	chat_textbox_.set_location(xscale(11) + 4, yscale(573) + 4);
-	chat_textbox_.set_measurements(xscale(833) - 8, yscale(143) - 8);
+	chat_textbox_.set_location(xscale(11) + 4, yscale(641) + 4);
+	chat_textbox_.set_measurements(xscale(833) - 8, yscale(75) - 8);
 	entry_textbox_.set_location(xscale(11) + 4, yscale(732));
 	entry_textbox_.set_width(xscale(833) - 8);
 }
