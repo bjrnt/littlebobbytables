@@ -93,7 +93,6 @@ protected:
 	replay_network_sender replay_sender_;
 
 	bool end_turn_;
-	enum preferences::INTERACTION_METHOD interaction_mode;
 	bool player_type_changed_;
 	bool replaying_;
 	bool turn_over_;
