@@ -24,6 +24,7 @@ private:
 
     static void click(int mousex, int mousey, Uint8 mousebutton = SDL_BUTTON_LEFT);
     static void double_click(int mousex, int mousey);
+    static void right_or_left_click(int x,int y);
 
     static Uint32 callback(Uint32 interval, void* widget); // Called after a timer has expired
     static void stop_timer();
@@ -34,6 +35,7 @@ private:
 public:
     static void checkStillDwelling();
     static void blink(int x, int y);
+    static void press_switch();
 
     static void toggle_right_click(bool value);
     static bool get_right_click();

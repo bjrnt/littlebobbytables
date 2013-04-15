@@ -153,10 +153,10 @@ void interaction_controller::checkStillDwelling()
 
 
         SDL_GetMouseState(&x, &y);
-        cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
+        //cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
         if(y<200)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
         {
-            cerr<<"ENTERED IF\n";
+            //cerr<<"ENTERED IF\n";
            // selected_window_ = NULL;
             init_window(selected_window_);
            // stop_timer();
@@ -295,6 +295,16 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     return 0;
 }
 
+
+void interaction_controller::press_switch(){
+    if (preferences::interaction_method() == preferences::SWITCH) {
+        int x,y;
+        SDL_GetMouseState(&x,&y);
+        right_or_left_click(x,y);
+    }
+}
+
+
 // Functions like callback but with limited functionality.
 // Should be used to simulate a MouseClick event when a blink
 // occurs.
@@ -308,43 +318,31 @@ void interaction_controller::blink(int x,int y){
     if(preferences::interaction_method() == preferences::BLINK){
         //int x,y;
 
-        if(selected_widget_g1_ != NULL)
-        {
-            //SDL_Rect rect = selected_widget_g1_->location();
-            //x = rect.x + rect.w/2;
-            //y = rect.y + rect.h/2;
-        }
-        else if(selected_widget_g2_ != NULL)
-        {
-          //  x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
-          //  y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
-        }
-        else if(map_loc_ != NULL)
-        {
-           // SDL_GetMouseState(&x,&y);
-        }
-
-        else if(selected_window_ != NULL)
+        if(selected_window_ != NULL)
         {
             x = dwell_startX_;
             y = dwell_startY_;
         }
-        else
+        else if(map_loc_ == NULL && selected_widget_g2_ == NULL && selected_widget_g1_ == NULL)
         {
-            return;
+           return;
         }
 
-        if(right_click_){
-            click(x,y,SDL_BUTTON_RIGHT);
-            right_click_ = false;
-        }
-        else{
-            click(x,y);
-        }
+        right_or_left_click(x,y);
 
         reset();
     }
     return;
+}
+
+void interaction_controller::right_or_left_click(int x,int y){
+    if(right_click_){
+        click(x,y,SDL_BUTTON_RIGHT);
+        right_click_ = false;
+    }
+    else{
+        click(x,y);
+    }
 }
 
 void interaction_controller::toggle_right_click(bool value){
