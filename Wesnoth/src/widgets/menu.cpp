@@ -32,6 +32,8 @@
 
 #include <numeric>
 
+#define ITEM_HEIGHT 50
+
 namespace gui {
 
 menu::basic_sorter::basic_sorter()
@@ -829,7 +831,7 @@ SDL_Rect menu::style::item_size(const std::string& item) const {
 				font::draw_text(NULL,area,get_font_size(),font::NORMAL_COLOR,str,0,0);
 			res.w += font_size.w;
 			//res.h = std::max<int>(font_size.h, res.h);
-			res.h = 40; // Bobby : Dennis : bigger menu item
+			res.h = ITEM_HEIGHT; // Bobby : Dennis : bigger menu item
 		}
 	}
 	return res;
