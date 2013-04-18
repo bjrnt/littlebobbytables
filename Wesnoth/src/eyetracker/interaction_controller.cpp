@@ -20,6 +20,7 @@ gui2::twindow* interaction_controller::selected_window_ = NULL;
 map_location* interaction_controller::map_loc_ = NULL;
 display* interaction_controller::disp = NULL;
 bool right_click_ = false;
+bool been_out_of_top_box = true;
 int dwell_startX_ = 0;
 int dwell_startY_ = 0;
 
@@ -163,6 +164,7 @@ void interaction_controller::checkStillDwelling()
         }
            // stop_timer();
         }else{
+            been_out_of_top_box = true;
             stop_timer();
         }
     }
@@ -196,7 +198,8 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
-        if(changedCord){
+        if(changedCord && been_out_of_top_box){
+            been_out_of_top_box = false;
             start_timer(event);
         }
         break;
