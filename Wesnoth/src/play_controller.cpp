@@ -452,6 +452,7 @@ void play_controller::right_mouse_click(){
 
 
 void play_controller::cycle_units(){
+    gui_->set_select_mode(true);
 	mouse_handler_.cycle_units(browse_);
 }
 

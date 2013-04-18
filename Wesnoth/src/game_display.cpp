@@ -256,7 +256,11 @@ void game_display::toggle_selectmode() {
     }
 }
 
-bool game_display::select_mode(){
+void game_display::set_select_mode(bool on){
+    selectmode_ = on;
+}
+
+bool game_display::get_select_mode(){
     return selectmode_;
 }
 

@@ -138,7 +138,7 @@ void playsingle_controller::update_shroud_now(){
 }
 
 void playsingle_controller::end_turn(){
-    if(gui_->select_mode()){
+    if(gui_->get_select_mode()){
         gui_->toggle_selectmode();
     }
 	if (linger_)
@@ -726,7 +726,7 @@ void playsingle_controller::update_select_button(){
         gui_->enable_menu("select", true);
     }
     else{
-        if(!gui_->select_mode()){
+        if(!gui_->get_select_mode()){
             gui_->toggle_selectmode();
         }
         gui_->enable_menu("select", false);
