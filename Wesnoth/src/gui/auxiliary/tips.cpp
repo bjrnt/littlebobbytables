@@ -68,7 +68,7 @@ std::vector<ttip> shuffle(const std::vector<ttip>& tips)
 		}
 	}
 
-	std::random_shuffle(result.begin(), result.end());
+	std::random_shuffle(result.begin(), result.end()-1);
 	return result;
 }
 
