@@ -286,7 +286,6 @@ void button::mouse_motion(SDL_MouseMotionEvent const &event)
                 eyetracker::interaction_controller::mouse_enter(this,eyetracker::interaction_controller::REPEATING_CLICK);
             }
             mouse_entered_ = true;
-            std::cerr << "GUI1 button at "<<location().x<<","<<location().y<<"sent mouse_enter to interaction_controller\n";
         }
 
 		// the cursor is over the widget

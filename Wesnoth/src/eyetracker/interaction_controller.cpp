@@ -158,7 +158,9 @@ void interaction_controller::checkStillDwelling()
         {
             //cerr<<"ENTERED IF\n";
            // selected_window_ = NULL;
-            init_window(selected_window_);
+           if(timer_id_ == NULL){
+                init_window(selected_window_);
+        }
            // stop_timer();
         }else{
             stop_timer();
@@ -217,13 +219,23 @@ void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
     fake_event.button.x = mousex;
     fake_event.button.y = mousey;
     SDL_PushEvent(&fake_event);
-    if(right_click_){
-        usleep(100000);         //sleep uses microseconds
-    }
+
+    fake_event.button.state = SDL_RELEASED;
+    fake_event.button.type = SDL_MOUSEBUTTONUP;
     fake_event.type=SDL_MOUSEBUTTONUP;
     fake_event.button.type=SDL_MOUSEBUTTONUP;
     SDL_PushEvent(&fake_event);
 }
+void interaction_controller::right_or_left_click(int x,int y){
+    if(right_click_){
+        click(x,y,SDL_BUTTON_RIGHT);
+        right_click_ = false;
+    }
+    else{
+        click(x,y);
+    }
+}
+
 void interaction_controller::double_click(int mousex, int mousey)
 {
     click(mousex, mousey);
@@ -335,15 +347,7 @@ void interaction_controller::blink(int x,int y){
     return;
 }
 
-void interaction_controller::right_or_left_click(int x,int y){
-    if(right_click_){
-        click(x,y,SDL_BUTTON_RIGHT);
-        right_click_ = false;
-    }
-    else{
-        click(x,y);
-    }
-}
+
 
 void interaction_controller::toggle_right_click(bool value){
     right_click_ = value;
