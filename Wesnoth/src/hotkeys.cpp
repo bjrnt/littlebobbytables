@@ -980,7 +980,6 @@ bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 			undo();
 			break;
         case HOTKEY_CANCEL_MENU:
-            undo();
             break;
 		case HOTKEY_REDO:
 			redo();

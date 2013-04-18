@@ -371,7 +371,7 @@ void pump()
 				throw CVideo::quit();
 			}
 			case SDL_KEYUP: {
-                if (preferences::interaction_method() == preferences::SWITCH && event.key.keysym.sym == SDLK_SPACE) {
+                if (preferences::interaction_method() == preferences::SWITCH && event.key.keysym.sym == SDLK_MENU) {
                     eyetracker::interaction_controller::press_switch();
                 }
 			}
