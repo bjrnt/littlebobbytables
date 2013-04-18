@@ -21,6 +21,7 @@
 #include "actions.hpp"
 #include "attack_prediction_display.hpp"
 #include "dialogs.hpp"
+#include "display.hpp"
 #include "game_end_exceptions.hpp"
 #include "game_events.hpp"
 #include "gettext.hpp"
@@ -444,6 +445,7 @@ bool mouse_handler::right_click_show_menu(int x, int y, const bool browse)
 bool mouse_handler::left_click(int x, int y, const bool browse)
 {
 	undo_ = false;
+	bool second_time_clicked = false;
 	if (mouse_handler_base::left_click(x, y, browse)) return false;
 
 	// Lock whiteboard activation state to avoid problems due to
@@ -462,11 +464,16 @@ bool mouse_handler::left_click(int x, int y, const bool browse)
 	{ // start planned unit map scope
 		wb::future_map_if_active planned_unit_map;
 		u = find_unit(selected_hex_);
-
 		//if the unit is selected and then itself clicked on,
 		//any goto command is cancelled
 		if (u != units_.end() && !browse && selected_hex_ == hex && u->side() == side_num_) {
 			u->set_goto(map_location());
+			//Bobby
+			//gui_->invalidate(selected_hex_);
+            //gui_->clear_invalidated_hex();
+            deselect_hex();
+            second_time_clicked = true;
+            //BLUR
 		}
 
 		clicked_u = find_unit(hex);
@@ -608,7 +615,10 @@ bool mouse_handler::left_click(int x, int y, const bool browse)
 	} else {
 		// we select a (maybe empty) hex
 		// we block selection during attack+move (because motion is blocked)
-		select_hex(hex, browse);
+		// Bobby: if second time clicked we should deselect
+		if (!second_time_clicked) {
+            select_hex(hex, browse);
+		}
 	}
 	return false;
 	//FIXME: clean all these "return false"
