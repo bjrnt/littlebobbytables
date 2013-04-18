@@ -24,6 +24,12 @@ bool been_out_of_top_box = true;
 int dwell_startX_ = 0;
 int dwell_startY_ = 0;
 
+SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
+CVideo* interaction_controller::video_ = NULL;
+SDL_Rect interaction_controller::draw_target_ = create_rect(0,0,0,0);
+int interaction_controller::remaining_dwell_length_ = 0;
+surface interaction_controller::restore_ = NULL;
+
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event)
@@ -31,6 +37,8 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
 //    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
+    if(draw_timer_id_ != NULL)
+        stop_draw_timer();
     if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
     {
         reset();
@@ -46,6 +54,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
     {
     case preferences::DWELL:
         start_timer(event);
+        start_draw_timer();
         break;
     case preferences::BLINK:
         // Blink
@@ -64,6 +73,8 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
 //    std::cerr << "Entered GUI2\n";
     if(timer_id_ != NULL)
         stop_timer();
+    if(draw_timer_id_ != NULL)
+        stop_draw_timer();
     if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
     {
         reset();
@@ -75,6 +86,7 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
     {
     case preferences::DWELL:
         start_timer(event);
+        start_draw_timer();
         break;
     case preferences::BLINK:
         // Blink
@@ -88,6 +100,8 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
 {
     if(timer_id_ != NULL)
         stop_timer();
+    if(draw_timer_id_ != NULL)
+        stop_draw_timer();
 
     map_loc_ = loc;
     disp = d;
@@ -123,16 +137,17 @@ void interaction_controller::mouse_leave(gui2::twidget *widget) {
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
 void interaction_controller::mouse_leave_base()
 {
-/*    if(selected_widget_g1_ != NULL)
-        std::cerr << "Left GUI1\n";
-    else if(selected_widget_g2_ != NULL)
-        std::cerr << "Left GUI2\n";
-*/
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
         if(timer_id_ != NULL)
             stop_timer();
+        if(draw_timer_id_ != NULL)
+            stop_draw_timer();
+        if(restore_ != NULL) {
+            restore_background();
+            restore_ = NULL;
+        }
         break;
     case preferences::BLINK:
         // Blink is selected
@@ -157,12 +172,9 @@ void interaction_controller::checkStillDwelling()
         //cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
         if(y<200)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
         {
-            //cerr<<"ENTERED IF\n";
-           // selected_window_ = NULL;
            if(timer_id_ == NULL){
                 init_window(selected_window_);
         }
-           // stop_timer();
         }else{
             been_out_of_top_box = true;
             stop_timer();
@@ -176,6 +188,8 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
 //    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
+    if(draw_timer_id_ != NULL)
+        stop_draw_timer();
     if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
     {
         reset();
@@ -247,6 +261,10 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
+    if(restore_ != NULL) {
+        restore_background();
+        restore_ = NULL;
+    }
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
     selected_window_ = NULL;
@@ -371,9 +389,118 @@ void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND e
         throw "Trying to start timer without stopping last timer or without selected widget";
     }
 }
+void interaction_controller::start_draw_timer() {
+    if(draw_timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL || selected_window_ != NULL))
+    {
+        remaining_dwell_length_ = preferences::gaze_length();
+        draw_timer_id_ = SDL_AddTimer(75, draw_callback, NULL);
+    }
+    else
+    {
+        throw "Trying to start draw timer without stopping last timer or without selected widget";
+    }
+}
 void interaction_controller::stop_timer()
 {
     SDL_RemoveTimer(timer_id_);
     timer_id_ = NULL;
+}
+void interaction_controller::stop_draw_timer()
+{
+    SDL_RemoveTimer(draw_timer_id_);
+    draw_timer_id_ = NULL;
+}
+
+void interaction_controller::set_indicator_display(CVideo* video)
+{
+    video_ = video;
+}
+Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
+{
+    remaining_dwell_length_ -= interval;
+    if(remaining_dwell_length_ <= 0) {
+        return 0;
+    }
+    double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
+    int circle_radius = 25;
+    int x,y;
+
+    if(selected_widget_g1_ != NULL)
+    {
+        SDL_Rect rect = selected_widget_g1_->location();
+        x = rect.x + rect.w/2;
+        y = rect.y + rect.h/2;
+    }
+    else if(selected_widget_g2_ != NULL)
+    {
+        x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+        y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+    }
+    else if(map_loc_ != NULL){
+        //SDL_GetMouseState(&x,&y);
+        return interval;
+    }
+    else if(selected_window_ != NULL){
+        //x = dwell_startX_;
+        //y = dwell_startY_;
+        return interval;
+    }
+    else
+    {
+        throw "InteractionController: Trying to click a widget but no widget has been selected.";
+    }
+
+	int current_radius = (int) (circle_radius * size_multiplier);
+    draw_indicator(x, y, circle_radius, current_radius);
+    return interval;
+}
+void interaction_controller::restore_background()
+{
+    if(restore_ != NULL) {
+        surface& surf = video_->getSurface();
+        sdl_blit(restore_,NULL,surf,&draw_target_);
+        SDL_Flip(surf);
+    }
+}
+void interaction_controller::draw_indicator(int cx, int cy, int max_radius, int radius)
+{
+    surface& surf = video_->getSurface();
+	surface ind = create_neutral_surface(2 * radius, 2 * radius);
+
+    max_radius += 5;
+    if(restore_ == NULL) {
+        draw_target_ = create_rect(cx - max_radius, cy - max_radius, max_radius * 2, max_radius * 2);
+        restore_ = create_neutral_surface(2 * max_radius, 2 * max_radius);
+        sdl_blit(surf,&draw_target_,restore_,NULL);
+    }
+    else {
+        restore_background();
+        sdl_blit(surf,&draw_target_,restore_,NULL);
+        draw_target_ = create_rect(cx - max_radius, cy - max_radius, max_radius * 2, max_radius * 2);
+    }
+
+	Uint32 pixel = SDL_MapRGBA(ind->format, 0, 254, 0, 60);
+
+	double r = (double) radius;
+	ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
+	unsigned w = ind->w;
+
+	for (int y = 0; y < 2 * radius; y++)
+	{
+		double dy = abs((cy - radius + y) - cy);
+
+		for(int x = 0; x < 2 * radius; x++)
+		{
+			double dx = abs((cx - radius + x) - cx);
+			double dist = sqrt(dx * dx + dy * dy);
+			if(dist < r)
+				*reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+		}
+	}
+
+	SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+	sdl_blit(ind,NULL,surf,&target);
+	SDL_Flip(surf);
 }
 }

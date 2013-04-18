@@ -32,7 +32,20 @@ private:
     static void start_timer(interaction_controller::EVENT_TO_SEND event); // Sets the selected widget and timer id, starts a timer
     static void mouse_leave_base();
 
+    static CVideo* video_;
+    static SDL_Rect draw_target_;
+    static surface restore_;
+    static SDL_TimerID draw_timer_id_;
+    static int remaining_dwell_length_;
+
+    static void restore_background();
+    static void start_draw_timer();
+    static void stop_draw_timer();
+    static Uint32 draw_callback(Uint32 interval, void* param);
+    static void draw_indicator(int cx, int cy, int max_radius, int radius);
+
 public:
+    static void set_indicator_display(CVideo* video);
     static void checkStillDwelling();
     static void blink(int x, int y);
     static void press_switch();

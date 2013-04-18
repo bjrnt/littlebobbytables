@@ -429,6 +429,9 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 		std::cerr << "could not initialize resolution\n";
 		return 1;
     }
+
+    eyetracker::interaction_controller::set_indicator_display(&(game->disp().video()));
+
 	loadscreen::start_stage("load config");
 	res = game->init_config();
 	if(res == false) {
