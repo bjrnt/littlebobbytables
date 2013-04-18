@@ -325,20 +325,20 @@ connect::side::side(const side& a) :
 
 void connect::side::add_widgets_to_scrollpane(gui::scrollpane& pane, int pos)
 {
-	pane.add_widget(&player_number_,     0, 5 + pos);
-	pane.add_widget(combo_controller_.get(), 20, 5 + pos);
+	pane.add_widget(&player_number_,     0, 45 + pos);
+	pane.add_widget(combo_controller_.get(), 20, 45 + pos);
 	pane.add_widget(&orig_controller_,  20 + (combo_controller_->width() - orig_controller_.width()) / 2,
-									    35 + pos + (combo_leader_.height() - orig_controller_.height()) / 2);
-	pane.add_widget(&combo_ai_algorithm_, 20, 35 + pos);
-	pane.add_widget(&combo_faction_, 135, 5 + pos);
-	pane.add_widget(&combo_leader_,  135, 35 + pos);
-	pane.add_widget(&combo_gender_,  250, 35 + pos);
-	pane.add_widget(&combo_team_,    250, 5 + pos);
-	pane.add_widget(&combo_color_,  365, 5 + pos);
-	pane.add_widget(&slider_gold_,   475, 5 + pos);
-	pane.add_widget(&label_gold_,    475, 35 + pos);
-	pane.add_widget(&slider_income_, 475 + slider_gold_.width(),  5 + pos);
-	pane.add_widget(&label_income_,  475 + slider_gold_.width(), 35 + pos);
+									    75 + pos + (combo_leader_.height() - orig_controller_.height()) / 2);
+	pane.add_widget(&combo_ai_algorithm_, 20, 100 + pos);
+	pane.add_widget(&combo_faction_, 135, 45 + pos);
+	pane.add_widget(&combo_leader_,  135, 100 + pos);
+	pane.add_widget(&combo_gender_,  250, 100 + pos);
+	pane.add_widget(&combo_team_,    250, 45 + pos);
+	pane.add_widget(&combo_color_,  365, 45 + pos);
+	pane.add_widget(&slider_gold_,   475, 45 + pos);
+	pane.add_widget(&label_gold_,    475, 75 + pos);
+	pane.add_widget(&slider_income_, 475 + slider_gold_.width(),  45 + pos);
+	pane.add_widget(&label_income_,  475 + slider_gold_.width(), 75 + pos);
 }
 
 void connect::side::process_event()
@@ -1487,9 +1487,9 @@ void connect::layout_children(const SDL_Rect& rect)
 
 	// Buttons
 	right_button->set_location(right  - right_button->width(),
-	                           bottom - right_button->height());
+	                           bottom - right_button->height() + 80);
 	left_button->set_location(right  - right_button->width() - left_button->width() - gui::ButtonHPadding,
-	                          bottom - left_button->height());
+	                          bottom - left_button->height() + 80);
 
 	type_title_label_.set_location(left+30, top+35);
 	faction_title_label_.set_location((left+145), top+35);
@@ -1606,7 +1606,7 @@ void connect::lists_init()
 	// This function must be called after the sides_ vector is fully populated.
 	for(side_list::iterator s = sides_.begin(); s != sides_.end(); ++s) {
 		const int side_num = s - sides_.begin();
-		const int spos = 60 * (side_num-offset);
+		const int spos = 120 * (side_num-offset);
 		if(!s->allow_player()) {
 			offset++;
 			continue;

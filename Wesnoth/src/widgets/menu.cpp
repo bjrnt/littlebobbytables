@@ -734,6 +734,7 @@ void menu::handle_event(const SDL_Event& event)
 
 		const int heading_item = hit_heading(event.motion.x,event.motion.y);
 		if(heading_item != highlight_heading_) {
+            eyetracker::interaction_controller::mouse_enter(this);
 			highlight_heading_ = heading_item;
 			invalidate_heading();
 		}

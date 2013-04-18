@@ -93,7 +93,6 @@ void playsingle_controller::init_gui(){
 		gui_->scroll_to_tile(map_.starting_position(first_human_team_ + 1), game_display::WARP);
 	}
 	gui_->scroll_to_tile(map_.starting_position(1), game_display::WARP);
-	interaction_mode = preferences::interaction_method();
     if(preferences::interaction_method() == preferences::DWELL){
         gui_->enable_menu("select", true);
     }
@@ -723,20 +722,14 @@ void playsingle_controller::execute_gotos(){
 }
 
 void playsingle_controller::update_select_button(){
-    if(interaction_mode != preferences::interaction_method()){
-        interaction_mode = preferences::interaction_method();
-        if(interaction_mode == preferences::DWELL){
-            if(gui_->select_mode()){
-                gui_->toggle_selectmode();
-            }
-            gui_->enable_menu("select", true);
+    if(preferences::interaction_method() == preferences::DWELL){
+        gui_->enable_menu("select", true);
+    }
+    else{
+        if(!gui_->select_mode()){
+            gui_->toggle_selectmode();
         }
-        else{
-            if(!gui_->select_mode()){
-                gui_->toggle_selectmode();
-            }
-            gui_->enable_menu("select", false);
-        }
+        gui_->enable_menu("select", false);
     }
 }
 
@@ -744,7 +737,7 @@ void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
-    gui_->enable_menu("select", true);
+    update_select_button();
 	gui_->enable_menu("endturn", true);
 	gui_->enable_menu("right", true);
 	while(!end_turn_) {
