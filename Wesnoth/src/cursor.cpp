@@ -164,7 +164,7 @@ void set(CURSOR_TYPE type)
 	//if (cursor_image != NULL && cursor_image != SDL_GetCursor())
 		SDL_SetCursor(cursor_image);
 
-    SDL_ShowCursor(SDL_DISABLE); //Bobby | Christoffer: Enable/disable cursor
+    SDL_ShowCursor(SDL_ENABLE); //Bobby | Christoffer: Enable/disable cursor
 }
 
 void set_dragging(bool drag)
