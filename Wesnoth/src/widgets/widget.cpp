@@ -51,6 +51,10 @@ widget::~widget()
 	free_mouse_lock();
 }
 
+SDL_Rect widget::indicator_rect(){
+    return {0,0,0,0};
+}
+
 void widget::aquire_mouse_lock()
 {
 	assert(!mouse_lock_);

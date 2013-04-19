@@ -54,6 +54,7 @@ public:
 	{
 		disconnect_signal_mouse_left_click(*this, signal);
 	}
+	SDL_Rect indicator_rect();
 
 	/***** ***** ***** setters / getters for members ***** ****** *****/
 

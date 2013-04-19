@@ -213,6 +213,9 @@ public:
 	 */
 	tpoint get_best_size() const;
 
+    // Bobby
+    SDL_Rect indicator_rect();
+
 private:
 	/**
 	 * Calculates the best size.
