@@ -63,6 +63,14 @@ void tbutton::set_state(const tstate state)
 	}
 }
 
+SDL_Rect tbutton::indicator_rect() {
+    int h = this->get_height();
+    int w = h;
+    int x = this->get_x() + this->get_width() / 2 - w / 2;
+    int y = this->get_y();
+    return {x,y,w,h};
+}
+
 const std::string& tbutton::get_control_type() const
 {
 	static const std::string type = "button";

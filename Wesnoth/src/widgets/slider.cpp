@@ -113,6 +113,11 @@ int slider::max_value() const
 	return max_;
 }
 
+int slider::min_value() const
+{
+    return min_;
+}
+
 bool slider::value_change()
 {
 	if (value_change_) {
@@ -139,10 +144,13 @@ void slider::draw_contents()
 	surface image(state_ != NORMAL ? highlightedImage_ : image_);
 	if (image == NULL)
 		return;
-	SDL_Color line_color = font::NORMAL_COLOR;
+	//SDL_Color line_color = font::NORMAL_COLOR;
+	SDL_Color line_color_top = {163, 155, 152, 0};
+	SDL_Color line_color_bottom = {106, 99, 96, 0};
+
 	if (!enabled()) {
 		image = greyscale_image(image);
-		line_color = font::DISABLED_COLOR;
+		line_color_top = line_color_bottom = font::DISABLED_COLOR;
 	}
 
 	SDL_Rect const &loc = location();
@@ -151,13 +159,37 @@ void slider::draw_contents()
 
 	surface screen = video().getSurface();
 
-	SDL_Rect line_rect = create_rect(loc.x + image->w / 2
+	SDL_Rect line_rect_top = create_rect(loc.x + image->w / 2
+			, loc.y + loc.h / 2 - 1
+			, loc.w - image->w
+			, 1);
+    SDL_Rect line_rect_bottom = create_rect(loc.x + image->w / 2
 			, loc.y + loc.h / 2
 			, loc.w - image->w
 			, 1);
 
-	sdl_fill_rect(screen, &line_rect, SDL_MapRGB(screen->format,
-		line_color.r, line_color.g, line_color.b));
+	sdl_fill_rect(screen, &line_rect_top, SDL_MapRGB(screen->format,
+		line_color_top.r, line_color_top.g, line_color_top.b));
+    sdl_fill_rect(screen, &line_rect_bottom, SDL_MapRGB(screen->format,
+		line_color_bottom.r, line_color_bottom.g, line_color_bottom.b));
+
+    // Little Bobby: draws steps on certain sliders
+    if((max_ - min_) < 15) {
+        SDL_Color step_color = {200,200,200,0};
+        int width = loc.w - image->w;
+        int steps = max_ - min_;
+        int start_x = loc.x + image->w / 2;
+        int end_x = start_x + width;
+        int step_length = width / steps;
+        for(int step = 0; step < steps; step++) {
+            SDL_Rect step_rect = create_rect(start_x + step * step_length, loc.y + loc.h/2 - 3, 2, 5);
+            sdl_fill_rect(screen, &step_rect, SDL_MapRGB(screen->format,
+                step_color.r, step_color.g, step_color.b));
+        }
+        SDL_Rect step_rect = create_rect(end_x - 1, loc.y + loc.h/2 - 3, 2, 5);
+        sdl_fill_rect(screen, &step_rect, SDL_MapRGB(screen->format,
+            step_color.r, step_color.g, step_color.b));
+    }
 
 	SDL_Rect const &slider = slider_area();
 	video().blit_surface(slider.x, slider.y, image);
@@ -172,7 +204,8 @@ void slider::set_slider_position(int x)
 	if (tmp > loc.w - image_->w)
 		tmp = loc.w - image_->w;
 
-	set_value(tmp * (max_ - min_) / static_cast<int>(loc.w - image_->w) + min_);
+
+	set_value( round((0.0 + tmp * (max_ - min_)) / (loc.w - image_->w) + min_) );
 }
 
 void slider::mouse_motion(const SDL_MouseMotionEvent& event)
