@@ -33,8 +33,8 @@ private:
     static void mouse_leave_base();
 
     static CVideo* video_;
-    static SDL_Rect draw_target_;
     static surface restore_;
+    static SDL_Rect previous_rect_;
     static SDL_TimerID draw_timer_id_;
     static int remaining_dwell_length_;
 
@@ -42,7 +42,7 @@ private:
     static void start_draw_timer();
     static void stop_draw_timer();
     static Uint32 draw_callback(Uint32 interval, void* param);
-    static void draw_indicator(int cx, int cy, int max_radius, int radius);
+    static void draw_indicator(SDL_Rect rect, double size_multiplier);
 
 public:
     static void set_indicator_display(CVideo* video);

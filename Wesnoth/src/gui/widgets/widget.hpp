@@ -214,7 +214,7 @@ public:
 	tpoint get_best_size() const;
 
     // Bobby
-    SDL_Rect indicator_rect();
+    virtual SDL_Rect indicator_rect();
 
 private:
 	/**

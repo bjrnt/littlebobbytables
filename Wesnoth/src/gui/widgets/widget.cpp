@@ -63,6 +63,10 @@ twidget::~twidget()
 	}
 }
 
+SDL_Rect twidget::indicator_rect(){
+    return {0,0,0,0};
+}
+
 void twidget::set_id(const std::string& id)
 {
 	DBG_GUI_LF << "set id of " << static_cast<void*>(this)
@@ -188,11 +192,6 @@ tdialog* twidget::dialog()
 {
 	twindow* window = get_window();
 	return window ? window->dialog() : NULL;
-}
-
-//Bobby
-SDL_Rect indicator_rect(){
-    return {0,0,0,0};
 }
 
 void twidget::populate_dirty_list(twindow& caller,

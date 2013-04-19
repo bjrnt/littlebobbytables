@@ -26,7 +26,7 @@ int dwell_startY_ = 0;
 
 SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
 CVideo* interaction_controller::video_ = NULL;
-SDL_Rect interaction_controller::draw_target_ = create_rect(0,0,0,0);
+SDL_Rect interaction_controller::previous_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_dwell_length_ = 0;
 surface interaction_controller::restore_ = NULL;
 
@@ -39,7 +39,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
         stop_timer();
     if(draw_timer_id_ != NULL)
         stop_draw_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL || map_loc_ != NULL)
     {
         reset();
     }
@@ -75,7 +75,7 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
         stop_timer();
     if(draw_timer_id_ != NULL)
         stop_draw_timer();
-    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL)
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL || map_loc_ != NULL)
     {
         reset();
     }
@@ -244,7 +244,7 @@ void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
     SDL_PushEvent(&fake_event);
 }
 void interaction_controller::right_or_left_click(int x,int y){
-    if(right_click_){
+    if(right_click_ && map_loc_ != NULL){
         click(x,y,SDL_BUTTON_RIGHT);
         right_click_ = false;
     }
@@ -306,13 +306,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 
     if(event == CLICK)
     {
-        if(right_click_){
-            click(x,y,SDL_BUTTON_RIGHT);
-            right_click_ = false;
-        }
-        else{
-            click(x,y);
-        }
+        right_or_left_click(x,y);
     }
     else if(event == DOUBLE_CLICK)
     {
@@ -422,19 +416,14 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
         return 0;
     }
     double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
-    int circle_radius = 25;
-    int x,y;
-
+    SDL_Rect indicator_rect;
     if(selected_widget_g1_ != NULL)
     {
-        SDL_Rect rect = selected_widget_g1_->location();
-        x = rect.x + rect.w/2;
-        y = rect.y + rect.h/2;
+        indicator_rect = selected_widget_g1_->indicator_rect();
     }
     else if(selected_widget_g2_ != NULL)
     {
-        x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
-        y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
+        indicator_rect = selected_widget_g2_->indicator_rect();
     }
     else if(map_loc_ != NULL){
         //SDL_GetMouseState(&x,&y);
@@ -450,41 +439,41 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
         throw "InteractionController: Trying to click a widget but no widget has been selected.";
     }
 
-	int current_radius = (int) (circle_radius * size_multiplier);
-    draw_indicator(x, y, circle_radius, current_radius);
+    draw_indicator(indicator_rect,size_multiplier);
     return interval;
 }
 void interaction_controller::restore_background()
 {
     if(restore_ != NULL) {
         surface& surf = video_->getSurface();
-        sdl_blit(restore_,NULL,surf,&draw_target_);
+        sdl_blit(restore_,NULL,surf,&previous_rect_);
         SDL_Flip(surf);
     }
 }
-void interaction_controller::draw_indicator(int cx, int cy, int max_radius, int radius)
+void interaction_controller::draw_indicator(SDL_Rect indicator_rect, double size_multiplier)
 {
+    int max_radius = indicator_rect.h / 2;
+	int radius = (int) (max_radius * size_multiplier);
     surface& surf = video_->getSurface();
 	surface ind = create_neutral_surface(2 * radius, 2 * radius);
 
-    max_radius += 5;
     if(restore_ == NULL) {
-        draw_target_ = create_rect(cx - max_radius, cy - max_radius, max_radius * 2, max_radius * 2);
-        restore_ = create_neutral_surface(2 * max_radius, 2 * max_radius);
-        sdl_blit(surf,&draw_target_,restore_,NULL);
+        restore_ = create_neutral_surface(indicator_rect.w, indicator_rect.h);
+        sdl_blit(surf,&indicator_rect,restore_,NULL);
     }
     else {
         restore_background();
-        sdl_blit(surf,&draw_target_,restore_,NULL);
-        draw_target_ = create_rect(cx - max_radius, cy - max_radius, max_radius * 2, max_radius * 2);
+        sdl_blit(surf,&indicator_rect,restore_,NULL);
     }
+    previous_rect_ = indicator_rect;
 
 	Uint32 pixel = SDL_MapRGBA(ind->format, 0, 254, 0, 60);
 
 	double r = (double) radius;
 	ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
 	unsigned w = ind->w;
-
+    int cy = indicator_rect.y + indicator_rect.h/2;
+    int cx = indicator_rect.x + indicator_rect.w/2;
 	for (int y = 0; y < 2 * radius; y++)
 	{
 		double dy = abs((cy - radius + y) - cy);

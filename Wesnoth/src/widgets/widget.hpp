@@ -26,7 +26,7 @@ namespace gui {
 class widget : public events::handler
 {
 public:
-    SDL_Rect indicator_rect();
+    virtual SDL_Rect indicator_rect();
 	SDL_Rect const &location() const;
 	virtual void set_location(SDL_Rect const &rect);
 	void set_location(int x, int y);
