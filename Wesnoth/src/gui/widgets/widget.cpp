@@ -190,6 +190,11 @@ tdialog* twidget::dialog()
 	return window ? window->dialog() : NULL;
 }
 
+//Bobby
+SDL_Rect indicator_rect(){
+    return {0,0,0,0};
+}
+
 void twidget::populate_dirty_list(twindow& caller,
 		std::vector<twidget*>& call_stack)
 {
