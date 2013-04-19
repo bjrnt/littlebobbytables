@@ -91,6 +91,14 @@ void trepeating_button::set_state(const tstate state)
 	}
 }
 
+SDL_Rect trepeating_button::indicator_rect(){
+    int w = std::min(this->get_width(),this->get_height());
+    int h = w;
+    int x = this->get_x() + this->get_width()/2 - w/2;
+    int y = this->get_y() + this->get_height() /2 - h/2;
+    return {x,y,w,h};
+}
+
 const std::string& trepeating_button::get_control_type() const
 {
 	static const std::string type = "repeating_button";

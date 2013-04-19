@@ -72,6 +72,8 @@ public:
 		disconnect_signal_mouse_left_down(signal);
 	}
 
+	SDL_Rect indicator_rect();
+
 private:
 	/**
 	 * Possible states of the widget.

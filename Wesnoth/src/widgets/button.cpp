@@ -276,6 +276,14 @@ void button::set_label(const std::string& val)
 	set_dirty(true);
 }
 
+SDL_Rect button::indicator_rect(){
+    int h = this->height();
+    int w = h;
+    int x = this->location().x + this->width() / 2 - w / 2;
+    int y = this->location().y;
+    return {x,y,w,h};
+}
+
 void button::mouse_motion(SDL_MouseMotionEvent const &event)
 {
 	if (hit(event.x, event.y)) {

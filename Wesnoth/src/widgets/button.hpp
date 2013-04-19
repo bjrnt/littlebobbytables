@@ -51,6 +51,8 @@ public:
 	virtual void enable(bool new_val=true);
 	void release();
 
+    SDL_Rect indicator_rect();
+
 protected:
 	virtual void handle_event(const SDL_Event& event);
 	virtual void mouse_motion(const SDL_MouseMotionEvent& event);
