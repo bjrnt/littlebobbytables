@@ -1,11 +1,12 @@
 UI_sound=""
 UI_volume=""
+allow_observers=""
 ally_sighted_interrupts=""
 animate_map=""
 ask_delete=""
 auto_save_max=10
 bell_volume=""
-blink_length=""
+blink_length=257
 chat_lines=""
 chat_message_aging=""
 chat_timestamp=""
@@ -17,20 +18,28 @@ confirm_end_turn=""
 confirm_load_save_from_different_version=""
 delete_saves=""
 disable_notifications=""
+editor_auto_update_transitions=""
+editor_b=""
+editor_default_dir=""
+editor_draw_hex_coordinates=""
+editor_draw_terrain_codes=""
+editor_g=""
+editor_r=""
+editor_use_mdi=""
 enable_planning_mode_on_start=""
-encountered_terrain_list="Ce^Es, Ce, Ch, Cv, Ds, Ft, Gg^Efm, Gg^Es, Gg^Fet, Gg^Ve, Gg, Gll^Fp, Gs^Em, Gs^Es, Gs^Fds, Gs^Fdw, Gs^Fms, Gs^Fp, Gs^Uf, Gs^Ve, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Ke, Kh, Kv, Mm, Rb^Es, Rb, Rd, Re^Es, Re^Gvs, Re, Rp^Ve, Rp, Rr, Ss^Vhs, Ss, Vi, Ww^Bw/, Ww^Bw|, Ww, Wwf^Bw/, Wwf, Wwg, Wwr, ^Uf"
-encountered_units="Elder Mage,Elvish Archer,Elvish Captain,Elvish Fighter,Elvish Lord,Elvish Rider,Elvish Scout,Elvish Shaman,Fighter,Goblin Knight,Goblin Pillager,Orcish Archer,Orcish Assassin,Orcish Crossbowman,Orcish Grunt,Orcish Warrior,Wolf Rider"
+encountered_terrain_list="Ce^Es, Ce, Ch, Cv, Ds, Ft, Gg^Efm, Gg^Es, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg, Gll^Fp, Gll^Vh, Gs^Em, Gs^Es, Gs^Fds, Gs^Fdw, Gs^Fms, Gs^Fp, Gs^Uf, Gs^Ve, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Kv, Mm, Rb^Es, Rb^Vh, Rb, Rd, Re^Es, Re^Gvs, Re, Rp^Ve, Rp, Rr, Ss^Vhs, Ss, Vi, Wo, Ww^Bw/, Ww^Bw|, Ww, Wwf^Bw/, Wwf, Wwg, Wwr, ^Uf"
+encountered_units="Bandit_Peasant,Elder Mage,Elvish Archer,Elvish Captain,Elvish Fighter,Elvish Lord,Elvish Rider,Elvish Scout,Elvish Shaman,Fighter,Fighteress,Footpad_Peasant,Goblin Knight,Goblin Pillager,Orcish Archer,Orcish Assassin,Orcish Crossbowman,Orcish Grunt,Orcish Warrior,Poacher_Peasant,Thug_Peasant,Wolf Rider"
 flip_time=""
 floating_labels=""
 friends=""
 fullscreen=yes
-gaze_length=1044
+gaze_length=250
 grid=no
 hide_whiteboard=""
 iconize_list=""
 idle_anim=""
 idle_anim_rate=0
-interaction=2
+interaction=0
 joystick_cursor_deadzone=""
 joystick_cursor_threshold=""
 joystick_cursor_xaxis_num=""
@@ -45,9 +54,20 @@ lobby_sounds=""
 lobby_whisper_friends_only=""
 local_tod_lighting=""
 locale=""
-login=""
+login="@player2@"
+login_is_wrapped=yes
 middle_click_scrolls=""
 mouse_scrolling=""
+mp_countdown=""
+mp_era=""
+mp_fog=""
+mp_map=""
+mp_random_start_time=""
+mp_shroud=""
+mp_turns=""
+mp_use_map_settings=""
+mp_village_gold=""
+mp_xp_modifier=""
 music=""
 music_volume=""
 new_lobby=""
@@ -65,6 +85,7 @@ show_all_units_in_help=""
 show_combat=""
 show_haloes=yes
 show_side_colors=""
+shuffle_sides=""
 sort_list=""
 sound=""
 sound_buffer_size=""
@@ -81,5 +102,338 @@ xresolution=""
 xwindowsize=""
 yresolution=""
 ywindowsize=""
+[hotkey]
+	command="cancel"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="leftmouseclick"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="rightmouseclick"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="cycle"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="cycleback"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="holdposition"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="endunitturn"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="leader"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="undo"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="redo"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="zoomin"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="zoomout"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="zoomdefault"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="fullscreen"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="screenshot"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="mapscreenshot"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="accelerated"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="describeunit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="renameunit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="save"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="savereplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="savemap"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="load"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="recruit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="repeatrecruit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="recall"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="select"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="right"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="endturn"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="toggleellipses"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="togglegrid"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="mousescroll"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="statustable"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="mute"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="speak"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="createunit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="changeside"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="preferences"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="objectives"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="unitlist"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="statistics"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="stopnetwork"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="quit"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="labelteamterrain"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="labelterrain"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="clearlabels"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="showenemymoves"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="bestenemymoves"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="playreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="resetreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="stopreplay"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replaynextturn"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replaynextside"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replayshoweverything"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replayshowteam1"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="replayskipanimation"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbtoggle"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbexecuteaction"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbexecuteallactions"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbdeleteaction"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbbumpupaction"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbbumpdownaction"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="wbsupposedead"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="updateshroud"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="continue"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="search"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="speaktoally"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="speaktoall"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="help"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="chatlog"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="command"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="aiformula"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="clearmessages"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__next_tip"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__previous_tip"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__tutorial"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__campaign"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__multiplayer"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__addons"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__editor"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="title_screen__credits"
+	key="__none__"
+[/hotkey]
+[hotkey]
+	command="global__helptip"
+	key="__none__"
+[/hotkey]
 [history]
+	[mp_user_name_history]
+		[line]
+			message="player2"
+		[/line]
+	[/mp_user_name_history]
 [/history]

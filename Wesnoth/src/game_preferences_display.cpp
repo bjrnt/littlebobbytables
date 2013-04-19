@@ -108,7 +108,7 @@ private:
 
 //
 	// change
-	gui::slider gaze_length_slider_, music_slider_, sound_slider_, UI_sound_slider_, bell_slider_,
+	gui::slider gaze_length_slider_,blink_length_slider_, music_slider_, sound_slider_, UI_sound_slider_, bell_slider_,
 	            scroll_slider_, chat_lines_slider_,
 	  buffer_size_slider_, idle_anim_slider_, autosavemax_slider_, advanced_slider_;
 	gui::list_slider<double> turbo_slider_;
@@ -140,7 +140,7 @@ private:
 			standing_anim_button_,
 			animate_map_button_;
 	gui::label music_label_, sound_label_, UI_sound_label_, bell_label_,
-	           scroll_label_, chat_lines_label_, gaze_length_label_,
+	           scroll_label_, chat_lines_label_, gaze_length_label_, blink_length_label_,
 	           turbo_slider_label_, sample_rate_label_, buffer_size_label_,
 			   idle_anim_slider_label_, autosavemax_slider_label_,
 			   advanced_slider_label_;
@@ -166,7 +166,7 @@ public:
 preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	: gui::preview_pane(disp.video()),
 	  friends_names_(),
-	  gaze_length_slider_(disp.video()),
+	  gaze_length_slider_(disp.video()),blink_length_slider_(disp.video()),
 	  music_slider_(disp.video()), sound_slider_(disp.video()),
 	  UI_sound_slider_(disp.video()), bell_slider_(disp.video()),
 	  scroll_slider_(disp.video()),
@@ -251,6 +251,7 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	  friends_selection_(-1),
 
       gaze_length_label_(disp.video(), _("Gaze length:"), font::SIZE_SMALL),
+      blink_length_label_(disp.video(), _("Blink length:"), font::SIZE_SMALL),
 
 	  tab_(EYETRACKING_TAB), disp_(disp), game_cfg_(game_cfg), adv_preferences_cfg_(), parent(NULL)
 {
@@ -274,11 +275,17 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	music_slider_.set_value(music_volume());
 	music_slider_.set_help_string(_("Change the music volume"));
 
-    gaze_length_slider_.set_min(0);
+    gaze_length_slider_.set_min(250);
     gaze_length_slider_.set_max(2500);
     gaze_length_slider_.set_value(gaze_length());
     gaze_length_slider_.set_help_string(_("Change the length of gaze"));
     gaze_length_slider_.enable(true);
+
+    blink_length_slider_.set_min(250);
+    blink_length_slider_.set_max(2500);
+    blink_length_slider_.set_value(blink_length());
+    blink_length_slider_.set_help_string(_("Change the length of blink"));
+    blink_length_slider_.enable(true);
 
 	// bell volume slider
 	bell_slider_.set_min(0);
@@ -456,6 +463,7 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	hotkeys_button_.set_help_string(_("View and configure keyboard shortcuts"));
 
     gaze_length_label_.set_help_string(_("Set the gaze length"));
+    blink_length_label_.set_help_string(_("Set the blink length"));
 
 	set_advanced_menu();
 	set_friends_menu();
@@ -466,6 +474,7 @@ handler_vector preferences_dialog::handler_members()
 	handler_vector h;
 	h.push_back(&music_slider_);
 	h.push_back(&gaze_length_slider_);
+	h.push_back(&blink_length_slider_);
 	h.push_back(&sound_slider_);
 	h.push_back(&bell_slider_);
 	h.push_back(&UI_sound_slider_);
@@ -526,6 +535,7 @@ handler_vector preferences_dialog::handler_members()
 	h.push_back(&sample_rate_button3_);
 	h.push_back(&confirm_sound_button_);
 	h.push_back(&gaze_length_label_);
+	h.push_back(&blink_length_label_);
 	h.push_back(&music_label_);
 	h.push_back(&sound_label_);
 	h.push_back(&bell_label_);
@@ -574,8 +584,16 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
     gaze_length_slider_.set_location(gaze_slider_rect);
     ypos += item_interline + gaze_slider_rect.h;
     interaction_blink_button_.set_location(rect.x + horizontal_padding, ypos);
+    ypos += item_interline;
+    blink_length_label_.set_location(rect.x + horizontal_padding, ypos);
     ypos += short_interline;
+    const SDL_Rect blink_slider_rect = create_rect(rect.x + horizontal_padding,
+                                                  ypos,
+                                                  rect.w - right_border - 200,
+                                                  0);
 
+    blink_length_slider_.set_location(blink_slider_rect);
+    ypos += item_interline + blink_slider_rect.h;
     interaction_switch_button_.set_location(rect.x + horizontal_padding, ypos);
 
 	// General tab
@@ -809,6 +827,13 @@ void preferences_dialog::process_event()
 		std::stringstream buffer_els;
 		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
 		gaze_length_label_.set_text(buffer_els.str());
+
+
+		set_blink_length(blink_length_slider_.value());
+
+		std::stringstream buffer_els2;
+		buffer_els2 << _("Blink length: ") << blink_length_slider_.value() << " ms";
+		blink_length_label_.set_text(buffer_els2.str());
 		return;
     }
 
@@ -1229,6 +1254,8 @@ void preferences_dialog::set_selection(int index)
 	const bool hide_eyetracking = tab_ != EYETRACKING_TAB;
     gaze_length_slider_.hide(hide_eyetracking);
     gaze_length_label_.hide(hide_eyetracking);
+    blink_length_slider_.hide(hide_eyetracking);
+    blink_length_label_.hide(hide_eyetracking);
     interaction_blink_button_.hide(hide_eyetracking);
     interaction_dwell_button_.hide(hide_eyetracking);
     interaction_switch_button_.hide(hide_eyetracking);
@@ -1246,7 +1273,7 @@ void preferences_dialog::set_selection(int index)
 	whiteboard_on_start_button_.hide(hide_general);
 	hide_whiteboard_button_.hide(hide_general);
 	interrupt_when_ally_sighted_button_.hide(hide_general);
-	hotkeys_button_.hide(true);
+	hotkeys_button_.hide(hide_general);
 	save_replays_button_.hide(hide_general);
 	delete_saves_button_.hide(hide_general);
 	autosavemax_slider_label_.hide(hide_general);
