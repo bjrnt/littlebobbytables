@@ -33,6 +33,10 @@
 
 #include <boost/foreach.hpp>
 
+#define gaze_length_step_ (250)
+#define blink_length_base_ (250)
+#define blink_length_step_ (70)
+
 namespace preferences {
 
 static void set_lobby_joins(int ison)
@@ -275,15 +279,15 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 	music_slider_.set_value(music_volume());
 	music_slider_.set_help_string(_("Change the music volume"));
 
-    gaze_length_slider_.set_min(250);
-    gaze_length_slider_.set_max(2500);
-    gaze_length_slider_.set_value(gaze_length());
+    gaze_length_slider_.set_min(1);
+    gaze_length_slider_.set_max(10);
+    gaze_length_slider_.set_value(gaze_length()/gaze_length_step_);
     gaze_length_slider_.set_help_string(_("Change the length of gaze"));
     gaze_length_slider_.enable(true);
 
-    blink_length_slider_.set_min(250);
-    blink_length_slider_.set_max(2500);
-    blink_length_slider_.set_value(blink_length());
+    blink_length_slider_.set_min(0);
+    blink_length_slider_.set_max(10);
+    blink_length_slider_.set_value(blink_length_base_ + blink_length_step_ * blink_length());
     blink_length_slider_.set_help_string(_("Change the length of blink"));
     blink_length_slider_.enable(true);
 
@@ -822,17 +826,17 @@ void preferences_dialog::process_event()
             interaction_switch_button_.set_check(true);
         }
 
-        set_gaze_length(gaze_length_slider_.value());
+        set_gaze_length(gaze_length_slider_.value()*gaze_length_step_);
 
 		std::stringstream buffer_els;
-		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() << " ms";
+		buffer_els << _("Gaze length: ") << gaze_length_slider_.value() * gaze_length_step_ << " ms (" << gaze_length_step_ * gaze_length_slider_.min_value() << " - " << gaze_length_step_ * gaze_length_slider_.max_value() << " ms)";
 		gaze_length_label_.set_text(buffer_els.str());
 
 
-		set_blink_length(blink_length_slider_.value());
+		set_blink_length(blink_length_base_ + blink_length_step_ * blink_length_slider_.value());
 
 		std::stringstream buffer_els2;
-		buffer_els2 << _("Blink length: ") << blink_length_slider_.value() << " ms";
+		buffer_els2 << _("Blink length: ") << blink_length_base_ + blink_length_step_ * blink_length_slider_.value() << " ms (" << blink_length_base_ + blink_length_step_ * blink_length_slider_.min_value() << " - " << blink_length_base_ + blink_length_step_ * blink_length_slider_.max_value() << " ms)";
 		blink_length_label_.set_text(buffer_els2.str());
 		return;
     }
