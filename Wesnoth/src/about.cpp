@@ -207,7 +207,7 @@ void show_about(display &disp, const std::string &campaign)
 	}
 
 	gui::button close(video,_("Close"));
-	close.set_location((screen->w/2)-(close.width()/2), screen->h - 30);
+	close.set_location((screen->w/2)-(close.width()/2), screen->h - 55);
 	close.set_volatile(true);
 
 	const int def_size = font::SIZE_XLARGE;
@@ -234,9 +234,9 @@ void show_about(display &disp, const std::string &campaign)
 
 	//TODO: use values proportionnal to screen ?
 	// distance from top of map image to top of scrolling text
-	const int top_margin = 60;
+	const int top_margin = 40;
 	// distance from bottom of scrolling text to bottom of map image
-	const int bottom_margin = 40;
+	const int bottom_margin = 60;
 	// distance from left of scrolling text to the frame border
 	const int text_left_padding = screen->w/32;
 

@@ -43,6 +43,10 @@
 
 #include <queue>
 
+#include <preferences.hpp>
+
+#include "eyetracker/interaction_controller.hpp"
+
 static lg::log_domain log_display("display");
 #define WRN_DP LOG_STREAM(warn, log_display)
 
@@ -613,7 +617,7 @@ namespace {
 	const int title_size = font::SIZE_LARGE;
 	const int title2_size = font::SIZE_15;
 	const int box_width = 2;
-	const int normal_font_size = font::SIZE_SMALL;
+	const int normal_font_size = font::SIZE_NORMAL;//font::SIZE_SMALL;
 	const unsigned max_history = 100;
 	const std::string topic_img = "help/topic.png";
 	const std::string closed_section_img = "help/closed_section.png";
@@ -2187,7 +2191,7 @@ help_text_area::item::item(surface surface, int x, int y, const std::string& _te
 	rect(),
 	surf(surface),
 	text(_text),
-	ref_to(reference_to),
+	ref_to(reference_to), // BOBBY: HYPERLINKS DISABLED
 	floating(_floating), box(_box),
 	align(alignment)
 {
@@ -2429,7 +2433,7 @@ void help_text_area::add_text_item(const std::string& text, const std::string& r
 		return;
 	}
 	const std::string first_word = get_first_word(text);
-	int state = ref_dst == "" ? 0 : TTF_STYLE_UNDERLINE;
+	int state = ref_dst == "" ? 0 : TTF_STYLE_UNDERLINE; // BOBBY: SET EQUAL TO 0 FOR NO UNDERLINES
 	state |= bold ? TTF_STYLE_BOLD : 0;
 	state |= italic ? TTF_STYLE_ITALIC : 0;
 	if (curr_loc_.first != get_min_x(curr_loc_.second, curr_row_height_)
@@ -2445,6 +2449,7 @@ void help_text_area::add_text_item(const std::string& text, const std::string& r
 		std::string first_part = parts.front();
 		// Always override the color if we have a cross reference.
 		SDL_Color color;
+		//color = text_color; // BOBBY: ALL TEXT IS NOW SAME COLOR
 		if(ref_dst.empty())
 			color = text_color;
 		else if(broken_link)
@@ -2830,11 +2835,14 @@ void help_browser::update_cursor()
 	SDL_GetMouseState(&mousex,&mousey);
 	const std::string ref = text_area_.ref_at(mousex, mousey);
 	if (ref != "" && !ref_cursor_) {
+        int gaze_time = std::max(2000,preferences::gaze_length()*3);
+      //  eyetracker::interaction_controller::mouse_enter(this,eyetracker::interaction_controller::CLICK,gaze_time); // BOBBY: INTERACTION CONTROLLER
 		cursor::set(cursor::HYPERLINK);
 		ref_cursor_ = true;
 	}
 	else if (ref == "" && ref_cursor_) {
 		cursor::set(cursor::NORMAL);
+	//	eyetracker::interaction_controller::mouse_leave(this); // BOBBY: INTERACTION CONTROLLER
 		ref_cursor_ = false;
 	}
 }
