@@ -161,7 +161,7 @@ public:
     void click_last_item();
 
 	int selection() const;
-
+    SDL_Rect indicator_rect();
 	void move_selection(size_t id);
 	void move_selection_keeping_viewport(size_t id);
 	void reset_selection();

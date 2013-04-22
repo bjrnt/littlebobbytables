@@ -647,6 +647,17 @@ bool menu::requires_event_focus(const SDL_Event* event) const
 	return false;
 }
 
+// Returns the rectangle for the currently marked item that is used when drawing the indicator.
+//
+// Author: Christoffer & Andreas & Kai
+// Version: 22-04-2013
+SDL_Rect menu::indicator_rect(){
+    SDL_Rect indicator_rect = get_item_rect(last_item_);
+    indicator_rect.x = indicator_rect.x + indicator_rect.w/2 - indicator_rect.h/2;
+    indicator_rect.w = indicator_rect.h;
+    return indicator_rect;
+}
+
 void menu::handle_event(const SDL_Event& event)
 {
 	scrollarea::handle_event(event);
@@ -670,40 +681,30 @@ void menu::handle_event(const SDL_Event& event)
 			y = reinterpret_cast<long>(event.user.data2);
 		}
 
-		/*const int item = hit(x,y);
-		if(item != -1) {
-			set_focus(true);
-			move_selection_to(item);
-
-			if(click_selects_) {
-				show_result_ = true;
-			}*/
         click_last_item(); // Bobby bobby bobby
 
-			if(event.type == DOUBLE_CLICK_EVENT) {
-				if (ignore_next_doubleclick_) {
-					ignore_next_doubleclick_ = false;
-				} else {
-					double_clicked_ = true;
-					last_was_doubleclick_ = true;
-					if(!silent_) {
-						sound::play_UI_sound(game_config::sounds::button_press);
-					}
-				}
-			} else if (last_was_doubleclick_) {
-				// If we have a double click as the next event, it means
-				// this double click was generated from a click that
-				// already has helped in generating a double click.
-				SDL_Event ev;
-				SDL_PeepEvents(&ev, 1, SDL_PEEKEVENT,
-							   SDL_EVENTMASK(DOUBLE_CLICK_EVENT));
-				if (ev.type == DOUBLE_CLICK_EVENT) {
-					ignore_next_doubleclick_ = true;
-				}
-				last_was_doubleclick_ = false;
-			}
-
-
+        if(event.type == DOUBLE_CLICK_EVENT) {
+            if (ignore_next_doubleclick_) {
+                ignore_next_doubleclick_ = false;
+            } else {
+                double_clicked_ = true;
+                last_was_doubleclick_ = true;
+                if(!silent_) {
+                    sound::play_UI_sound(game_config::sounds::button_press);
+                }
+            }
+        } else if (last_was_doubleclick_) {
+            // If we have a double click as the next event, it means
+            // this double click was generated from a click that
+            // already has helped in generating a double click.
+            SDL_Event ev;
+            SDL_PeepEvents(&ev, 1, SDL_PEEKEVENT,
+                           SDL_EVENTMASK(DOUBLE_CLICK_EVENT));
+            if (ev.type == DOUBLE_CLICK_EVENT) {
+                ignore_next_doubleclick_ = true;
+            }
+            last_was_doubleclick_ = false;
+        }
 
 		if(sorter_ != NULL) {
 			const int heading = hit_heading(x,y);

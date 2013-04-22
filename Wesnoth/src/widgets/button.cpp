@@ -316,47 +316,6 @@ void button::mouse_motion(SDL_MouseMotionEvent const &event)
 	}
 }
 
-/*
-Fires a button-click event when timer has run through its time.
-*/
-//static Uint32 callback(Uint32 interval, void* button) {
-//    gui::button* b = (gui::button*) button;
-//    interval = 0; // Björn: kan ta bort detta sen
-//    SDL_Event fake_event;
-//    fake_event.type = SDL_MOUSEBUTTONDOWN;
-//    fake_event.button.button = SDL_BUTTON_LEFT
-//    fake_event.button.state = SDL_PRESSED;
-//    fake_event.button.which = 0;
-//    SDL_Rect rect = (*b).location();
-//    fake_event.button.x = rect.x + rect.w / 2;
-//    fake_event.button.y = rect.y + rect.h / 2;
-//    SDL_PushEvent(&fake_event);
-//    fake_event.type = SDL_MOUSEBUTTONUP;
-//    fake_event.button.type = SDL_MOUSEBUTTONUP;
-//    SDL_PushEvent(&fake_event);
-//    (*b).stop_timer();
-//    return 0;
-//}
-
-/*
-Adds a timer for a button-click event.
-*/
-//void button::start_timer() {
-//    if(timer_id == NULL)
-//        timer_id = SDL_AddTimer(preferences::gaze_length(), gui::callback, (void*) this); // Björn: Gaze length should be here
-//}
-
-/*
-Removes the timer for a button-click-event.
-*/
-//void button::stop_timer() {
-//    if(timer_id != NULL) {
-//
-//        SDL_RemoveTimer(timer_id);
-//        timer_id = NULL;
-//    }
-//}
-
 void button::mouse_down(SDL_MouseButtonEvent const &event)
 {
 	if (hit(event.x, event.y) && event.button == SDL_BUTTON_LEFT && type_ != TYPE_CHECK){
