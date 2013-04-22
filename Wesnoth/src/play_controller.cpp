@@ -809,6 +809,7 @@ bool play_controller::can_execute_command(hotkey::HOTKEY_COMMAND command, int in
 	switch(command) {
 
 	// Commands we can always do:
+	case hotkey::HOTKEY_MINIMIZE:
 	case hotkey::HOTKEY_CANCEL_MENU:
 	case hotkey::HOTKEY_LEADER:
 	case hotkey::HOTKEY_CYCLE_UNITS:

@@ -51,6 +51,7 @@ const struct {
 } hotkey_list_[] = {
 
 	{ hotkey::HOTKEY_CANCEL, "cancel", N_("Cancel"), false, hotkey::SCOPE_GENERAL },
+	{ hotkey::HOTKEY_MINIMIZE, "minimize", N_("Minimize"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_LEFT_MOUSE_CLICK, "leftmouseclick", N_("Left Mouse Click"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_RIGHT_MOUSE_CLICK, "rightmouseclick", N_("Right Mouse Click"), false, hotkey::SCOPE_GENERAL },
 	{ hotkey::HOTKEY_ANIMATE_MAP, "animatemap", N_("Animate Map"), false, hotkey::SCOPE_GENERAL },
@@ -952,6 +953,9 @@ void key_event_execute(display& disp, const SDL_KeyboardEvent& event, command_ex
 bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 {
 	switch(command) {
+	    case HOTKEY_MINIMIZE:
+            SDL_WM_IconifyWindow();
+            break;
 		case HOTKEY_CYCLE_UNITS:
 			cycle_units();
 			break;
