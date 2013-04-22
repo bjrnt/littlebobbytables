@@ -194,6 +194,8 @@ public:
 	int get_location_x(const map_location& loc) const;
 	int get_location_y(const map_location& loc) const;
 
+	SDL_Rect indicator_rect();
+
 	/**
 	 * Rectangular area of hexes, allowing to decide how the top and bottom
 	 * edges handles the vertical shift for each parity of the x coordinate

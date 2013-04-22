@@ -46,6 +46,8 @@ public:
 
 	void set_label(const std::string& val);
 
+	SDL_Rect indicator_rect();
+
 	bool pressed();
 	bool hit(int x, int y) const;
 	virtual void enable(bool new_val=true);

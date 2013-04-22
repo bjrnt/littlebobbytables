@@ -164,7 +164,7 @@ config* get_prefs(){
 
 bool fullscreen()
 {
-	return get("fullscreen", false);
+	return get("fullscreen", true);
 }
 
 void _set_fullscreen(bool ison)

@@ -1166,6 +1166,14 @@ void display::render_image(int x, int y, const display::tdrawing_layer drawing_l
 
 }
 
+SDL_Rect display::indicator_rect(){
+    int x = get_location_x(mouseoverHex_) + 15;
+    int y = get_location_y(mouseoverHex_) + 15;
+    int w = std::min(hex_width(),hex_size());
+    int h = w;
+    return {x,y,w,h};
+}
+
 void display::select_hex(map_location hex)
 {
 	invalidate(selectedHex_);

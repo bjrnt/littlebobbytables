@@ -103,6 +103,11 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     if(draw_timer_id_ != NULL)
         stop_draw_timer();
 
+    if(selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || selected_window_ != NULL || map_loc_ != NULL)
+    {
+        reset();
+    }
+
     map_loc_ = loc;
     disp = d;
 
@@ -110,6 +115,7 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     {
     case preferences::DWELL:
         start_timer(event);
+        start_draw_timer();
         break;
     case preferences::BLINK:
         // Blink
@@ -426,8 +432,7 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
         indicator_rect = selected_widget_g2_->indicator_rect();
     }
     else if(map_loc_ != NULL){
-        //SDL_GetMouseState(&x,&y);
-        return interval;
+        indicator_rect = disp->indicator_rect();
     }
     else if(selected_window_ != NULL){
         //x = dwell_startX_;

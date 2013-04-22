@@ -256,6 +256,14 @@ bool button::hit(int x, int y) const
 	return point_in_rect(x,y,location());
 }
 
+SDL_Rect button::indicator_rect(){
+    int x = location().x + location().w/2 - location().h/2;
+    int y = location().y;
+    int w = location().h;
+    int h = w;
+    return {x,y,w,h};
+}
+
 static bool not_image(const std::string& str) { return !str.empty() && str[0] != IMAGE_PREFIX; }
 
 void button::set_label(const std::string& val)
