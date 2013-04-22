@@ -37,7 +37,7 @@ namespace gui {
 slider::slider(CVideo &video)
 	: widget(video), image_(image::get_image(slider_image)),
 	  highlightedImage_(image::get_image(selected_image)),
-	  min_(-100000), max_(100000), value_(0),
+	  min_(-100000), max_(100000), value_(0), xpos_(0),
 	  increment_(1), value_change_(false),mouse_entered_(false), state_(NORMAL)
 {
 }
@@ -96,6 +96,47 @@ void slider::set_value(int value)
 	value_ = value;
 	value_change_ = true;
 	set_dirty(true);
+}
+
+void slider::snap_value()
+{
+	if (xpos_ > max_)
+		xpos_ = max_;
+	if (xpos_ < min_)
+		xpos_ = min_;
+
+	if (increment_ > 1) {
+		int hi = increment_ / 2;
+		xpos_ = ((xpos_ + hi) / increment_) * increment_;
+	}
+}
+
+SDL_Rect slider::indicator_rect(){
+    if((max_ - min_) < 15) {
+        SDL_Rect const &loc = location();
+        int tmp = xpos_ - loc.x - image_->w / 2;
+        if (tmp < 0)
+            tmp = 0;
+        if (tmp > loc.w - image_->w)
+            tmp = loc.w - image_->w;
+
+        xpos_ = round((0.0 + tmp * (max_ - min_)) / (loc.w - image_->w) + min_);
+        snap_value();
+        xpos_ = loc.x + (xpos_ - min_) *
+            static_cast<int>(loc.w - image_->w) / (max_ - min_);
+        int x = xpos_ - slider_area().h/4;
+        int y = slider_area().y;
+        int w = slider_area().h;
+        int h = w;
+        return {x,y,w,h};
+    }
+    else{
+        int x = xpos_ - slider_area().h/4;
+        int y = slider_area().y;
+        int w = slider_area().h;
+        int h = w;
+        return {x,y,w,h};
+    }
 }
 
 void slider::set_increment(int increment)
@@ -215,6 +256,7 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
         //Bobby | Christoffer | Added eyetracker support
         if(!mouse_entered_){
             eyetracker::interaction_controller::mouse_enter(this);
+            xpos_ = event.x;
             mouse_entered_ = true;
         }
     }

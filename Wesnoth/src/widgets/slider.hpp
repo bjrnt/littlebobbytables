@@ -43,6 +43,10 @@ public:
 
 	virtual void enable(bool new_val=true);
 
+	SDL_Rect indicator_rect();
+
+	void snap_value();
+
 	//VC++ doesn't like a 'using scrollarea::set_location' directive here, so we declare
 	//an inline forwarding function instead
 	void set_location(int x, int y) { widget::set_location(x,y); }
@@ -64,6 +68,7 @@ private:
 	int max_;
 	int value_;
 	int increment_;
+	int xpos_;
 
 	bool value_change_;
 	bool mouse_entered_;
