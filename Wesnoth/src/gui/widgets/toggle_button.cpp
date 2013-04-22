@@ -66,10 +66,11 @@ void ttoggle_button::set_members(const string_map& data)
 	}
 }
 
+//BOBBY : This will work for all toggle buttons but the one delete save toggle button in the load menu
 SDL_Rect ttoggle_button::indicator_rect(){
-    int x = this->get_x();
-    int y = this->get_y();
     int h = this->get_height();
+    int x = this->get_x() + this->get_width()/2 - h/2;
+    int y = this->get_y();
     int w = h;
     return {x,y,w,h};
 }
