@@ -73,6 +73,8 @@ public:
 		{ icon_name_ = icon_name; update_canvas(); }
 	const std::string& icon_name() const { return icon_name_; }
 
+	SDL_Rect indicator_rect();
+
 private:
 	/**
 	 * Possible states of the widget.

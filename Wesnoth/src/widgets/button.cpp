@@ -257,7 +257,13 @@ bool button::hit(int x, int y) const
 }
 
 SDL_Rect button::indicator_rect(){
-    int x = location().x + location().w/2 - location().h/2;
+    int x;
+    if(type_ == TYPE_CHECK){
+        x = location().x;
+    }
+    else{
+        x = location().x + location().w/2 - location().h/2;
+    }
     int y = location().y;
     int w = location().h;
     int h = w;

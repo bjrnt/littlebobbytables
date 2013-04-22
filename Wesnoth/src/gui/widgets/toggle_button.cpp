@@ -23,6 +23,7 @@
 #include "gui/widgets/settings.hpp"
 #include "gui/widgets/window.hpp"
 #include "sound.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -63,6 +64,14 @@ void ttoggle_button::set_members(const string_map& data)
 	if(itor != data.end()) {
 		set_icon_name(itor->second);
 	}
+}
+
+SDL_Rect ttoggle_button::indicator_rect(){
+    int x = this->get_x();
+    int y = this->get_y();
+    int h = this->get_height();
+    int w = h;
+    return {x,y,w,h};
 }
 
 void ttoggle_button::set_active(const bool active)
@@ -144,6 +153,7 @@ void ttoggle_button::signal_handler_mouse_enter(
 		set_state(FOCUSSED);
 	}
 	handled = true;
+    eyetracker::interaction_controller::mouse_enter(this);
 }
 
 void ttoggle_button::signal_handler_mouse_leave(
@@ -157,6 +167,7 @@ void ttoggle_button::signal_handler_mouse_leave(
 		set_state(ENABLED);
 	}
 	handled = true;
+    eyetracker::interaction_controller::mouse_leave(this);
 }
 
 void ttoggle_button::signal_handler_left_button_click(
