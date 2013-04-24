@@ -97,6 +97,14 @@ const std::string& trepeating_button::get_control_type() const
 	return type;
 }
 
+SDL_Rect trepeating_button::indicator_rect(){
+    int h = this->get_height();
+    int w = h;
+    int x = this->get_x() + this->get_width() / 2 - w / 2;
+    int y = this->get_y();
+    return {x,y,w,h};
+}
+
 void trepeating_button::signal_handler_mouse_enter(
 		const event::tevent event, bool& handled)
 {

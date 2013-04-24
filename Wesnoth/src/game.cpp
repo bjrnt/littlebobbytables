@@ -399,9 +399,13 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 		return 1;
 	}
 
+    // Björn: starta eyetracker här
+	app->run(preferences::getResolutionPointer(),runner,tracker);
+
 	res = game->init_video();
 	if(res == false) {
-		std::cerr << "could not initialize display\n";
+		gui2::show_error_message(game->disp().video(),"The video mode could not be set. Your display must support 1024x768x16 to run the game!\n");
+		std::cerr << "could not initialize resolution\n";
 		return 1;
 	}
 
@@ -420,15 +424,6 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 	loadscreen::start_stage("init gui");
 	gui2::init();
 	const gui2::event::tmanager gui_event_manager;
-
-    // Björn: starta eyetracker här
-	app->run(preferences::getResolutionPointer(),runner,tracker);
-	//BOBBY: Show error message when the resolution cannot be set.
-    if(preferences::resolution().first < preferences::min_allowed_width() || preferences::resolution().second < preferences::min_allowed_height()){
-        gui2::show_error_message(game->disp().video(),"The video mode could not be set. Your display must support 1024x768x16 to run the game!\n");
-		std::cerr << "could not initialize resolution\n";
-		return 1;
-    }
 
     eyetracker::interaction_controller::set_indicator_display(&(game->disp().video()));
 

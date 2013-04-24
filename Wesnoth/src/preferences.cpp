@@ -209,8 +209,9 @@ std::pair<int,int> resolution()
 		//return res;
 		return resolutionDim;
 	} else {
-	    resolutionDim.first = 1024;
-	    resolutionDim.second = 768;
+	    const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	    resolutionDim.first = info->current_w;
+	    resolutionDim.second = info->current_h;
 		//return std::pair<int,int>(1024,768);
 		return resolutionDim;
 	}

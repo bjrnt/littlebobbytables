@@ -366,7 +366,9 @@ int CVideo::bppForMode( int x, int y, int flags)
 
 int CVideo::modePossible( int x, int y, int bits_per_pixel, int flags, bool current_screen_optimal )
 {
-
+	if(x < 1024 || y < 768){
+        return 0;
+	}
 	int bpp = SDL_VideoModeOK( x, y, bits_per_pixel, get_flags(flags) );
 	if(current_screen_optimal)
 	{
