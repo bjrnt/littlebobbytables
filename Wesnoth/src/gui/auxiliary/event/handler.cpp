@@ -26,6 +26,7 @@
 #include "gui/widgets/window.hpp"
 #include "hotkeys.hpp"
 #include "video.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -495,7 +496,9 @@ void thandler::draw(const bool force)
 		surface frame_buffer = video.getSurface();
 
 		cursor::draw(frame_buffer);
+		eyetracker::interaction_controller::draw_indicator(frame_buffer);
 		video.flip();
+		eyetracker::interaction_controller::restore_background();
 		cursor::undraw(frame_buffer);
 	}
 }

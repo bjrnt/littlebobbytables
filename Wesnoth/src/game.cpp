@@ -425,8 +425,6 @@ static int do_gameloop(int argc, char** argv, eye_handler* app, MainLoopRunner* 
 	gui2::init();
 	const gui2::event::tmanager gui_event_manager;
 
-    eyetracker::interaction_controller::set_indicator_display(&(game->disp().video()));
-
 	loadscreen::start_stage("load config");
 	res = game->init_config();
 	if(res == false) {

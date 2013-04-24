@@ -718,12 +718,13 @@ void menu::handle_event(const SDL_Event& event)
 
         if(last_item_ != -1 && out) {
             eyetracker::interaction_controller::mouse_leave(this);
+            last_item_ = item;
         }
 	    else if(item != last_item_){
             eyetracker::interaction_controller::mouse_leave(this);
+            last_item_ = item;
             eyetracker::interaction_controller::mouse_enter(this);
         }
-        last_item_ = item;
 
 		if(click_selects_) {
 			if (out_ != out) {

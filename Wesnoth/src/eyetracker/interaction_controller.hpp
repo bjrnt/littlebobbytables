@@ -34,18 +34,15 @@ private:
 
     static CVideo* video_;
     static surface restore_;
-    static SDL_Rect previous_rect_;
+    static SDL_Rect indicator_rect_;
     static SDL_TimerID draw_timer_id_;
     static int remaining_dwell_length_;
 
-    static void restore_background();
     static void start_draw_timer();
     static void stop_draw_timer();
     static Uint32 draw_callback(Uint32 interval, void* param);
-    static void draw_indicator(SDL_Rect rect, double size_multiplier);
 
 public:
-    static void set_indicator_display(CVideo* video);
     static void checkStillDwelling();
     static void blink(int x, int y);
     static void press_switch();
@@ -59,5 +56,9 @@ public:
     static void init_window(gui2::twindow* window, interaction_controller::EVENT_TO_SEND event = CLICK);
     static void mouse_leave(gui::widget* widget);
     static void mouse_leave(gui2::twidget* widget);
+    static void mouse_leave(map_location* loc, display* d);
+
+    static void restore_background();
+    static void draw_indicator(surface surf);
 };
 }

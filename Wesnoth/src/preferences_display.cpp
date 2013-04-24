@@ -75,13 +75,16 @@ bool detect_video_settings(CVideo& video, std::pair<int,int>& resolution, int& b
 
 	typedef std::pair<int, int> res_t;
 	std::vector<res_t> res_list;
-    res_list.push_back(res_t(2560, 1600));
-    res_list.push_back(res_t(1920, 1200));
-    res_list.push_back(res_t(1920, 1080));
-    res_list.push_back(res_t(1680, 1050));
-    res_list.push_back(res_t(1440, 900));
-    res_list.push_back(res_t(1360, 768));
+    if(fullscreen()){
+        res_list.push_back(res_t(2560, 1600));
+        res_list.push_back(res_t(1920, 1200));
+        res_list.push_back(res_t(1920, 1080));
+        res_list.push_back(res_t(1680, 1050));
+        res_list.push_back(res_t(1440, 900));
+        res_list.push_back(res_t(1360, 768));
+    }
     res_list.push_back(res_t(1024, 768));
+
 
 	bpp = video.modePossible(resolution.first, resolution.second,
 		DefaultBPP, video_flags, true);

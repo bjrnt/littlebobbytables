@@ -5,6 +5,7 @@
 #include "../game_preferences.hpp"
 #include "map_location.hpp"
 #include "display.hpp"
+#include "video.hpp"
 #include <unistd.h>
 
 #define DWELL_BOUNDARY_X 40
@@ -25,10 +26,10 @@ int dwell_startX_ = 0;
 int dwell_startY_ = 0;
 
 SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
-CVideo* interaction_controller::video_ = NULL;
-SDL_Rect interaction_controller::previous_rect_ = create_rect(0,0,0,0);
+SDL_Rect interaction_controller::indicator_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_dwell_length_ = 0;
 surface interaction_controller::restore_ = NULL;
+surface current_surface = NULL;
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
@@ -53,6 +54,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
+        indicator_rect_ = selected_widget_g1_->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -85,6 +87,7 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
+        indicator_rect_ = selected_widget_g2_->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -114,6 +117,7 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
+        indicator_rect_ = disp->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -136,7 +140,10 @@ void interaction_controller::mouse_leave(gui2::twidget *widget) {
         mouse_leave_base();
 }
 
-
+void interaction_controller::mouse_leave(map_location* loc, display* d) {
+    if (loc == map_loc_)
+        mouse_leave_base();
+}
 
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
@@ -150,10 +157,6 @@ void interaction_controller::mouse_leave_base()
             stop_timer();
         if(draw_timer_id_ != NULL)
             stop_draw_timer();
-        if(restore_ != NULL) {
-            restore_background();
-            restore_ = NULL;
-        }
         break;
     case preferences::BLINK:
         // Blink is selected
@@ -248,6 +251,9 @@ void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
     fake_event.type=SDL_MOUSEBUTTONUP;
     fake_event.button.type=SDL_MOUSEBUTTONUP;
     SDL_PushEvent(&fake_event);
+    if(draw_timer_id_ != NULL){
+        stop_draw_timer();
+    }
 }
 void interaction_controller::right_or_left_click(int x,int y){
     if(right_click_ && map_loc_ != NULL){
@@ -307,7 +313,9 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     }
     else
     {
-        throw "InteractionController: Trying to click a widget but no widget has been selected.";
+        std::cerr << "Trying to click a widget that does not exist";
+        stop_timer();
+        return 0;
     }
 
     if(event == CLICK)
@@ -386,7 +394,10 @@ void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND e
     }
     else
     {
-        throw "Trying to start timer without stopping last timer or without selected widget";
+        std::cerr << "Trying to start new timer without stopping previous timer or selected widget was null";
+        if(timer_id_ != NULL){
+            stop_timer();
+        }
     }
 }
 void interaction_controller::start_draw_timer() {
@@ -397,7 +408,10 @@ void interaction_controller::start_draw_timer() {
     }
     else
     {
-        throw "Trying to start draw timer without stopping last timer or without selected widget";
+        std::cerr << "Trying to start new draw timer without stopping previous timer or selected widget was null";
+        if(draw_timer_id_ != NULL){
+            stop_draw_timer();
+        }
     }
 }
 void interaction_controller::stop_timer()
@@ -411,90 +425,59 @@ void interaction_controller::stop_draw_timer()
     draw_timer_id_ = NULL;
 }
 
-void interaction_controller::set_indicator_display(CVideo* video)
-{
-    video_ = video;
-}
 Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
 {
     remaining_dwell_length_ -= interval;
     if(remaining_dwell_length_ <= 0) {
+        stop_draw_timer();
         return 0;
     }
-    double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
-    SDL_Rect indicator_rect;
-    if(selected_widget_g1_ != NULL)
-    {
-        indicator_rect = selected_widget_g1_->indicator_rect();
-    }
-    else if(selected_widget_g2_ != NULL)
-    {
-        indicator_rect = selected_widget_g2_->indicator_rect();
-    }
-    else if(map_loc_ != NULL){
-        indicator_rect = disp->indicator_rect();
-    }
-    else if(selected_window_ != NULL){
-        //x = dwell_startX_;
-        //y = dwell_startY_;
-        return interval;
-    }
-    else
-    {
-        throw "InteractionController: Trying to click a widget but no widget has been selected.";
-    }
-
-    draw_indicator(indicator_rect,size_multiplier);
     return interval;
 }
 void interaction_controller::restore_background()
 {
     if(restore_ != NULL) {
-        surface& surf = video_->getSurface();
-        sdl_blit(restore_,NULL,surf,&previous_rect_);
-        SDL_Flip(surf);
+        sdl_blit(restore_,NULL,current_surface,&indicator_rect_);
+        update_rect(indicator_rect_);
     }
 }
-void interaction_controller::draw_indicator(SDL_Rect indicator_rect, double size_multiplier)
+void interaction_controller::draw_indicator(surface surf)
 {
-    int max_radius = indicator_rect.h / 2;
-	int radius = (int) (max_radius * size_multiplier);
-    surface& surf = video_->getSurface();
-	surface ind = create_neutral_surface(2 * radius, 2 * radius);
+    if(draw_timer_id_ != NULL){
+        double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
+        int max_radius = indicator_rect_.h / 2;
+        int radius = (int) (max_radius * size_multiplier);
+        surface ind = create_neutral_surface(2 * radius, 2 * radius);
 
-    if(restore_ == NULL) {
-        restore_ = create_neutral_surface(indicator_rect.w, indicator_rect.h);
-        sdl_blit(surf,&indicator_rect,restore_,NULL);
+        if(restore_ == NULL) {
+            restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
+        }
+        sdl_blit(surf,&indicator_rect_,restore_,NULL);
+        Uint32 pixel = SDL_MapRGBA(ind->format, 0, 254, 0, 60);
+
+        double r = (double) radius;
+        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
+        unsigned w = ind->w;
+        int cy = indicator_rect_.y + indicator_rect_.h/2;
+        int cx = indicator_rect_.x + indicator_rect_.w/2;
+        for (int y = 0; y < 2 * radius; y++)
+        {
+            double dy = abs((cy - radius + y) - cy);
+
+            for(int x = 0; x < 2 * radius; x++)
+            {
+                double dx = abs((cx - radius + x) - cx);
+                double dist = sqrt(dx * dx + dy * dy);
+                if(dist < r)
+                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+            }
+        }
+
+        SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+        sdl_blit(ind,NULL,surf,&target);
+        current_surface = surf;
+        update_rect(indicator_rect_);
     }
-    else {
-        restore_background();
-        sdl_blit(surf,&indicator_rect,restore_,NULL);
-    }
-    previous_rect_ = indicator_rect;
-
-	Uint32 pixel = SDL_MapRGBA(ind->format, 0, 254, 0, 60);
-
-	double r = (double) radius;
-	ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
-	unsigned w = ind->w;
-    int cy = indicator_rect.y + indicator_rect.h/2;
-    int cx = indicator_rect.x + indicator_rect.w/2;
-	for (int y = 0; y < 2 * radius; y++)
-	{
-		double dy = abs((cy - radius + y) - cy);
-
-		for(int x = 0; x < 2 * radius; x++)
-		{
-			double dx = abs((cx - radius + x) - cx);
-			double dist = sqrt(dx * dx + dy * dy);
-			if(dist < r)
-				*reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-		}
-	}
-
-	SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
-
-	sdl_blit(ind,NULL,surf,&target);
-	SDL_Flip(surf);
 }
 }

@@ -889,9 +889,11 @@ void display::flip()
 	font::draw_floating_labels(frameBuffer);
 	events::raise_volatile_draw_event();
 	cursor::draw(frameBuffer);
+	eyetracker::interaction_controller::draw_indicator(frameBuffer);
 
 	video().flip();
 
+    eyetracker::interaction_controller::restore_background();
 	cursor::undraw(frameBuffer);
 	events::raise_volatile_undraw_event();
 	font::undraw_floating_labels(frameBuffer);
@@ -1186,9 +1188,9 @@ void display::highlight_hex(map_location hex)
 	invalidate(mouseoverHex_);
     if(tile_nearly_on_screen(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
         || get_location_y(hex) != get_location_y(mouseoverHex_))){
-        eyetracker::interaction_controller::mouse_enter(&hex, this);
-
+        eyetracker::interaction_controller::mouse_leave(&mouseoverHex_,this);
         mouseoverHex_ = hex;
+        eyetracker::interaction_controller::mouse_enter(&mouseoverHex_, this);
         invalidate(mouseoverHex_);
     }
 }
