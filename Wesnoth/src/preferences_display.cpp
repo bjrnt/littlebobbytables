@@ -80,7 +80,7 @@ bool detect_video_settings(CVideo& video, std::pair<int,int>& resolution, int& b
     res_list.push_back(res_t(1920, 1080));
     res_list.push_back(res_t(1680, 1050));
     res_list.push_back(res_t(1440, 900));
-    res_list.push_back(res_t(1366, 768));
+    res_list.push_back(res_t(1360, 768));
     res_list.push_back(res_t(1024, 768));
 
 	bpp = video.modePossible(resolution.first, resolution.second,
@@ -98,6 +98,7 @@ bool detect_video_settings(CVideo& video, std::pair<int,int>& resolution, int& b
 			DefaultBPP, video_flags);
 	}
 
+	preferences::set_resolution(resolution);
 	return bpp != 0;
 }
 
