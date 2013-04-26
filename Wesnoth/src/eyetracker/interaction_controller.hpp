@@ -36,7 +36,7 @@ private:
     static surface restore_;
     static SDL_Rect indicator_rect_;
     static SDL_TimerID draw_timer_id_;
-    static int remaining_dwell_length_;
+    static int remaining_slices_;
 
     static void start_draw_timer();
     static void stop_draw_timer();

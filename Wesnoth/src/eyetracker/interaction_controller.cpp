@@ -30,7 +30,7 @@ int dwell_startY_ = 0;
 
 SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
 SDL_Rect interaction_controller::indicator_rect_ = create_rect(0,0,0,0);
-int interaction_controller::remaining_dwell_length_ = 0;
+int interaction_controller::remaining_slices_ = 0;
 surface interaction_controller::restore_ = NULL;
 surface current_surface = NULL;
 
@@ -133,17 +133,20 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     }
 }
 
-void interaction_controller::mouse_leave(gui::widget *widget) {
+void interaction_controller::mouse_leave(gui::widget *widget)
+{
     if (widget == selected_widget_g1_)
         mouse_leave_base();
 }
 
-void interaction_controller::mouse_leave(gui2::twidget *widget) {
+void interaction_controller::mouse_leave(gui2::twidget *widget)
+{
     if (widget == selected_widget_g2_)
         mouse_leave_base();
 }
 
-void interaction_controller::mouse_leave(map_location* loc, display* d) {
+void interaction_controller::mouse_leave(map_location* loc, display* d)
+{
     if (loc == map_loc_)
         mouse_leave_base();
 }
@@ -174,7 +177,8 @@ void interaction_controller::mouse_leave_base()
 //CheckStillDwelling BOBBY, Veronica, Andreas
 void interaction_controller::checkStillDwelling()
 {
-    if(selected_window_ != NULL){
+    if(selected_window_ != NULL)
+    {
 
         int x;
         int y;
@@ -185,10 +189,13 @@ void interaction_controller::checkStillDwelling()
         //cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
         if(y<DIALOG_INDICATOR_HEIGHT && y > DIALOG_INDICATOR_STARTY && x < res.first - DIALOG_INDICATOR_WIDTH_OFFSET)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
         {
-           if(timer_id_ == NULL){
+            if(timer_id_ == NULL)
+            {
                 init_window(selected_window_);
+            }
         }
-        }else{
+        else
+        {
             been_out_of_top_box = true;
             stop_timer();
         }
@@ -217,7 +224,8 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     int y;
     SDL_GetMouseState(&x, &y);
     bool changedCord = false;
-    if(x!=dwell_startX_ || y !=dwell_startY_){
+    if(x!=dwell_startX_ || y !=dwell_startY_)
+    {
         changedCord = true;
         dwell_startX_ = x;
         dwell_startY_ = y;
@@ -225,7 +233,8 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
-        if(changedCord && been_out_of_top_box){
+        if(changedCord && been_out_of_top_box)
+        {
             been_out_of_top_box = false;
             start_timer(event);
         }
@@ -239,27 +248,32 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     }
 }//End init windoe
 
-void interaction_controller::toggle_dialog_indicator(bool show){
+void interaction_controller::toggle_dialog_indicator(bool show)
+{
     if(current_surface == NULL || selected_window_ == NULL) return;
     static surface restore;
     std::pair<int,int> res = preferences::resolution();
     SDL_Rect dialog_rect = {0,DIALOG_INDICATOR_STARTY,res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT};
-    if(restore == NULL && show){
+    if(restore == NULL && show)
+    {
         surface draw_surface = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
         restore = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
         sdl_blit(current_surface,&dialog_rect,restore,NULL);
         unsigned w = draw_surface->w;
         Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 0, 0, 60);
         ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
-        for(int x = dialog_rect.x; x < dialog_rect.w; x++){
-            for(int y = dialog_rect.y; y < dialog_rect.h; y++){
+        for(int x = dialog_rect.x; x < dialog_rect.w; x++)
+        {
+            for(int y = dialog_rect.y; y < dialog_rect.h; y++)
+            {
                 *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
             }
         }
         sdl_blit(draw_surface,NULL,current_surface,&dialog_rect);
         update_rect(dialog_rect);
     }
-    else if(!show){
+    else if(!show)
+    {
         sdl_blit(restore,NULL,current_surface,&dialog_rect);
         update_rect(dialog_rect);
         restore = NULL;
@@ -283,16 +297,20 @@ void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
     fake_event.type=SDL_MOUSEBUTTONUP;
     fake_event.button.type=SDL_MOUSEBUTTONUP;
     SDL_PushEvent(&fake_event);
-    if(draw_timer_id_ != NULL){
+    if(draw_timer_id_ != NULL)
+    {
         stop_draw_timer();
     }
 }
-void interaction_controller::right_or_left_click(int x,int y){
-    if(right_click_ && map_loc_ != NULL){
+void interaction_controller::right_or_left_click(int x,int y)
+{
+    if(right_click_ && map_loc_ != NULL)
+    {
         click(x,y,SDL_BUTTON_RIGHT);
         right_click_ = false;
     }
-    else{
+    else
+    {
         click(x,y);
     }
 }
@@ -305,7 +323,8 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
-    if(restore_ != NULL) {
+    if(restore_ != NULL)
+    {
         restore_background();
         restore_ = NULL;
     }
@@ -336,10 +355,12 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
         //y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
         SDL_GetMouseState(&x,&y);
     }
-    else if(map_loc_ != NULL){
+    else if(map_loc_ != NULL)
+    {
         SDL_GetMouseState(&x,&y);
     }
-    else if(selected_window_ != NULL){
+    else if(selected_window_ != NULL)
+    {
         x = dwell_startX_;
         y = dwell_startY_;
         toggle_dialog_indicator(false);
@@ -370,8 +391,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
 }
 
 
-void interaction_controller::press_switch(){
-    if (preferences::interaction_method() == preferences::SWITCH) {
+void interaction_controller::press_switch()
+{
+    if (preferences::interaction_method() == preferences::SWITCH)
+    {
         int x,y;
         SDL_GetMouseState(&x,&y);
         right_or_left_click(x,y);
@@ -388,8 +411,10 @@ void interaction_controller::press_switch(){
 //
 // Author: Robert, Christoffer, Andreas, Björn, Johan
 // Version: 28-03-2013
-void interaction_controller::blink(int x,int y){
-    if(preferences::interaction_method() == preferences::BLINK){
+void interaction_controller::blink(int x,int y)
+{
+    if(preferences::interaction_method() == preferences::BLINK)
+    {
         //int x,y;
 
         if(selected_window_ != NULL)
@@ -399,7 +424,7 @@ void interaction_controller::blink(int x,int y){
         }
         else if(map_loc_ == NULL && selected_widget_g2_ == NULL && selected_widget_g1_ == NULL)
         {
-           return;
+            return;
         }
 
         right_or_left_click(x,y);
@@ -411,11 +436,13 @@ void interaction_controller::blink(int x,int y){
 
 
 
-void interaction_controller::toggle_right_click(bool value){
+void interaction_controller::toggle_right_click(bool value)
+{
     right_click_ = value;
 }
 
-bool interaction_controller::get_right_click(){
+bool interaction_controller::get_right_click()
+{
     return right_click_;
 }
 
@@ -428,21 +455,24 @@ void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND e
     else
     {
         std::cerr << "Trying to start new timer without stopping previous timer or selected widget was null";
-        if(timer_id_ != NULL){
+        if(timer_id_ != NULL)
+        {
             stop_timer();
         }
     }
 }
-void interaction_controller::start_draw_timer() {
+void interaction_controller::start_draw_timer()
+{
     if(draw_timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL || selected_window_ != NULL))
     {
-        remaining_dwell_length_ = preferences::gaze_length();
-        draw_timer_id_ = SDL_AddTimer(75, draw_callback, NULL);
+        remaining_slices_ = 4;
+        draw_timer_id_ = SDL_AddTimer(preferences::gaze_length()/4, draw_callback, NULL);
     }
     else
     {
         std::cerr << "Trying to start new draw timer without stopping previous timer or selected widget was null";
-        if(draw_timer_id_ != NULL){
+        if(draw_timer_id_ != NULL)
+        {
             stop_draw_timer();
         }
     }
@@ -460,8 +490,9 @@ void interaction_controller::stop_draw_timer()
 
 Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
 {
-    remaining_dwell_length_ -= interval;
-    if(remaining_dwell_length_ <= 0) {
+    remaining_slices_--;
+    if(remaining_slices_ <= 0)
+    {
         stop_draw_timer();
         return 0;
     }
@@ -469,24 +500,68 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
 }
 void interaction_controller::restore_background()
 {
-    if(restore_ != NULL) {
+    if(restore_ != NULL)
+    {
         sdl_blit(restore_,NULL,current_surface,&indicator_rect_);
         update_rect(indicator_rect_);
     }
 }
+
+//BOBBY OLD INDICATOR!
+//void interaction_controller::draw_indicator(surface surf)
+//{
+//    if(draw_timer_id_ != NULL){
+//        double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
+//        int max_radius = indicator_rect_.h / 2;
+//        int radius = (int) (max_radius * size_multiplier);
+//        surface ind = create_neutral_surface(2 * radius, 2 * radius);
+//
+//        if(restore_ == NULL) {
+//            restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
+//        }
+//        sdl_blit(surf,&indicator_rect_,restore_,NULL);
+//        Uint32 pixel = SDL_MapRGBA(ind->format, 254, 0, 0, 60);
+//
+//        double r = (double) radius;
+//        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
+//        unsigned w = ind->w;
+//        int cy = indicator_rect_.y + indicator_rect_.h/2;
+//        int cx = indicator_rect_.x + indicator_rect_.w/2;
+//        for (int y = 0; y < 2 * radius; y++)
+//        {
+//            double dy = abs((cy - radius + y) - cy);
+//
+//            for(int x = 0; x < 2 * radius; x++)
+//            {
+//                double dx = abs((cx - radius + x) - cx);
+//                double dist = sqrt(dx * dx + dy * dy);
+//                if(dist < r)
+//                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+//            }
+//        }
+//
+//        SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
+//
+//        sdl_blit(ind,NULL,surf,&target);
+//        update_rect(indicator_rect_);
+//    }
+//    current_surface = surf;
+//}
+
+//Draw indicator using Tårtenham's circle algorithm
 void interaction_controller::draw_indicator(surface surf)
 {
-    if(draw_timer_id_ != NULL){
-        double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
-        int max_radius = indicator_rect_.h / 2;
-        int radius = (int) (max_radius * size_multiplier);
+    if(draw_timer_id_ != NULL)
+    {
+        int radius = indicator_rect_.h / 2;
         surface ind = create_neutral_surface(2 * radius, 2 * radius);
 
-        if(restore_ == NULL) {
+        if(restore_ == NULL)
+        {
             restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
         }
         sdl_blit(surf,&indicator_rect_,restore_,NULL);
-        Uint32 pixel = SDL_MapRGBA(ind->format, 0, 254, 0, 60);
+        Uint32 pixel = SDL_MapRGBA(ind->format, 254, 254, 254, 60);
 
         double r = (double) radius;
         ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
@@ -502,7 +577,23 @@ void interaction_controller::draw_indicator(surface surf)
                 double dx = abs((cx - radius + x) - cx);
                 double dist = sqrt(dx * dx + dy * dy);
                 if(dist < r)
-                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                {
+                    switch(remaining_slices_)
+                    {
+                    case 4:
+                        *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        break;
+                    case 3:
+                        if(!(x > radius && y < radius)) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        break;
+                    case 2:
+                        if(x < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        break;
+                    case 1:
+                        if(x < radius && y < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        break;
+                    }
+                }
             }
         }
 
