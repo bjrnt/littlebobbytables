@@ -1,5 +1,5 @@
 Battle for Wesnoth v1.10.5
-Started on Tue Mar 12 16:21:53 2013
+Started on Fri Apr 26 14:28:55 2013
 
 Automatically found a possible data directory at C:/Users/Veronica/Documents/GitHub/littlebobbytables/Wesnoth
 
@@ -7,7 +7,7 @@ Data directory: C:/Users/Veronica/Documents/GitHub/littlebobbytables/Wesnoth
 User configuration directory: C:/Users/Veronica/Documents/GitHub/littlebobbytables/Wesnoth/userdata
 User data directory: C:/Users/Veronica/Documents/GitHub/littlebobbytables/Wesnoth/userdata
 Cache directory: C:/Users/Veronica/Documents/GitHub/littlebobbytables/Wesnoth/userdata/cache
+No eyetracker could be found.
 Checking video mode: 1024x768x32...
 setting mode to 1024x768x32
-No eyetracker could be found.
-20130312 16:25:04 warning gui/event: distributor mouse button left [title_screen]: . Mouse down on non focussed widget and mouse not captured, we missed events.
+Trying to click a widget that does not existTrying to click a widget that does not existTrying to click a widget that does not existTrying to click a widget that does not existTrying to click a widget that does not existTrying to click a widget that does not existTrying to click a widget that does not existRunnerThread was shut down

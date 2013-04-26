@@ -53,7 +53,19 @@ void callback_list_item_clicked(twidget* caller)
 
 void tlistbox::signal_handler_mouse_enter()
 {
-    previous_widget_ = NULL;
+    ;
+}
+
+void tlistbox::signal_handler_mouse_leave()
+{
+
+    int mx, my;
+    SDL_GetMouseState(&mx,&my);
+    // if this is a genuine mouse leave where we actually leave the entire listbox
+    if (mx < this->get_x() || mx > this->get_x() + this->get_width() || my < this->get_y() || my > this->get_y() + this->get_height()){
+        eyetracker::interaction_controller::mouse_leave(this);
+        previous_row_ = -1;
+    }
 }
 
 void tlistbox::signal_handler_mouse_move()
@@ -61,35 +73,41 @@ void tlistbox::signal_handler_mouse_move()
     // TODO make sure that the element selected really gets focus
     int mx, my;
     SDL_GetMouseState(&mx,&my);
-    tpoint* mouse_point = new tpoint(mx,my);
-    twidget* res = generator_->find_at(*mouse_point,false);
+    tpoint mouse_point = tpoint(mx,my);
+    twidget* res = generator_->find_at(mouse_point,false);
     if(res != NULL)
     {
-        if(res != previous_widget_) {
-            eyetracker::interaction_controller::mouse_enter(res);
-        }
-
-        /*for(unsigned i=0; i < generator_->get_item_count(); i++)
+        // walk through all items in the list
+        for(unsigned i=0; i < generator_->get_item_count(); i++)
         {
-            if(generator_->item(i).has_widget(res))
+            if(generator_->item(i).has_widget(res)&& i != previous_row_)
             {
-                previous_widget_ = res;
+                previous_row_ = i;
                 //generator_->toggle_item(i);
-                eyetracker::interaction_controller::mouse_enter(res);
+                eyetracker::interaction_controller::mouse_enter(this);
             }
-        }*/
+        }
     }
-    else {
-        eyetracker::interaction_controller::mouse_leave(previous_widget_);
-    }
-
-    previous_widget_ = res;
 }
 
-void tlistbox::signal_handler_mouse_leave()
-{
-    eyetracker::interaction_controller::mouse_leave(this);
+
+// Returns indicator_rect for row under cursor
+// Returns {0,0,0,0} if no row could be found
+SDL_Rect tlistbox::indicator_rect(){
+    int mx, my;
+    SDL_GetMouseState(&mx,&my);
+    tpoint mouse_point = tpoint(mx,my);
+    twidget* row_widget = content_grid_->find_at(mouse_point,true);
+    for(size_t i = 0; i < generator_->get_item_count(); ++i)
+    {
+        if(generator_->item(i).has_widget(row_widget))
+        {
+            return generator_->item(i).get_rect();
+        }
+    }
+    return {0,0,0,0};
 }
+
 
 tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
                    const tgenerator_::tplacement placement, const bool select)
@@ -105,15 +123,14 @@ tlistbox::tlistbox(const bool has_minimum, const bool has_maximum,
     connect_signal<event::MOUSE_MOTION>(boost::bind(&tlistbox::signal_handler_mouse_move,this), front_pre_child);
     connect_signal<event::MOUSE_LEAVE>(boost::bind(&tlistbox::signal_handler_mouse_leave,this), front_pre_child);
     // needed to emulate mouse enter and leave efficiently
-    previous_widget_ = NULL;
+    previous_row_ = -1;
 
 }
 
 void tlistbox::add_row(const string_map& item, const int index)
 {
     assert(generator_);
-    generator_->create_item(
-        index, list_builder_, item, callback_list_item_clicked);
+    generator_->create_item(index, list_builder_, item, callback_list_item_clicked);
 }
 
 void tlistbox::add_row(

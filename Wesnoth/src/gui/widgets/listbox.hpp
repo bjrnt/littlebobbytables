@@ -50,6 +50,8 @@ public:
 	tlistbox(const bool has_minimum, const bool has_maximum,
 			const tgenerator_::tplacement placement, const bool select);
 
+    SDL_Rect indicator_rect();
+
     void signal_handler_mouse_enter();
     void signal_handler_mouse_leave();
     void signal_handler_mouse_move();
@@ -272,7 +274,7 @@ private:
 	tgenerator_* generator_;
 
 	// needed to emulate mouse_enter and mouse_leave efficiently
-    twidget * previous_widget_;
+    int previous_row_;
 
 	/** Contains the builder for the new items. */
 	tbuilder_grid_const_ptr list_builder_;
