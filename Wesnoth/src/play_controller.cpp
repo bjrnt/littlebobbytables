@@ -453,6 +453,7 @@ void play_controller::right_mouse_click(){
 
 void play_controller::cycle_units(){
     gui_->set_select_mode(true);
+    gui_->addModeText("Select Mode");
 	mouse_handler_.cycle_units(browse_);
 }
 
@@ -1217,6 +1218,8 @@ void play_controller::show_menu(const std::vector<std::string>& items_arg, int x
 
 bool play_controller::in_context_menu(hotkey::HOTKEY_COMMAND command) const
 {
+    gui_->addModeText("Select Mode");
+
 	switch(command) {
 	// Only display these if the mouse is over a castle or keep tile
 	case hotkey::HOTKEY_RECRUIT:

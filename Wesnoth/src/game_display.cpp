@@ -82,6 +82,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		selectmode_(true),
 		in_game_(false),
 		observers_(),
+		curModeLabelId_(-1),
 		chat_messages_(),
 		reach_map_(),
 		reach_map_old_(),
@@ -248,10 +249,12 @@ void game_display::highlight_hex(map_location hex)
 // BOBBY veronica
 void game_display::toggle_selectmode() {
     if(selectmode_ == true) {
+        addModeText("View Mode");
         selectmode_ = false;
         display::clear_invalidated_hex();
     }
     else {
+        addModeText("Select Mode");
         selectmode_ = true;
     }
 }
@@ -266,12 +269,28 @@ bool game_display::get_select_mode(){
 
 void game_display::toggle_right_click(){
     if(eyetracker::interaction_controller::get_right_click()){
+        addModeText("Select Mode");
         eyetracker::interaction_controller::toggle_right_click(false);
     }
     else{
+        addModeText("Right Click Mode");
         selectmode_ = true;
         eyetracker::interaction_controller::toggle_right_click(true);
     }
+}
+
+// BOBBY Andreas || Display a text describing which mode the player currently is in
+void game_display::addModeText(const char* text){
+    if(curModeLabelId_!=-1){
+        font::remove_floating_label(curModeLabelId_);
+    }
+    font::floating_label flabel(text);
+    flabel.set_font_size(font::SIZE_XLARGE);
+    SDL_Color color = {218,145,0,255}; // GOLD
+    flabel.set_color(color);
+    flabel.set_position(display::map_outside_area().w/8, display::map_outside_area().h/6);
+    flabel.set_clip_rect(display::map_outside_area());
+    curModeLabelId_ = font::add_floating_label(flabel);
 }
 
 void game_display::display_unit_hex(map_location hex)

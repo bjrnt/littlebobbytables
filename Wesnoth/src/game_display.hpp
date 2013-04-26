@@ -116,6 +116,8 @@ public:
 	/** Reset highlighting of paths. */
 	void unhighlight_reach();
 
+    void addModeText(const char * text);
+
 	/**
 	 * Sets the route along which footsteps are drawn to show movement of a
 	 * unit. If NULL, no route is displayed. @a route does not have to remain
@@ -352,6 +354,7 @@ public:
 private:
     //BOBBY veronica
     bool selectmode_;
+    int curModeLabelId_;
 
 	game_display(const game_display&);
 	void operator=(const game_display&);

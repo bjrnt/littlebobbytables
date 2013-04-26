@@ -95,9 +95,11 @@ void playsingle_controller::init_gui(){
 	gui_->scroll_to_tile(map_.starting_position(1), game_display::WARP);
     if(preferences::interaction_method() == preferences::DWELL){
         gui_->enable_menu("select", true);
+        gui_->addModeText("Viewing Mode");
     }
     else{
         gui_->enable_menu("select", false);
+        gui_->addModeText("Select Mode");
     }
 
 	update_locker lock_display(gui_->video(),recorder.is_skipping());
