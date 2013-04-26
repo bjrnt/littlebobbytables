@@ -10,6 +10,9 @@
 
 #define DWELL_BOUNDARY_X 40
 #define DWELL_BOUNDARY_Y 40
+#define DIALOG_INDICATOR_HEIGHT 200
+#define DIALOG_INDICATOR_STARTY 30
+#define DIALOG_INDICATOR_WIDTH_OFFSET 140
 using ::std::cerr;
 
 namespace eyetracker
@@ -178,8 +181,9 @@ void interaction_controller::checkStillDwelling()
 
 
         SDL_GetMouseState(&x, &y);
+        std::pair<int,int> res = preferences::resolution();
         //cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
-        if(y<200)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
+        if(y<DIALOG_INDICATOR_HEIGHT && y > DIALOG_INDICATOR_STARTY && x < res.first - DIALOG_INDICATOR_WIDTH_OFFSET)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
         {
            if(timer_id_ == NULL){
                 init_window(selected_window_);
@@ -234,6 +238,34 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
         break;
     }
 }//End init windoe
+
+void interaction_controller::toggle_dialog_indicator(bool show){
+    if(current_surface == NULL || selected_window_ == NULL) return;
+    static surface restore;
+    std::pair<int,int> res = preferences::resolution();
+    SDL_Rect dialog_rect = {0,DIALOG_INDICATOR_STARTY,res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT};
+    if(restore == NULL && show){
+        surface draw_surface = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
+        restore = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
+        sdl_blit(current_surface,&dialog_rect,restore,NULL);
+        unsigned w = draw_surface->w;
+        Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 0, 0, 60);
+        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
+        for(int x = dialog_rect.x; x < dialog_rect.w; x++){
+            for(int y = dialog_rect.y; y < dialog_rect.h; y++){
+                *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+            }
+        }
+        sdl_blit(draw_surface,NULL,current_surface,&dialog_rect);
+        update_rect(dialog_rect);
+    }
+    else if(!show){
+        sdl_blit(restore,NULL,current_surface,&dialog_rect);
+        update_rect(dialog_rect);
+        restore = NULL;
+    }
+}
+
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
 {
     SDL_Event fake_event;
@@ -310,6 +342,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     else if(selected_window_ != NULL){
         x = dwell_startX_;
         y = dwell_startY_;
+        toggle_dialog_indicator(false);
     }
     else
     {
@@ -476,8 +509,8 @@ void interaction_controller::draw_indicator(surface surf)
         SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
 
         sdl_blit(ind,NULL,surf,&target);
-        current_surface = surf;
         update_rect(indicator_rect_);
     }
+    current_surface = surf;
 }
 }

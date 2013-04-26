@@ -542,10 +542,8 @@ int twindow::show(const bool restore, const unsigned auto_close_timeout)
 	 * Removes the old tip if one shown. The show_tip doesn't remove
 	 * the tip, since it's the tip.
 	 */
-
-    eyetracker::interaction_controller::init_window(this);
 	tip::remove();
-
+    if(click_dismiss_) eyetracker::interaction_controller::init_window(this);
 	show_mode_ = modal;
 
 	/**
@@ -663,6 +661,7 @@ void twindow::draw()
 		return;
 	}
 
+    if(click_dismiss_) eyetracker::interaction_controller::toggle_dialog_indicator(true);
 	surface frame_buffer = video_.getSurface();
 
 	/***** ***** Layout and get dirty list ***** *****/
