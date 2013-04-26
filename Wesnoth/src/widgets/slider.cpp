@@ -255,8 +255,8 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
     if(point_in_rect(event.x, event.y, location())){
         //Bobby | Christoffer | Added eyetracker support
         if(!mouse_entered_){
-            eyetracker::interaction_controller::mouse_enter(this);
             xpos_ = event.x;
+            eyetracker::interaction_controller::mouse_enter(this);
             mouse_entered_ = true;
         }
     }

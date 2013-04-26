@@ -33,6 +33,7 @@ SDL_Rect interaction_controller::indicator_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_slices_ = 0;
 surface interaction_controller::restore_ = NULL;
 surface current_surface = NULL;
+bool draw_indicator_ = false;
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
@@ -54,10 +55,12 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
     */
     selected_widget_g1_ = widget;
 
+    indicator_rect_ = selected_widget_g1_->indicator_rect();
+    draw_indicator_ = true;
+
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
-        indicator_rect_ = selected_widget_g1_->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -87,10 +90,12 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
 
     selected_widget_g2_ = widget;
 
+    indicator_rect_ = selected_widget_g2_->indicator_rect();
+    draw_indicator_ = true;
+
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
-        indicator_rect_ = selected_widget_g2_->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -117,10 +122,12 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     map_loc_ = loc;
     disp = d;
 
+    indicator_rect_ = disp->indicator_rect();
+    draw_indicator_ = true;
+
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
-        indicator_rect_ = disp->indicator_rect();
         start_timer(event);
         start_draw_timer();
         break;
@@ -323,6 +330,8 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
+
+    draw_indicator_ = false;
     if(restore_ != NULL)
     {
         restore_background();
@@ -551,7 +560,7 @@ void interaction_controller::restore_background()
 //Draw indicator using Tårtenham's circle algorithm
 void interaction_controller::draw_indicator(surface surf)
 {
-    if(draw_timer_id_ != NULL)
+    if(draw_indicator_)
     {
         int radius = indicator_rect_.h / 2;
         surface ind = create_neutral_surface(2 * radius, 2 * radius);
@@ -578,20 +587,25 @@ void interaction_controller::draw_indicator(surface surf)
                 double dist = sqrt(dx * dx + dy * dy);
                 if(dist < r)
                 {
-                    switch(remaining_slices_)
-                    {
-                    case 4:
+                    if(preferences::interaction_method() == preferences::DWELL){
+                        switch(remaining_slices_)
+                        {
+                        case 4:
+                            *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                            break;
+                        case 3:
+                            if(!(x > radius && y < radius)) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                            break;
+                        case 2:
+                            if(x < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                            break;
+                        case 1:
+                            if(x < radius && y < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                            break;
+                        }
+                    }
+                    else{
                         *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                        break;
-                    case 3:
-                        if(!(x > radius && y < radius)) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                        break;
-                    case 2:
-                        if(x < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                        break;
-                    case 1:
-                        if(x < radius && y < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                        break;
                     }
                 }
             }
