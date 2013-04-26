@@ -740,6 +740,7 @@ void playsingle_controller::play_human_turn() {
     update_select_button();
 	gui_->enable_menu("endturn", true);
 	gui_->enable_menu("right", true);
+	gui_->enable_menu("cycle", true);
 	while(!end_turn_) {
 		play_slice();
 		check_end_level();
@@ -866,6 +867,7 @@ void playsingle_controller::play_ai_turn(){
 	gui_->enable_menu("endturn", false);
 	gui_->enable_menu("select", false);
 	gui_->enable_menu("right", false);
+	gui_->enable_menu("cycle", false);
 	browse_ = true;
 	gui_->recalculate_minimap();
 

@@ -842,9 +842,9 @@ void create::layout_children(const SDL_Rect& rect)
 
 	// Buttons
 	right_button->set_location(ca.x + ca.w - right_button->width(),
-	                           ca.y + ca.h - right_button->height() + 50);
+	                           ca.y + ca.h - right_button->height() + 70);
 	left_button->set_location(right_button->location().x - left_button->width() -
-	                          gui::ButtonHPadding, ca.y + ca.h - left_button->height() + 50);
+	                          gui::ButtonHPadding, ca.y + ca.h - left_button->height() + 70);
 }
 
 } // namespace mp

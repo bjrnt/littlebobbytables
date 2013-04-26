@@ -1,12 +1,12 @@
 UI_sound=""
 UI_volume=""
-allow_observers=""
+allow_observers=yes
 ally_sighted_interrupts=""
 animate_map=""
 ask_delete=""
 auto_save_max=10
 bell_volume=""
-blink_length=257
+blink_length=950
 chat_lines=""
 chat_message_aging=""
 chat_timestamp=""
@@ -29,16 +29,23 @@ editor_use_mdi=""
 enable_planning_mode_on_start=""
 encountered_terrain_list="Ce^Es, Ce, Ch, Cv, Ds, Ft, Gg^Efm, Gg^Es, Gg^Fds, Gg^Fet, Gg^Fp, Gg^Ve, Gg^Vh, Gg, Gll^Fp, Gll^Vh, Gs^Em, Gs^Es, Gs^Fds, Gs^Fdw, Gs^Fms, Gs^Fp, Gs^Uf, Gs^Ve, Gs, Gt, Hh^Fds, Hh^Fms, Hh^Fp, Hh, Hhd^Fds, Hhd^Fdw, Hhd^Fms, Hhd, Ke, Kh, Kv, Mm, Rb^Es, Rb^Vh, Rb, Rd, Re^Es, Re^Gvs, Re, Rp^Ve, Rp, Rr, Ss^Vhs, Ss, Vi, Wo, Ww^Bw/, Ww^Bw|, Ww, Wwf^Bw/, Wwf, Wwg, Wwr, ^Uf"
 encountered_units="Bandit_Peasant,Elder Mage,Elvish Archer,Elvish Captain,Elvish Fighter,Elvish Lord,Elvish Rider,Elvish Scout,Elvish Shaman,Fighter,Fighteress,Footpad_Peasant,Goblin Knight,Goblin Pillager,Orcish Archer,Orcish Assassin,Orcish Crossbowman,Orcish Grunt,Orcish Warrior,Poacher_Peasant,Thug_Peasant,Wolf Rider"
+fi_friends_in_game=""
+fi_invert=""
+fi_text=""
+fi_vacant_slots=""
+filter_lobby=""
 flip_time=""
 floating_labels=""
 friends=""
 fullscreen=yes
-gaze_length=250
+gaze_length=1250
 grid=no
 hide_whiteboard=""
+host="server.wesnoth.org:15000"
 iconize_list=""
 idle_anim=""
 idle_anim_rate=0
+ignores=""
 interaction=0
 joystick_cursor_deadzone=""
 joystick_cursor_threshold=""
@@ -58,14 +65,18 @@ login="@player2@"
 login_is_wrapped=yes
 middle_click_scrolls=""
 mouse_scrolling=""
-mp_countdown=""
-mp_era=""
+mp_countdown=no
+mp_countdown_action_bonus=""
+mp_countdown_init_time=""
+mp_countdown_reservoir_time=""
+mp_countdown_turn_bonus=""
+mp_era=0
 mp_fog=""
-mp_map=""
+mp_map=3
 mp_random_start_time=""
 mp_shroud=""
 mp_turns=""
-mp_use_map_settings=""
+mp_use_map_settings=yes
 mp_village_gold=""
 mp_xp_modifier=""
 music=""
@@ -85,7 +96,8 @@ show_all_units_in_help=""
 show_combat=""
 show_haloes=yes
 show_side_colors=""
-shuffle_sides=""
+shuffle_sides=no
+skip_mp_replay=no
 sort_list=""
 sound=""
 sound_buffer_size=""
@@ -98,9 +110,9 @@ turn_bell=""
 turn_dialog=""
 unit_standing_animations=""
 use_twelve_hour_clock_format=""
-xresolution=""
+xresolution=1024
 xwindowsize=""
-yresolution=""
+yresolution=768
 ywindowsize=""
 [hotkey]
 	command="cancel"
@@ -431,6 +443,11 @@ ywindowsize=""
 	key="__none__"
 [/hotkey]
 [history]
+	[mp_connect_history]
+		[line]
+			message="server.wesnoth.org:15000"
+		[/line]
+	[/mp_connect_history]
 	[mp_user_name_history]
 		[line]
 			message="player2"
