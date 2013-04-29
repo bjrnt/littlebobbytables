@@ -90,8 +90,9 @@ public:
     */
     virtual void toggle_right_click();
 
-    virtual void set_select_mode(bool on);
-    virtual bool get_select_mode();
+	enum INTERACTION_MODE { VIEW, SELECT, RIGHT };
+
+    enum INTERACTION_MODE get_interaction_mode();
 
 	/**
 	 * Change the unit to be displayed in the sidebar.
@@ -353,9 +354,9 @@ public:
 
 private:
     //BOBBY veronica
-    bool selectmode_;
     int curModeLabelId_;
 
+	enum INTERACTION_MODE interaction_mode_;
 	game_display(const game_display&);
 	void operator=(const game_display&);
 

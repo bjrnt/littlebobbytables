@@ -59,6 +59,7 @@ static lg::log_domain log_engine("engine");
 
 std::map<map_location,fixed_t> game_display::debugHighlights_;
 
+
 game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		const tod_manager& tod, const std::vector<team>& t,
 		const config& theme_cfg, const config& level) :
@@ -79,7 +80,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 		activeTeam_(0),
 		sidebarScaling_(1.0),
 		first_turn_(true),
-		selectmode_(true),
+		interaction_mode_(SELECT),
 		in_game_(false),
 		observers_(),
 		curModeLabelId_(-1),
@@ -93,7 +94,7 @@ game_display::game_display(unit_map& units, CVideo& video, const gamemap& map,
 	singleton_ = this;
 
     if(preferences::interaction_method() == preferences::DWELL){
-        selectmode_ = false;
+        interaction_mode_ = VIEW;
     }
 	// Inits the flag list and the team colors used by ~TC
 	flags_.reserve(teams_.size());
@@ -223,7 +224,7 @@ void game_display::select_hex(map_location hex)
 
 void game_display::highlight_hex(map_location hex)
 {
-    if(selectmode_ == true) {
+    if(interaction_mode_ != VIEW) {
         wb::future_map future; //< Lasts for whole method.
 
         const unit *u = get_visible_unit(hex, teams_[viewing_team()], !viewpoint_);
@@ -248,34 +249,37 @@ void game_display::highlight_hex(map_location hex)
 
 // BOBBY veronica
 void game_display::toggle_selectmode() {
-    if(selectmode_ == true) {
+    if(interaction_mode_ == SELECT) {
         addModeText("View Mode");
-        selectmode_ = false;
+        interaction_mode_ = VIEW;
         display::clear_invalidated_hex();
+    }
+    else if(interaction_mode_ == RIGHT){
+        eyetracker::interaction_controller::toggle_right_click(false);
+        addModeText("Select Mode");
+        interaction_mode_ = SELECT;
     }
     else {
         addModeText("Select Mode");
-        selectmode_ = true;
+        interaction_mode_ = SELECT;
     }
 }
 
-void game_display::set_select_mode(bool on){
-    selectmode_ = on;
-}
-
-bool game_display::get_select_mode(){
-    return selectmode_;
+enum game_display::INTERACTION_MODE game_display::get_interaction_mode(){
+    return interaction_mode_;
 }
 
 void game_display::toggle_right_click(){
     if(eyetracker::interaction_controller::get_right_click()){
-        addModeText("Select Mode");
+        addModeText("View Mode");
+        interaction_mode_ = VIEW;
+        display::clear_invalidated_hex();
         eyetracker::interaction_controller::toggle_right_click(false);
     }
     else{
         addModeText("Right Click Mode");
-        selectmode_ = true;
         eyetracker::interaction_controller::toggle_right_click(true);
+        interaction_mode_ = RIGHT;
     }
 }
 
