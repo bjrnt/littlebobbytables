@@ -98,6 +98,9 @@ const std::string& trepeating_button::get_control_type() const
 }
 
 SDL_Rect trepeating_button::indicator_rect(){
+    if(state_ == DISABLED) {
+        return {0,0,0,0};
+    }
     int h = this->get_height();
     int w = h;
     int x = this->get_x() + this->get_width() / 2 - w / 2;

@@ -452,7 +452,9 @@ void play_controller::right_mouse_click(){
 
 
 void play_controller::cycle_units(){
-    gui_->set_select_mode(true);
+    if(gui_->get_interaction_mode() != game_display::SELECT){
+        gui_->toggle_selectmode();
+    }
     gui_->addModeText("Select Mode");
 	mouse_handler_.cycle_units(browse_);
 }

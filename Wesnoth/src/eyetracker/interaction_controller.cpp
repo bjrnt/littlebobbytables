@@ -285,6 +285,10 @@ void interaction_controller::toggle_dialog_indicator(bool show)
         update_rect(dialog_rect);
         restore = NULL;
     }
+   	else if(show && restore != NULL) {
+        toggle_dialog_indicator(false);
+        toggle_dialog_indicator(true);
+    }
 }
 
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
@@ -330,6 +334,7 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
+    toggle_dialog_indicator(false);
     draw_indicator_ = false;
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
@@ -379,13 +384,36 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     else if(event == REPEATING_CLICK)
     {
         click(x,y);
+        stop_draw_timer();
+        restore_background();
+
+        /* A small delay is added to allow the button to update it's state before fetching the new indicator rect.
+           See the comment below.
+        */
+        SDL_Delay(10);
+
+        /*
+        This is used when the state of the button's indicator can change between clicks.
+        At the moment the only place I have found this to be true are the repeating buttons in menus in the following case:
+        1. User keeps clicking until reaching the bottom of the list
+        2. The buttons state changes to disabled, so we shouldn't generate any more click events or draw the indicator
+        */
+        if(selected_widget_g1_ != NULL) {
+            indicator_rect_ = selected_widget_g1_->indicator_rect();
+        }
+        else if(selected_widget_g2_ != NULL) {
+            indicator_rect_ = selected_widget_g2_->indicator_rect();
+        }
+
+        if(indicator_rect_ == create_rect(0,0,0,0)) return 0; // Don't want to repeat another click if button is diabled
+
+        start_draw_timer();
         return interval; // returning interval to next click
     }
 
     reset();
     return 0;
 }
-
 
 void interaction_controller::press_switch()
 {

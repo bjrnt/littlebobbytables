@@ -33,7 +33,7 @@ namespace editor {
 
 size_specs::size_specs()
 	: terrain_size(default_terrain_size)
-	, terrain_padding(2)
+	, terrain_padding(20)
 	, terrain_space(terrain_size + terrain_padding)
 	, terrain_width(default_palette_width)
 	, palette_x(0)
