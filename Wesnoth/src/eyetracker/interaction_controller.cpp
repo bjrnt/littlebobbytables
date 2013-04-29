@@ -257,6 +257,10 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
 
 void interaction_controller::toggle_dialog_indicator(bool show)
 {
+    if(preferences::interaction_method() != preferences::DWELL) {
+        return;
+    }
+
     if(current_surface == NULL || selected_window_ == NULL) return;
     static surface restore;
     std::pair<int,int> res = preferences::resolution();
