@@ -285,6 +285,10 @@ void interaction_controller::toggle_dialog_indicator(bool show)
         update_rect(dialog_rect);
         restore = NULL;
     }
+    else if(show && restore != NULL) {
+        toggle_dialog_indicator(false);
+        toggle_dialog_indicator(true);
+    }
 }
 
 void interaction_controller::click(int mousex, int mousey, Uint8 mousebutton)
@@ -330,7 +334,7 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
-
+    toggle_dialog_indicator(false);
     draw_indicator_ = false;
     /*if(restore_ != NULL)
     {
