@@ -30,7 +30,7 @@ int dwell_startY_ = 0;
 
 SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
 SDL_Rect interaction_controller::indicator_rect_ = create_rect(0,0,0,0);
-int interaction_controller::remaining_slices_ = 0;
+int interaction_controller::remaining_slices_ = 4;
 surface interaction_controller::restore_ = NULL;
 surface current_surface = NULL;
 bool draw_indicator_ = false;
@@ -332,11 +332,12 @@ void interaction_controller::reset()
 {
 
     draw_indicator_ = false;
-    if(restore_ != NULL)
+    /*if(restore_ != NULL)
     {
         restore_background();
         restore_ = NULL;
-    }
+    }*/
+    //restore_ = NULL;
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
     selected_window_ = NULL;
@@ -507,12 +508,16 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
     }
     return interval;
 }
+
 void interaction_controller::restore_background()
 {
     if(restore_ != NULL)
     {
         sdl_blit(restore_,NULL,current_surface,&indicator_rect_);
         update_rect(indicator_rect_);
+        restore_ = NULL;
+    } else {
+        std::cerr << "restore_background called even though no background has been stored\n";
     }
 }
 
@@ -579,7 +584,7 @@ void interaction_controller::set_indicator_restore_surface(surface surf)
 // NOTE: Remember to call set_indicator_restore_surface before drawing indicator!
 void interaction_controller::draw_indicator(surface surf)
 {
-    if(draw_indicator_)
+    if(draw_indicator_ && remaining_slices_ > 0)
     {
         int radius = indicator_rect_.h / 2;
         surface ind = create_neutral_surface(2 * radius, 2 * radius);
@@ -591,6 +596,7 @@ void interaction_controller::draw_indicator(surface surf)
         unsigned w = ind->w;
         int cy = indicator_rect_.y + indicator_rect_.h/2;
         int cx = indicator_rect_.x + indicator_rect_.w/2;
+
         for (int y = 0; y < 2 * radius; y++)
         {
             double dy = abs((cy - radius + y) - cy);
