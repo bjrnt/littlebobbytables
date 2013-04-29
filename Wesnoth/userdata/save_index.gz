@@ -407,7 +407,7 @@ border_size=1
     Gs^Fds,   Gs^Fds,   Gs^Fds,   Gs^Fds,   Gs^Fds,   Gg,    Gg,    Gg,    Gg,    Gg,    Gg,    Gg,    Gg,    Gg,    Ww,    Gg,    Gg,    Gg,    Gs^Fds,   Gs^Fds,   Gs^Fds,   Gs^Fds
 "
 	mod_time=0
-	parent=""
+	parent="Wesnoth Tutorial Part I-Auto-Save2.gz"
 	replay=yes
 	save="Wesnoth Tutorial Part I.gz"
 	scenario="tutorial"
