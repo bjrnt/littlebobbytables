@@ -494,7 +494,7 @@ void thandler::draw(const bool force)
 		CVideo& video = dynamic_cast<twindow&>(*dispatchers_.back()).video();
 
 		surface frame_buffer = video.getSurface();
-
+        eyetracker::interaction_controller::set_indicator_restore_surface(frame_buffer);
 		cursor::draw(frame_buffer);
 		eyetracker::interaction_controller::draw_indicator(frame_buffer);
 		video.flip();

@@ -60,6 +60,7 @@ public:
     static void mouse_leave(gui2::twidget* widget);
     static void mouse_leave(map_location* loc, display* d);
 
+    static void set_indicator_restore_surface(surface surf);
     static void restore_background();
     static void draw_indicator(surface surf);
 };
