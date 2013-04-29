@@ -1167,7 +1167,7 @@ bool command_executor::execute_command(HOTKEY_COMMAND command, int /*index*/)
 
 void execute_command(display& disp, HOTKEY_COMMAND command, command_executor* executor, int index)
 {
-	const int zoom_amount = 4;
+	const int zoom_amount = 6;
 	bool map_screenshot = false;
 
 	if(executor != NULL) {
