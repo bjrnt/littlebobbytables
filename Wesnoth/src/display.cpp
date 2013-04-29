@@ -885,6 +885,8 @@ void display::flip()
 		fill_rect_alpha(r, color, 1, frameBuffer);
 		update_rect(r);
 	}
+    //bobby - johan
+    eyetracker::interaction_controller::set_indicator_restore_surface(frameBuffer);
 
 	font::draw_floating_labels(frameBuffer);
 	events::raise_volatile_draw_event();
