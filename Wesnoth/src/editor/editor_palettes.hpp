@@ -109,8 +109,12 @@ public:
 	/** Sets the tooltips used in the palette */
 	void load_tooltips();
 
+	SDL_Rect indicator_rect();
+
 private:
 	void draw_old(bool);
+
+	int mouse_over_palette_;
 
 	/**
 	 * To be called when a mouse click occurs.
@@ -188,6 +192,8 @@ public:
 	virtual void draw();
 	virtual void handle_event(const SDL_Event& event);
 
+	SDL_Rect indicator_rect();
+
 	/**
 	 * Update the size of this widget.
 	 *
@@ -206,6 +212,8 @@ private:
 
 	/** Return the index of the brush that is at coordinates (x, y) in the panel. */
 	int selected_index(const int x, const int y) const;
+
+    int mouse_over_index_;
 
 	const size_specs &size_specs_;
 	display &gui_;
