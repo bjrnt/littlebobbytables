@@ -16,7 +16,7 @@
 *.exe
 
 # Directories that shouldn't be pushed
-Wesnoth/userdata/*
-Wesnoth/projectfiles/*
+/Wesnoth/userdata/*
+/Wesnoth/projectfiles/*
 
 /Wesnoth/stderr.txt
