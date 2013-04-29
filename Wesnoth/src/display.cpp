@@ -1188,7 +1188,7 @@ void display::select_hex(map_location hex)
 void display::highlight_hex(map_location hex)
 {
 	invalidate(mouseoverHex_);
-    if(tile_nearly_on_screen(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
+    if(get_map().on_board(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
         || get_location_y(hex) != get_location_y(mouseoverHex_))){
         eyetracker::interaction_controller::mouse_leave(&mouseoverHex_,this);
         mouseoverHex_ = hex;

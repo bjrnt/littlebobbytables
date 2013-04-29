@@ -513,7 +513,8 @@ void interaction_controller::restore_background()
 {
     if(restore_ != NULL)
     {
-        sdl_blit(restore_,NULL,current_surface,&indicator_rect_);
+        SDL_Rect tempDestRect = {indicator_rect_.x,indicator_rect_.y,indicator_rect_.w,indicator_rect_.h};
+        sdl_blit(restore_,NULL,current_surface,&tempDestRect);
         update_rect(indicator_rect_);
         restore_ = NULL;
     } else {
@@ -599,11 +600,11 @@ void interaction_controller::draw_indicator(surface surf)
 
         for (int y = 0; y < 2 * radius; y++)
         {
-            double dy = abs((cy - radius + y) - cy);
+            double dy = abs(y - radius);
 
             for(int x = 0; x < 2 * radius; x++)
             {
-                double dx = abs((cx - radius + x) - cx);
+                double dx = abs(x - radius);
                 double dist = sqrt(dx * dx + dy * dy);
                 if(dist < r)
                 {
