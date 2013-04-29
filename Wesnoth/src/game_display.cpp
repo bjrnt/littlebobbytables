@@ -292,7 +292,7 @@ void game_display::addModeText(const char* text){
     flabel.set_font_size(font::SIZE_XLARGE);
     SDL_Color color = {218,145,0,255}; // GOLD
     flabel.set_color(color);
-    flabel.set_position(display::map_outside_area().w/8, display::map_outside_area().h/6);
+    flabel.set_position(display::map_outside_area().w/10, display::map_outside_area().h/10);
     flabel.set_clip_rect(display::map_outside_area());
     curModeLabelId_ = font::add_floating_label(flabel);
 }

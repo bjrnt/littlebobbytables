@@ -69,6 +69,7 @@ private:
 	int value_;
 	int increment_;
 	int xpos_;
+	int steps_;
 
 	bool value_change_;
 	bool mouse_entered_;
