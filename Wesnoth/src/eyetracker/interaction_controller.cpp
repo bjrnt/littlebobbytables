@@ -557,7 +557,26 @@ void interaction_controller::restore_background()
 //    current_surface = surf;
 //}
 
+// Sets the surface used to restore the image between every draw of the indicator
+//
+// surf : surface object to blit for the restore
+//
+// Author: Christoffer, Johan
+// Version: 29-04-2013
+void interaction_controller::set_indicator_restore_surface(surface surf)
+{
+    if(draw_indicator_)
+    {
+        if(restore_ == NULL)
+        {
+            restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
+        }
+        sdl_blit(surf,&indicator_rect_,restore_,NULL);
+    }
+}
+
 //Draw indicator using Tårtenham's circle algorithm
+// NOTE: Remember to call set_indicator_restore_surface before drawing indicator!
 void interaction_controller::draw_indicator(surface surf)
 {
     if(draw_indicator_)
@@ -565,11 +584,6 @@ void interaction_controller::draw_indicator(surface surf)
         int radius = indicator_rect_.h / 2;
         surface ind = create_neutral_surface(2 * radius, 2 * radius);
 
-        if(restore_ == NULL)
-        {
-            restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
-        }
-        sdl_blit(surf,&indicator_rect_,restore_,NULL);
         Uint32 pixel = SDL_MapRGBA(ind->format, 254, 254, 254, 60);
 
         double r = (double) radius;
