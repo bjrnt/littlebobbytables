@@ -163,7 +163,7 @@ void terrain_palette::adjust_size() {
 	// Values for the group buttons fully hardcoded for now
 	/** @todo will be fixed later */
 	const size_t group_button_height   = 24;
-	const size_t group_button_padding  =  2;
+	const size_t group_button_padding  =  50;
 	const size_t group_buttons_per_row =  5;
 
 	// Determine number of theme button rows
@@ -406,6 +406,7 @@ void terrain_palette::draw(bool force) {
 	if (!dirty() && !force) {
 		return;
 	}
+
 	unsigned int starting = tstart_;
 	unsigned int ending = starting + nterrains_;
 	surface screen = gui_.video().getSurface();
