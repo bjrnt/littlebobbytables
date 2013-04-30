@@ -892,6 +892,7 @@ void display::flip()
 	events::raise_volatile_draw_event();
 	cursor::draw(frameBuffer);
 	eyetracker::interaction_controller::draw_indicator(frameBuffer);
+	eyetracker::interaction_controller::toggle_dialog_indicator();
 
 	video().flip();
 
