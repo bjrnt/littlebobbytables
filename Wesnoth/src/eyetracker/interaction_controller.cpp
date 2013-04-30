@@ -240,10 +240,10 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
         dwell_startX_ = x;
         dwell_startY_ = y;
     }
-    show_dialog_indicator_ = true;
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
+        show_dialog_indicator_ = true;
         if(changedCord && been_out_of_top_box)
         {
             been_out_of_top_box = false;
@@ -262,10 +262,9 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
 void interaction_controller::toggle_dialog_indicator()
 {
     if(current_surface == NULL || selected_window_ == NULL) return;
-    std::pair<int,int> res = preferences::resolution();
     if(show_dialog_indicator_)
     {
-        surface draw_surface = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
+        surface draw_surface = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
         unsigned w = draw_surface->w;
         Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 0, 0, 60);
         ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
