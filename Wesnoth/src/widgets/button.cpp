@@ -185,6 +185,9 @@ bool button::checked() const
 
 void button::enable(bool new_val)
 {
+    if(new_val == false && enabled() == true) {
+        eyetracker::interaction_controller::mouse_leave(this);
+    }
 	if(new_val != enabled())
 	{
 		pressed_ = false;
@@ -257,6 +260,10 @@ bool button::hit(int x, int y) const
 }
 
 SDL_Rect button::indicator_rect(){
+    if(!enabled()) { // Don't want to show an indicator if the button is disabled
+        return {0,0,0,0};
+    }
+
     int x;
     if(type_ == TYPE_CHECK){
         x = location().x;
