@@ -21,6 +21,7 @@
 #include "log.hpp"
 #include "preferences.hpp"
 #include "tooltips.hpp"
+#include "gui/widgets/fakeminimap.hpp"
 
 static lg::log_domain log_display("display");
 #define WRN_DP LOG_STREAM(warn, log_display)
@@ -51,6 +52,7 @@ static bool command_active()
 mouse_handler_base::mouse_handler_base() :
 	simple_warp_(false),
 	minimap_scrolling_(false),
+	inside_minimap_(false),
 	dragging_left_(false),
 	dragging_started_(false),
 	dragging_right_(false),
@@ -85,6 +87,21 @@ bool mouse_handler_base::mouse_motion_default(int x, int y, bool /*update*/)
 
 	if(simple_warp_) {
 		return true;
+	}
+    gui2::fake_minimap fm;
+    fm.set_indicator_rect(gui().minimap_area());
+    //Bobby : Christoffer - Emulate mouse_enter & mouse_leave by checking if mouse inside minimap
+	if(point_in_rect(x, y, gui().minimap_area())) {
+		if(!inside_minimap_){
+            //Mouse enter
+            eyetracker::interaction_controller::mouse_enter(&fm);
+            inside_minimap_ = true;
+		}
+	}
+	else if(inside_minimap_){
+        //Mouse leave
+        eyetracker::interaction_controller::mouse_leave(&fm);
+        inside_minimap_ = false;
 	}
 
 	if(minimap_scrolling_) {

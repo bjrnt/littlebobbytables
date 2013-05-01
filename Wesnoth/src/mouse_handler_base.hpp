@@ -19,6 +19,8 @@
 
 #include "map_location.hpp"
 #include "SDL.h"
+#include "gui/widgets/widget.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 class display;
 
@@ -144,6 +146,8 @@ protected:
 	bool simple_warp_;
 	/** minimap scrolling (scroll-drag) state flag */
 	bool minimap_scrolling_;
+	/** Bobby : used to emulate mouse_enter & mouse_leave*/
+	bool inside_minimap_;
 	/** LMB drag init flag */
 	bool dragging_left_;
 	/** Actual drag flag */
