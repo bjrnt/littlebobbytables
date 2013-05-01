@@ -386,6 +386,8 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     else if(event == REPEATING_CLICK)
     {
         click(x,y);
+        stop_draw_timer();
+        start_draw_timer();
         return interval; // returning interval to next click
     }
 
