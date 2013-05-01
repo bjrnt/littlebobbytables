@@ -264,7 +264,10 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
             //int prevX = event.x;
             //xpos_ = event.x;
             //snap_value();
-            std::cerr<<xpos_<<std::endl;//", ";
+            if(steps_== 0){
+                steps_ = 10;
+            }
+            std::cerr<<steps_<<std::endl;//", ";
             int change = (this->width()/steps_)/2;
             if(event.x >= xpos_+ change || event.x <= xpos_- change){
                //std::cerr<<increment_<<std::endl;
