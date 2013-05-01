@@ -38,7 +38,7 @@ slider::slider(CVideo &video)
 	: widget(video), image_(image::get_image(slider_image)),
 	  highlightedImage_(image::get_image(selected_image)),
 	  min_(-100000), max_(100000), value_(0), xpos_(0),
-	  increment_(1), value_change_(false),mouse_entered_(false), state_(NORMAL)
+	  increment_(1), value_change_(false),mouse_entered_(false), state_(NORMAL), steps_(0)
 {
 }
 
@@ -219,6 +219,7 @@ void slider::draw_contents()
         SDL_Color step_color = {200,200,200,0};
         int width = loc.w - image->w;
         int steps = max_ - min_;
+        steps_ = steps;
         int start_x = loc.x + image->w / 2;
         int end_x = start_x + width;
         int step_length = width / steps;
@@ -258,6 +259,20 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
             xpos_ = event.x;
             eyetracker::interaction_controller::mouse_enter(this);
             mouse_entered_ = true;
+        }
+        else{
+            //int prevX = event.x;
+            //xpos_ = event.x;
+            //snap_value();
+            std::cerr<<xpos_<<std::endl;//", ";
+            int change = (this->width()/steps_)/2;
+            if(event.x >= xpos_+ change || event.x <= xpos_- change){
+               //std::cerr<<increment_<<std::endl;
+                //xpos_ = prevX;
+                eyetracker::interaction_controller::mouse_leave(this);
+                mouse_entered_ = false;
+                eyetracker::interaction_controller::mouse_enter(this);
+            }
         }
     }
     else{

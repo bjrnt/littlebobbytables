@@ -28,6 +28,7 @@
 #include "../sound.hpp"
 #include "../tooltips.hpp"
 #include "../marked-up_text.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <boost/foreach.hpp>
 
@@ -74,6 +75,7 @@ terrain_palette::terrain_palette(display &gui, const size_specs &sizes,
 	, nterrains_()
 	, nmax_terrains_()
 	, terrain_start_()
+	, mouse_over_palette_(-1)
 	, selected_fg_terrain_(fore)
 	, selected_bg_terrain_(back)
 {
@@ -177,9 +179,9 @@ void terrain_palette::adjust_size() {
 			, size_specs_.palette_h);
 
 	set_location(rect);
-	top_button_y_ = size_specs_.palette_y + group_height ;
+	top_button_y_ = size_specs_.palette_y + group_height - 60;
 	button_x_ = size_specs_.palette_x + size_specs_.palette_w/2 - button_height/2;
-	terrain_start_ = top_button_y_ + button_height + button_palette_padding;
+	terrain_start_ = top_button_y_ + button_height + button_palette_padding + 40;
 	const size_t space_for_terrains = size_specs_.palette_h - (button_height + button_palette_padding) * 2 - group_height;
 	rect.y = terrain_start_;
 	rect.h = space_for_terrains;
@@ -189,7 +191,7 @@ void terrain_palette::adjust_size() {
 		size_specs_.terrain_width;
 	nterrains_ = std::min<int>(terrains_fitting, nmax_terrains_);
 	bot_button_y_ = size_specs_.palette_y + (nterrains_ / size_specs_.terrain_width) * size_specs_.terrain_space + \
-		button_palette_padding * size_specs_.terrain_width + button_height + group_height;
+		button_palette_padding * size_specs_.terrain_width + button_height + group_height - 50;
 	top_button_.set_location(button_x_, top_button_y_);
 	bot_button_.set_location(button_x_, bot_button_y_);
 
@@ -336,13 +338,17 @@ void terrain_palette::handle_event(const SDL_Event& event) {
 	if (event.type == SDL_MOUSEMOTION) {
 		// If the mouse is inside the palette, give it focus.
 		if (point_in_rect(event.button.x, event.button.y, location())) {
-			if (!focus(&event)) {
-				set_focus(true);
-			}
+            if(mouse_over_palette_ != tile_selected(event.button.x,event.button.y)){
+                mouse_over_palette_ = tile_selected(event.button.x,event.button.y);
+                eyetracker::interaction_controller::mouse_enter(this);
+            }
+            set_focus(true);
 		}
 		// If the mouse is outside, remove focus.
 		else {
 			if (focus(&event)) {
+                mouse_over_palette_ = -1;
+                eyetracker::interaction_controller::mouse_leave(this);
 				set_focus(false);
 			}
 		}
@@ -400,6 +406,7 @@ void terrain_palette::draw(bool force) {
 	if (!dirty() && !force) {
 		return;
 	}
+
 	unsigned int starting = tstart_;
 	unsigned int ending = starting + nterrains_;
 	surface screen = gui_.video().getSurface();
@@ -512,6 +519,14 @@ void terrain_palette::draw(bool force) {
 	set_dirty(false);
 }
 
+SDL_Rect terrain_palette::indicator_rect(){
+    int x = size_specs_.palette_x + (mouse_over_palette_ % size_specs_.terrain_width) * size_specs_.terrain_space;
+    int y = terrain_start_ + (mouse_over_palette_ / size_specs_.terrain_width) * size_specs_.terrain_space;
+    int w = 50;
+    int h = w;
+    return {x,y,w,h};
+}
+
 int terrain_palette::tile_selected(const int x, const int y) const {
 	for(unsigned int i = 0; i != nterrains_; i++) {
 		const int px = size_specs_.palette_x + (i % size_specs_.terrain_width) * size_specs_.terrain_space;
@@ -556,8 +571,8 @@ void terrain_palette::load_tooltips()
 brush_bar::brush_bar(display &gui, const size_specs &sizes,
 	std::vector<brush>& brushes, brush** the_brush)
 : gui::widget(gui.video()), size_specs_(sizes), gui_(gui),
-selected_(0), brushes_(brushes), the_brush_(the_brush),
-size_(30) {
+selected_(0), mouse_over_index_(-1), brushes_(brushes), the_brush_(the_brush),
+size_(50) {
 	adjust_size();
 }
 
@@ -583,17 +598,42 @@ void brush_bar::left_mouse_click(const int mousex, const int mousey) {
 	}
 }
 
+SDL_Rect brush_bar::indicator_rect(){
+    int x;
+    int y = location().y;
+    int w = size_;
+    int h = w;
+    switch(mouse_over_index_){
+        case 0:
+            return {location().x,y,w,h};
+        case 1:
+            x = location().x + w;
+            return {x,y,w,h};
+        case 2:
+            x = location().x + 2*w;
+            return {x,y,w,h};
+        case 3:
+            x = location().x + 3*w;
+            return {x,y,w,h};
+    }
+    return location();
+}
+
 void brush_bar::handle_event(const SDL_Event& event) {
 	if (event.type == SDL_MOUSEMOTION) {
 		// If the mouse is inside the palette, give it focus.
 		if (point_in_rect(event.button.x, event.button.y, location())) {
-			if (!focus(&event)) {
-				set_focus(true);
-			}
+            if(mouse_over_index_ != selected_index(event.button.x,event.button.y)){
+                mouse_over_index_ = selected_index(event.button.x,event.button.y);
+                eyetracker::interaction_controller::mouse_enter(this);
+            }
+            set_focus(true);
 		}
 		// If the mouse is outside, remove focus.
 		else {
 			if (focus(&event)) {
+                mouse_over_index_ = -1;
+                eyetracker::interaction_controller::mouse_leave(this);
 				set_focus(false);
 			}
 		}

@@ -34,7 +34,9 @@ private:
 
     static CVideo* video_;
     static surface restore_;
+    static surface restore_dialog_;
     static SDL_Rect indicator_rect_;
+    static SDL_Rect dialog_rect_;
     static SDL_TimerID draw_timer_id_;
     static int remaining_slices_;
 
@@ -50,7 +52,7 @@ public:
     static void toggle_right_click(bool value);
     static bool get_right_click();
 
-    static void toggle_dialog_indicator(bool show);
+    static void toggle_dialog_indicator();
 
     static void mouse_enter(gui::widget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI1 widgets when the mouse enters over it
     static void mouse_enter(gui2::twidget* widget, interaction_controller::EVENT_TO_SEND event = CLICK); // Should be called by GUI2 widgets when the mouse enters over it

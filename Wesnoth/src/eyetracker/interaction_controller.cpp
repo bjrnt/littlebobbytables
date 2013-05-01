@@ -30,10 +30,13 @@ int dwell_startY_ = 0;
 
 SDL_TimerID interaction_controller::draw_timer_id_ = NULL;
 SDL_Rect interaction_controller::indicator_rect_ = create_rect(0,0,0,0);
+SDL_Rect interaction_controller::dialog_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_slices_ = 4;
 surface interaction_controller::restore_ = NULL;
+surface interaction_controller::restore_dialog_ = NULL;
 surface current_surface = NULL;
 bool draw_indicator_ = false;
+bool show_dialog_indicator_ = false;
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
@@ -240,6 +243,7 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     switch (preferences::interaction_method())
     {
     case preferences::DWELL:
+        show_dialog_indicator_ = true;
         if(changedCord && been_out_of_top_box)
         {
             been_out_of_top_box = false;
@@ -255,39 +259,24 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
     }
 }//End init windoe
 
-void interaction_controller::toggle_dialog_indicator(bool show)
+void interaction_controller::toggle_dialog_indicator()
 {
     if(current_surface == NULL || selected_window_ == NULL) return;
-    static surface restore;
-    std::pair<int,int> res = preferences::resolution();
-    SDL_Rect dialog_rect = {0,DIALOG_INDICATOR_STARTY,res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT};
-    if(restore == NULL && show)
+    if(show_dialog_indicator_)
     {
-        surface draw_surface = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
-        restore = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
-        sdl_blit(current_surface,&dialog_rect,restore,NULL);
+        surface draw_surface = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
         unsigned w = draw_surface->w;
         Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 0, 0, 60);
         ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
-        for(int x = dialog_rect.x; x < dialog_rect.w; x++)
+        for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
         {
-            for(int y = dialog_rect.y; y < dialog_rect.h; y++)
+            for(int y = dialog_rect_.y; y < dialog_rect_.h; y++)
             {
                 *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
             }
         }
-        sdl_blit(draw_surface,NULL,current_surface,&dialog_rect);
-        update_rect(dialog_rect);
-    }
-    else if(!show)
-    {
-        sdl_blit(restore,NULL,current_surface,&dialog_rect);
-        update_rect(dialog_rect);
-        restore = NULL;
-    }
-   	else if(show && restore != NULL) {
-        toggle_dialog_indicator(false);
-        toggle_dialog_indicator(true);
+        sdl_blit(draw_surface,NULL,current_surface,&dialog_rect_);
+        update_rect(dialog_rect_);
     }
 }
 
@@ -334,8 +323,15 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
-    toggle_dialog_indicator(false);
+
     draw_indicator_ = false;
+    show_dialog_indicator_ = false;
+    /*if(restore_ != NULL)
+    {
+        restore_background();
+        restore_ = NULL;
+    }*/
+    //restore_ = NULL;
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
     selected_window_ = NULL;
@@ -350,10 +346,17 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     interaction_controller::EVENT_TO_SEND event = (interaction_controller::EVENT_TO_SEND) tmp;
     if(selected_widget_g1_ != NULL)
     {
+        //Potentiell Johan konflikt (Andreas & Christoffer)
+        //SDL_Rect rect = selected_widget_g1_->location();
+        //x = rect.x + rect.w/2;
+        //y = rect.y + rect.h/2;
         SDL_GetMouseState(&x,&y);
     }
     else if(selected_widget_g2_ != NULL)
     {
+        //Potentiell Johan konflikt (Andreas & Christoffer)
+        //x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
+        //y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
         SDL_GetMouseState(&x,&y);
     }
     else if(map_loc_ != NULL)
@@ -364,11 +367,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     {
         x = dwell_startX_;
         y = dwell_startY_;
-        toggle_dialog_indicator(false);
     }
     else
     {
-        std::cerr << "Trying to click a widget that does not exist\n";
+        std::cerr << "Trying to click a widget that does not exist";
         stop_timer();
         return 0;
     }
@@ -385,28 +387,6 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     {
         click(x,y);
         stop_draw_timer();
-        restore_background();
-
-        /* A small delay is added to allow the button to update it's state before fetching the new indicator rect.
-           See the comment below.
-        */
-        SDL_Delay(10);
-
-        /*
-        This is used when the state of the button's indicator can change between clicks.
-        At the moment the only place I have found this to be true are the repeating buttons in menus in the following case:
-        1. User keeps clicking until reaching the bottom of the list
-        2. The buttons state changes to disabled, so we shouldn't generate any more click events or draw the indicator
-        */
-        if(selected_widget_g1_ != NULL) {
-            indicator_rect_ = selected_widget_g1_->indicator_rect();
-        }
-        else if(selected_widget_g2_ != NULL) {
-            indicator_rect_ = selected_widget_g2_->indicator_rect();
-        }
-
-        if(indicator_rect_ == create_rect(0,0,0,0)) return 0; // Don't want to repeat another click if button is diabled
-
         start_draw_timer();
         return interval; // returning interval to next click
     }
@@ -414,6 +394,7 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     reset();
     return 0;
 }
+
 
 void interaction_controller::press_switch()
 {
@@ -439,6 +420,8 @@ void interaction_controller::blink(int x,int y)
 {
     if(preferences::interaction_method() == preferences::BLINK)
     {
+        //int x,y;
+
         if(selected_window_ != NULL)
         {
             x = dwell_startX_;
@@ -448,7 +431,9 @@ void interaction_controller::blink(int x,int y)
         {
             return;
         }
+
         right_or_left_click(x,y);
+
         reset();
     }
     return;
@@ -527,8 +512,15 @@ void interaction_controller::restore_background()
         sdl_blit(restore_,NULL,current_surface,&tempDestRect);
         update_rect(indicator_rect_);
         restore_ = NULL;
-    } else {
-        std::cerr << "Restore_background called even though no background has been stored\n";
+    }
+    else if(restore_dialog_ != NULL)
+    {
+        sdl_blit(restore_dialog_,NULL,current_surface,&dialog_rect_);
+        update_rect(dialog_rect_);
+        restore_dialog_ = NULL;
+    }
+    else {
+        //std::cerr << "restore_background called even though no background has been stored\n";
     }
 }
 
@@ -557,9 +549,9 @@ void interaction_controller::restore_background()
 //            double dy = abs((cy - radius + y) - cy);
 //
 //            for(int x = 0; x < 2 * radius; x++)
-//            {crazyBool
+//            {
 //                double dx = abs((cx - radius + x) - cx);
-//                double dist = sqrt(dx * dx + dy * dy);crazyBool
+//                double dist = sqrt(dx * dx + dy * dy);
 //                if(dist < r)
 //                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
 //            }
@@ -589,6 +581,17 @@ void interaction_controller::set_indicator_restore_surface(surface surf)
         }
         sdl_blit(surf,&indicator_rect_,restore_,NULL);
     }
+    else if(show_dialog_indicator_)
+    {
+        //We reset this rect every time since the resolution might have changed
+        std::pair<int,int> res = preferences::resolution();
+        dialog_rect_ = {0,DIALOG_INDICATOR_STARTY,res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT};
+        if(restore_dialog_ == NULL)
+        {
+            restore_dialog_ = create_neutral_surface(res.first - DIALOG_INDICATOR_WIDTH_OFFSET,DIALOG_INDICATOR_HEIGHT);
+        }
+        sdl_blit(surf,&dialog_rect_,restore_dialog_,NULL);
+    }
 }
 
 //Draw indicator using Tårtenham's circle algorithm
@@ -610,11 +613,11 @@ void interaction_controller::draw_indicator(surface surf)
 
         for (int y = 0; y < 2 * radius; y++)
         {
-            double dy = abs(y-radius);
+            double dy = abs(y - radius);
 
             for(int x = 0; x < 2 * radius; x++)
             {
-                double dx = abs(x-radius);
+                double dx = abs(x - radius);
                 double dist = sqrt(dx * dx + dy * dy);
                 if(dist < r)
                 {

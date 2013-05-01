@@ -88,6 +88,10 @@ void trepeating_button::set_state(const tstate state)
 			remove_timer(repeat_timer_);
 			repeat_timer_ = 0;
 		}
+
+		if(state_ == DISABLED) {
+            eyetracker::interaction_controller::mouse_leave(this);
+		}
 	}
 }
 
@@ -98,7 +102,7 @@ const std::string& trepeating_button::get_control_type() const
 }
 
 SDL_Rect trepeating_button::indicator_rect(){
-    if(state_ == DISABLED) {
+    if(state_ == DISABLED) { // If the button isn't clickable we shouldn't display an indicator
         return {0,0,0,0};
     }
     int h = this->get_height();

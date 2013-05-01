@@ -661,7 +661,6 @@ void twindow::draw()
 		return;
 	}
 
-    if(click_dismiss_) eyetracker::interaction_controller::toggle_dialog_indicator(true);
 	surface frame_buffer = video_.getSurface();
 
 	/***** ***** Layout and get dirty list ***** *****/

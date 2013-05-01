@@ -874,6 +874,7 @@ void display::flip()
 	}
 
 	surface frameBuffer = get_video_surface();
+
 	// This is just the debug function "sunset" to progressively darken the map area
 	static size_t sunset_timer = 0;
 	if (sunset_delay && ++sunset_timer > sunset_delay) {
@@ -884,15 +885,17 @@ void display::flip()
 		fill_rect_alpha(r, color, 1, frameBuffer);
 		update_rect(r);
 	}
-	//bobby - johan
+    //bobby - johan
     eyetracker::interaction_controller::set_indicator_restore_surface(frameBuffer);
+
 	font::draw_floating_labels(frameBuffer);
 	events::raise_volatile_draw_event();
 	cursor::draw(frameBuffer);
-
 	eyetracker::interaction_controller::draw_indicator(frameBuffer);
+	eyetracker::interaction_controller::toggle_dialog_indicator();
 
 	video().flip();
+
     eyetracker::interaction_controller::restore_background();
 	cursor::undraw(frameBuffer);
 	events::raise_volatile_undraw_event();
@@ -1169,8 +1172,8 @@ void display::render_image(int x, int y, const display::tdrawing_layer drawing_l
 }
 
 SDL_Rect display::indicator_rect(){
-    int x = get_location_x(mouseoverHex_) + 15;
-    int y = get_location_y(mouseoverHex_) + 15;
+    int x = get_location_x(mouseoverHex_) + 15*zoom_/DefaultZoom;
+    int y = get_location_y(mouseoverHex_) + 15*zoom_/DefaultZoom;
     int w = std::min(hex_width(),hex_size());
     int h = w;
     return {x,y,w,h};
@@ -1186,7 +1189,7 @@ void display::select_hex(map_location hex)
 void display::highlight_hex(map_location hex)
 {
 	invalidate(mouseoverHex_);
-    if(tile_nearly_on_screen(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
+    if(get_map().on_board(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
         || get_location_y(hex) != get_location_y(mouseoverHex_))){
         eyetracker::interaction_controller::mouse_leave(&mouseoverHex_,this);
         mouseoverHex_ = hex;
