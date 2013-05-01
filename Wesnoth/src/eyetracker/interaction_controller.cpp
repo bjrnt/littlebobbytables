@@ -520,7 +520,7 @@ void interaction_controller::restore_background()
         restore_dialog_ = NULL;
     }
     else {
-        std::cerr << "restore_background called even though no background has been stored\n";
+        //std::cerr << "restore_background called even though no background has been stored\n";
     }
 }
 
