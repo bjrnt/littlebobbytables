@@ -63,23 +63,8 @@ twidget::~twidget()
 	}
 }
 
-SDL_Rect twidget::indicator_rect(){
-//    std::cerr << "Widget" << std::endl;
-//    int x = 0,y = 0,w = 0,h = 0;
-//    if(parent_ != NULL){
-//        x = parent_->x_ + parent_->w_/2 - parent_->h_/2;
-//        y = parent_->y_;
-//        w = parent_->h_;
-//        h = parent_->h_;
-//    }
-//    else{
-//        x = x_ + w_/2 - h_/2;
-//        y = y_;
-//        w = h_;
-//        h = h_;
-//    }
-//
-//    return {x,y,w,h};
+SDL_Rect twidget::indicator_rect()
+{
     return {0,0,0,0};
 }
 

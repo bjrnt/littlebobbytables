@@ -13,6 +13,7 @@ class interaction_controller
 
 public:
     enum EVENT_TO_SEND {CLICK, DOUBLE_CLICK, REPEATING_CLICK, RIGHT_CLICK};
+    enum INDICATOR_TYPE {CLOCK, ZOOM};
 
 private:
     static SDL_TimerID timer_id_;
@@ -63,6 +64,8 @@ public:
     static void mouse_leave(map_location* loc, display* d);
 
     static void set_indicator_restore_surface(surface surf);
+    static void override_indiactor_rect(SDL_Rect rect);
+    static void override_indicator_type(interaction_controller::INDICATOR_TYPE);
     static void restore_background();
     static void draw_indicator(surface surf);
 };

@@ -89,17 +89,31 @@ bool mouse_handler_base::mouse_motion_default(int x, int y, bool /*update*/)
 		return true;
 	}
     gui2::fake_minimap fm;
-    fm.set_indicator_rect(gui().minimap_area());
+
     //Bobby : Christoffer - Emulate mouse_enter & mouse_leave by checking if mouse inside minimap
 	if(point_in_rect(x, y, gui().minimap_area())) {
+        //updating indicator_rect for fake map
+        int ir_w = 40;
+        int ir_h = ir_w;
+        int ir_x = x - ir_w/2;
+        int ir_y = y - ir_h/2;
+		fm.set_indicator_rect(ir_x,ir_y,ir_w,ir_h);
+
+        //Signal mouse_enter if this was the first time we entered the minimap
 		if(!inside_minimap_){
             //Mouse enter
+            eyetracker::interaction_controller::override_indicator_type(eyetracker::interaction_controller::ZOOM);
             eyetracker::interaction_controller::mouse_enter(&fm);
             inside_minimap_ = true;
+		}
+		//Update indicator rect to current position on minimap
+		else{
+            eyetracker::interaction_controller::override_indiactor_rect(fm.indicator_rect());
 		}
 	}
 	else if(inside_minimap_){
         //Mouse leave
+        eyetracker::interaction_controller::override_indicator_type(eyetracker::interaction_controller::CLOCK);
         eyetracker::interaction_controller::mouse_leave(&fm);
         inside_minimap_ = false;
 	}

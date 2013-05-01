@@ -4,11 +4,11 @@
 
 
 namespace gui2{
-    void fake_minimap::set_indicator_rect(const SDL_Rect & maparea){
-        indicator_rect_.x = maparea.x;
-        indicator_rect_.y = maparea.y;
-        indicator_rect_.w = maparea.w;
-        indicator_rect_.h = maparea.w;
+    void fake_minimap::set_indicator_rect(int x, int y, int w, int h){
+        indicator_rect_.x = x;
+        indicator_rect_.y = y;
+        indicator_rect_.w = w;
+        indicator_rect_.h = w;
     }
 
     SDL_Rect fake_minimap::indicator_rect(){

@@ -37,6 +37,7 @@ surface interaction_controller::restore_dialog_ = NULL;
 surface current_surface = NULL;
 bool draw_indicator_ = false;
 bool show_dialog_indicator_ = false;
+interaction_controller::INDICATOR_TYPE indicator_type_ = interaction_controller::CLOCK;
 
 // REMEMBER: mouse_leave and mouse_enter may not be called one at a time.
 // Sometimes there are several calls to mouse_enter in a row or vice versa.
@@ -326,12 +327,6 @@ void interaction_controller::reset()
 
     draw_indicator_ = false;
     show_dialog_indicator_ = false;
-    /*if(restore_ != NULL)
-    {
-        restore_background();
-        restore_ = NULL;
-    }*/
-    //restore_ = NULL;
     selected_widget_g1_ = NULL;
     selected_widget_g2_ = NULL;
     selected_window_ = NULL;
@@ -346,17 +341,10 @@ Uint32 interaction_controller::callback(Uint32 interval, void* param)
     interaction_controller::EVENT_TO_SEND event = (interaction_controller::EVENT_TO_SEND) tmp;
     if(selected_widget_g1_ != NULL)
     {
-        //Potentiell Johan konflikt (Andreas & Christoffer)
-        //SDL_Rect rect = selected_widget_g1_->location();
-        //x = rect.x + rect.w/2;
-        //y = rect.y + rect.h/2;
         SDL_GetMouseState(&x,&y);
     }
     else if(selected_widget_g2_ != NULL)
     {
-        //Potentiell Johan konflikt (Andreas & Christoffer)
-        //x = selected_widget_g2_->get_x() + selected_widget_g2_->get_width()/2;
-        //y = selected_widget_g2_->get_y() + selected_widget_g2_->get_height()/2;
         SDL_GetMouseState(&x,&y);
     }
     else if(map_loc_ != NULL)
@@ -611,38 +599,61 @@ void interaction_controller::draw_indicator(surface surf)
         int cy = indicator_rect_.y + indicator_rect_.h/2;
         int cx = indicator_rect_.x + indicator_rect_.w/2;
 
-        for (int y = 0; y < 2 * radius; y++)
+        switch(indicator_type_)
         {
-            double dy = abs(y - radius);
-
-            for(int x = 0; x < 2 * radius; x++)
+        //Clock type indicator
+        case interaction_controller::CLOCK:
+            for (int y = 0; y < 2 * radius; y++)
             {
-                double dx = abs(x - radius);
-                double dist = sqrt(dx * dx + dy * dy);
-                if(dist < r)
+                double dy = abs(y - radius);
+
+                for(int x = 0; x < 2 * radius; x++)
                 {
-                    if(preferences::interaction_method() == preferences::DWELL){
-                        switch(remaining_slices_)
-                        {
-                        case 4:
-                            *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                            break;
-                        case 3:
-                            if(!(x > radius && y < radius)) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                            break;
-                        case 2:
-                            if(x < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                            break;
-                        case 1:
-                            if(x < radius && y < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                            break;
+                    double dx = abs(x - radius);
+                    double dist = sqrt(dx * dx + dy * dy);
+                    if(dist < r)
+                    {
+                        if(preferences::interaction_method() == preferences::DWELL){
+                            switch(remaining_slices_)
+                            {
+                            case 4:
+                                *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                                break;
+                            case 3:
+                                if(!(x > radius && y < radius)) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                                break;
+                            case 2:
+                                if(x < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                                break;
+                            case 1:
+                                if(x < radius && y < radius) *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                                break;
+                            }
                         }
-                    }
-                    else{
-                        *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        else{
+                            *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                        }
                     }
                 }
             }
+            break;
+        //Shrinking indicator
+        case interaction_controller::ZOOM:
+        double size_multiplier = remaining_slices_ / 4.0;
+        int draw_radius = (int) (radius * size_multiplier);
+            for (int y = 0; y < 2 * radius; y++)
+            {
+                double dy = abs((cy - radius + y) - cy);
+
+                for(int x = 0; x < 2 * radius; x++)
+                {
+                    double dx = abs((cx - radius + x) - cx);
+                    double dist = sqrt(dx * dx + dy * dy);
+                    if(dist < draw_radius)
+                        *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                }
+            }
+            break;
         }
 
         SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
@@ -652,4 +663,17 @@ void interaction_controller::draw_indicator(surface surf)
     }
     current_surface = surf;
 }
+
+//Overrides the indicator rect with input rect
+void interaction_controller::override_indiactor_rect(SDL_Rect rect)
+{
+    indicator_rect_ = rect;
+}
+
+//Overrides the indicator type with inpute type
+void interaction_controller::override_indicator_type(interaction_controller::INDICATOR_TYPE type)
+{
+    indicator_type_ = type;
+}
+
 }

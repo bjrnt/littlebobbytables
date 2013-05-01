@@ -8,7 +8,7 @@ namespace gui2{
 
 class fake_minimap : public gui2::twidget {
 public:
-    void set_indicator_rect(const SDL_Rect &);
+    void set_indicator_rect(int x, int y, int w, int h);
     SDL_Rect indicator_rect();
     virtual bool disable_click_dismiss() const {return false;}
     virtual gui2::iterator::twalker_* create_walker(){return NULL;}
