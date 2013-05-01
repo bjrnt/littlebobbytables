@@ -176,6 +176,10 @@ bool set_resolution(CVideo& video, const unsigned width, const unsigned height)
 	int bpp = video.bppForMode(width, height, flags);
 
 	if(bpp != 0) {
+        const std::string postfix = fullscreen() ? "resolution" : "windowsize";
+        preferences::set('x' + postfix, lexical_cast<std::string>(width));
+        preferences::set('y' + postfix, lexical_cast<std::string>(height));
+        preferences::resolution(); // BOBBY | Andreas | Update the resolution.
 		video.setMode(width, height, bpp, flags);
 
 		if(disp) {
@@ -188,10 +192,6 @@ bool set_resolution(CVideo& video, const unsigned width, const unsigned height)
 		return false;
 	}
 
-	const std::string postfix = fullscreen() ? "resolution" : "windowsize";
-	preferences::set('x' + postfix, lexical_cast<std::string>(width));
-	preferences::set('y' + postfix, lexical_cast<std::string>(height));
-    preferences::resolution(); // BOBBY | Andreas | Update the resolution.
 	return true;
 }
 
