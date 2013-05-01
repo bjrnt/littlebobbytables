@@ -277,7 +277,7 @@ void game_display::toggle_right_click(){
         eyetracker::interaction_controller::toggle_right_click(false);
     }
     else{
-        addModeText("Right Click Mode");
+        addModeText("Option Mode");
         eyetracker::interaction_controller::toggle_right_click(true);
         interaction_mode_ = RIGHT;
     }
