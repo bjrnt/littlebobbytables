@@ -492,6 +492,15 @@ Uint32 interaction_controller::draw_callback(Uint32 interval, void* param)
     return interval;
 }
 
+void interaction_controller::restore_dialog_background(){
+    if(restore_dialog_ != NULL)
+    {
+        sdl_blit(restore_dialog_,NULL,current_surface,&dialog_rect_);
+        update_rect(dialog_rect_);
+        restore_dialog_ = NULL;
+    }
+}
+
 void interaction_controller::restore_background()
 {
     if(restore_ != NULL)
@@ -500,12 +509,6 @@ void interaction_controller::restore_background()
         sdl_blit(restore_,NULL,current_surface,&tempDestRect);
         update_rect(indicator_rect_);
         restore_ = NULL;
-    }
-    else if(restore_dialog_ != NULL)
-    {
-        sdl_blit(restore_dialog_,NULL,current_surface,&dialog_rect_);
-        update_rect(dialog_rect_);
-        restore_dialog_ = NULL;
     }
     else {
         //std::cerr << "restore_background called even though no background has been stored\n";
@@ -569,7 +572,10 @@ void interaction_controller::set_indicator_restore_surface(surface surf)
         }
         sdl_blit(surf,&indicator_rect_,restore_,NULL);
     }
-    else if(show_dialog_indicator_)
+}
+
+void interaction_controller::set_dialog_restore_surface(surface surf){
+    if(show_dialog_indicator_)
     {
         //We reset this rect every time since the resolution might have changed
         std::pair<int,int> res = preferences::resolution();

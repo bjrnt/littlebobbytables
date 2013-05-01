@@ -64,9 +64,11 @@ public:
     static void mouse_leave(map_location* loc, display* d);
 
     static void set_indicator_restore_surface(surface surf);
+    static void set_dialog_restore_surface(surface surf);
     static void override_indiactor_rect(SDL_Rect rect);
     static void override_indicator_type(interaction_controller::INDICATOR_TYPE);
     static void restore_background();
+    static void restore_dialog_background();
     static void draw_indicator(surface surf);
 };
 }

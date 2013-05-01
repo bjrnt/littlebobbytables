@@ -495,10 +495,12 @@ void thandler::draw(const bool force)
 
 		surface frame_buffer = video.getSurface();
         eyetracker::interaction_controller::set_indicator_restore_surface(frame_buffer);
+        eyetracker::interaction_controller::set_dialog_restore_surface(frame_buffer);
 		cursor::draw(frame_buffer);
 		eyetracker::interaction_controller::draw_indicator(frame_buffer);
         eyetracker::interaction_controller::toggle_dialog_indicator();
 		video.flip();
+		eyetracker::interaction_controller::restore_dialog_background();
 		eyetracker::interaction_controller::restore_background();
 		cursor::undraw(frame_buffer);
 	}
