@@ -739,14 +739,13 @@ void playsingle_controller::play_human_turn() {
 	show_turn_dialog();
 	execute_gotos();
 
-    update_select_button();
 	gui_->enable_menu("endturn", true);
 	gui_->enable_menu("right", true);
 	gui_->enable_menu("cycle", true);
 	while(!end_turn_) {
+		update_select_button();
 		play_slice();
 		check_end_level();
-		update_select_button();
 		gui_->draw();
 	}
 }
