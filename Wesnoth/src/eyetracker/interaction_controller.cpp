@@ -7,6 +7,7 @@
 #include "display.hpp"
 #include "video.hpp"
 #include <unistd.h>
+#include "font.hpp"
 
 #define DWELL_BOUNDARY_X 40
 #define DWELL_BOUNDARY_Y 40
@@ -258,7 +259,7 @@ void interaction_controller::init_window(gui2::twindow* window, interaction_cont
         // Switch
         break;
     }
-}//End init windoe
+}//End init window
 
 void interaction_controller::toggle_dialog_indicator()
 {
@@ -267,7 +268,7 @@ void interaction_controller::toggle_dialog_indicator()
     {
         surface draw_surface = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
         unsigned w = draw_surface->w;
-        Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 0, 0, 60);
+        Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 254, 254, 60);
         ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
         for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
         {
@@ -276,7 +277,12 @@ void interaction_controller::toggle_dialog_indicator()
                 *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
             }
         }
+        surface text_surface = font::get_rendered_text("Next",font::SIZE_XLARGE,{160,0,0,255},0);
         sdl_blit(draw_surface,NULL,current_surface,&dialog_rect_);
+        int fontx = dialog_rect_.x + dialog_rect_.w/2;
+        int fonty = dialog_rect_.y + dialog_rect_.h/2;
+        SDL_Rect font_rect = {fontx,fonty,dialog_rect_.w,dialog_rect_.h};
+        sdl_blit(text_surface,NULL,current_surface,&font_rect);
         update_rect(dialog_rect_);
     }
 }
@@ -324,7 +330,6 @@ void interaction_controller::double_click(int mousex, int mousey)
 
 void interaction_controller::reset()
 {
-
     draw_indicator_ = false;
     show_dialog_indicator_ = false;
     selected_widget_g1_ = NULL;
