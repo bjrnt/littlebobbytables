@@ -322,7 +322,6 @@ void interaction_controller::right_or_left_click(int x,int y)
     if(right_click_ && map_loc_ != NULL)
     {
         click(x,y,SDL_BUTTON_RIGHT);
-        right_click_ = false;
     }
     else
     {

@@ -206,10 +206,13 @@ void playmp_controller::play_human_turn(){
 	show_turn_dialog();
 	execute_gotos();
 
-	if ((!linger_) || (is_host_))
+	if ((!linger_) || (is_host_)){
 		gui_->enable_menu("endturn", true);
+        gui_->enable_menu("right", true);
+        gui_->enable_menu("cycle", true);
+	}
 	while(!end_turn_) {
-
+        if((!linger_) || (is_host_)) update_select_button();
 		try {
 			config cfg;
 			const network::connection res = network::receive_data(cfg);
@@ -238,7 +241,6 @@ void playmp_controller::play_human_turn(){
 					throw end_turn_exception(gui_->playing_side());
 				}
 			}
-
 			play_slice();
 			check_end_level();
 			// give a chance to the whiteboard to continue an execute_all_actions
@@ -465,6 +467,9 @@ void playmp_controller::play_network_turn(){
 	LOG_NG << "is networked...\n";
 
 	gui_->enable_menu("endturn", false);
+    gui_->enable_menu("select", false);
+	gui_->enable_menu("right", false);
+	gui_->enable_menu("cycle", false);
 	turn_info turn_data(player_number_, replay_sender_);
 	turn_data.host_transfer().attach_handler(this);
 
