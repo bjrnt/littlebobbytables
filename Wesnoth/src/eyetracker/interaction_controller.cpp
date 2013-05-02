@@ -35,6 +35,7 @@ SDL_Rect interaction_controller::dialog_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_slices_ = 4;
 surface interaction_controller::restore_ = NULL;
 surface interaction_controller::restore_dialog_ = NULL;
+surface interaction_controller::dialog_indicator_ = NULL;
 surface current_surface = NULL;
 bool draw_indicator_ = false;
 bool show_dialog_indicator_ = false;
@@ -191,10 +192,8 @@ void interaction_controller::checkStillDwelling()
 {
     if(selected_window_ != NULL)
     {
-
         int x;
         int y;
-
 
         SDL_GetMouseState(&x, &y);
         std::pair<int,int> res = preferences::resolution();
@@ -217,7 +216,6 @@ void interaction_controller::checkStillDwelling()
 //Init_window BOBBY Veronica, Andreas
 void interaction_controller::init_window(gui2::twindow* window, interaction_controller::EVENT_TO_SEND event)
 {
-//    std::cerr << "Entered GUI1\n";
     if(timer_id_ != NULL)
         stop_timer();
     if(draw_timer_id_ != NULL)
@@ -266,23 +264,33 @@ void interaction_controller::toggle_dialog_indicator()
     if(current_surface == NULL || selected_window_ == NULL) return;
     if(show_dialog_indicator_)
     {
-        surface draw_surface = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
-        unsigned w = draw_surface->w;
-        Uint32 pixel = SDL_MapRGBA(draw_surface->format, 254, 254, 254, 60);
-        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(draw_surface->pixels);
-        for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
+        //Should we create a surface for the dialog indicator?
+        if(dialog_indicator_ == NULL)
         {
-            for(int y = dialog_rect_.y; y < dialog_rect_.h; y++)
+            dialog_indicator_ = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
+            unsigned w = dialog_indicator_->w;
+            Uint32 pixel = SDL_MapRGBA(dialog_indicator_->format, 254, 254, 254, 60);
+            ptrdiff_t start = reinterpret_cast<ptrdiff_t>(dialog_indicator_->pixels);
+            for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
             {
-                *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                for(int y = dialog_rect_.y; y < dialog_rect_.h; y++)
+                {
+                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
+                }
             }
+            font::floating_label flabel("Next");
+            flabel.set_font_size(2*font::SIZE_XLARGE);
+            SDL_Color color = {200,0,0,255};
+            flabel.set_color(color);
+            flabel.set_clip_rect(dialog_rect_);
+            int fontx = dialog_rect_.w/2;
+            int fonty = dialog_rect_.h/2;
+            SDL_Rect font_rect = {fontx,fonty,dialog_rect_.w,dialog_rect_.h};
+            sdl_blit(flabel.create_surface(),NULL,dialog_indicator_,&font_rect);
         }
-        surface text_surface = font::get_rendered_text("Next",font::SIZE_XLARGE,{160,0,0,255},0);
-        sdl_blit(draw_surface,NULL,current_surface,&dialog_rect_);
-        int fontx = dialog_rect_.x + dialog_rect_.w/2;
-        int fonty = dialog_rect_.y + dialog_rect_.h/2;
-        SDL_Rect font_rect = {fontx,fonty,dialog_rect_.w,dialog_rect_.h};
-        sdl_blit(text_surface,NULL,current_surface,&font_rect);
+
+        sdl_blit(dialog_indicator_,NULL,current_surface,&dialog_rect_);
+
         update_rect(dialog_rect_);
     }
 }
@@ -519,47 +527,6 @@ void interaction_controller::restore_background()
         //std::cerr << "restore_background called even though no background has been stored\n";
     }
 }
-
-//BOBBY OLD INDICATOR!
-//void interaction_controller::draw_indicator(surface surf)
-//{
-//    if(draw_timer_id_ != NULL){
-//        double size_multiplier = (double)remaining_dwell_length_ / (double)preferences::gaze_length();
-//        int max_radius = indicator_rect_.h / 2;
-//        int radius = (int) (max_radius * size_multiplier);
-//        surface ind = create_neutral_surface(2 * radius, 2 * radius);
-//
-//        if(restore_ == NULL) {
-//            restore_ = create_neutral_surface(indicator_rect_.w, indicator_rect_.h);
-//        }
-//        sdl_blit(surf,&indicator_rect_,restore_,NULL);
-//        Uint32 pixel = SDL_MapRGBA(ind->format, 254, 0, 0, 60);
-//
-//        double r = (double) radius;
-//        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(ind->pixels);
-//        unsigned w = ind->w;
-//        int cy = indicator_rect_.y + indicator_rect_.h/2;
-//        int cx = indicator_rect_.x + indicator_rect_.w/2;
-//        for (int y = 0; y < 2 * radius; y++)
-//        {
-//            double dy = abs((cy - radius + y) - cy);
-//
-//            for(int x = 0; x < 2 * radius; x++)
-//            {
-//                double dx = abs((cx - radius + x) - cx);
-//                double dist = sqrt(dx * dx + dy * dy);
-//                if(dist < r)
-//                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-//            }
-//        }
-//
-//        SDL_Rect target = create_rect(cx - radius, cy - radius, radius * 2, radius * 2);
-//
-//        sdl_blit(ind,NULL,surf,&target);
-//        update_rect(indicator_rect_);
-//    }
-//    current_surface = surf;
-//}
 
 // Sets the surface used to restore the image between every draw of the indicator
 //

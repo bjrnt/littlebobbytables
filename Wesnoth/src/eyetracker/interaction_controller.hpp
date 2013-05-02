@@ -36,6 +36,7 @@ private:
     static CVideo* video_;
     static surface restore_;
     static surface restore_dialog_;
+    static surface dialog_indicator_;
     static SDL_Rect indicator_rect_;
     static SDL_Rect dialog_rect_;
     static SDL_TimerID draw_timer_id_;
