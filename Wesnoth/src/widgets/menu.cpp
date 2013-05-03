@@ -652,7 +652,19 @@ bool menu::requires_event_focus(const SDL_Event* event) const
 // Author: Christoffer & Andreas & Kai
 // Version: 22-04-2013
 SDL_Rect menu::indicator_rect(){
-    SDL_Rect indicator_rect = get_item_rect(last_item_);
+    SDL_Rect indicator_rect;
+    if(last_item_ != -1) indicator_rect = get_item_rect(last_item_);
+    else if(highlight_heading_ != -1) {
+        std::vector<int> const &widths = column_widths();
+        indicator_rect.y = inner_location().y;
+        indicator_rect.w = widths[highlight_heading_];
+        indicator_rect.h = heading_height();
+        int x = inner_location().x;
+        for(int i = 0; i < highlight_heading_; i++){
+            x += widths[i];
+        }
+        indicator_rect.x = x;
+    }
     indicator_rect.x = indicator_rect.x + indicator_rect.w/2 - indicator_rect.h/2;
     indicator_rect.w = indicator_rect.h;
     return indicator_rect;
@@ -719,6 +731,7 @@ void menu::handle_event(const SDL_Event& event)
         if(last_item_ != -1 && out) {
             eyetracker::interaction_controller::mouse_leave(this);
             last_item_ = item;
+            highlight_heading_ = item;
         }
 	    else if(item != last_item_){
             eyetracker::interaction_controller::mouse_leave(this);
@@ -738,8 +751,8 @@ void menu::handle_event(const SDL_Event& event)
 
 		const int heading_item = hit_heading(event.motion.x,event.motion.y);
 		if(heading_item != highlight_heading_) {
-            eyetracker::interaction_controller::mouse_enter(this);
 			highlight_heading_ = heading_item;
+            eyetracker::interaction_controller::mouse_enter(this);
 			invalidate_heading();
 		}
 	}

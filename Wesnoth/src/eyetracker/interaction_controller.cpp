@@ -201,7 +201,7 @@ void interaction_controller::checkStillDwelling()
         SDL_GetMouseState(&x, &y);
         std::pair<int,int> res = preferences::resolution();
         //cerr<<"STILLDWELL: "<<x<<" "<<y<<"\n";
-        if(y<DIALOG_INDICATOR_HEIGHT && y > DIALOG_INDICATOR_STARTY && x < res.first - DIALOG_INDICATOR_WIDTH_OFFSET)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
+        if(y< DIALOG_INDICATOR_STARTY + DIALOG_INDICATOR_HEIGHT && y > DIALOG_INDICATOR_STARTY && x < res.first - DIALOG_INDICATOR_WIDTH_OFFSET)//(abs(dwell_startX_ - x) >= DWELL_BOUNDARY_X) || abs(dwell_startY_ - y) >= DWELL_BOUNDARY_Y)
         {
             if(timer_id_ == NULL)
             {
