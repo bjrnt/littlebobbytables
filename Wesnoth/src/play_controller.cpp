@@ -1220,8 +1220,6 @@ void play_controller::show_menu(const std::vector<std::string>& items_arg, int x
 
 bool play_controller::in_context_menu(hotkey::HOTKEY_COMMAND command) const
 {
-    gui_->addModeText("Select Mode");
-
 	switch(command) {
 	// Only display these if the mouse is over a castle or keep tile
 	case hotkey::HOTKEY_RECRUIT:
