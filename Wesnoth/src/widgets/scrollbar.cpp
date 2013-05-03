@@ -56,7 +56,7 @@ scrollbar::scrollbar(CVideo &video)
 	, grip_height_(0)
 	, old_position_(0)
 	, full_height_(0)
-	, scroll_rate_(1)
+	, scroll_rate_(5)
 {
 	static const surface img(image::get_image(scrollbar_mid));
 

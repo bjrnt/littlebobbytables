@@ -48,12 +48,12 @@ const std::map<std::string, tscrollbar_::tscroll>& scroll_lookup()
 	static std::map<std::string, tscrollbar_::tscroll> lookup;
 	if(lookup.empty()) {
 		lookup["_begin"] = tscrollbar_::BEGIN;
-		lookup["_line_up"] = tscrollbar_::ITEM_BACKWARDS;
+		lookup["_line_up"] = tscrollbar_::HALF_JUMP_BACKWARDS;
 		lookup["_half_page_up"] = tscrollbar_::HALF_JUMP_BACKWARDS;
 		lookup["_page_up"] = tscrollbar_::JUMP_BACKWARDS;
 
 		lookup["_end"] = tscrollbar_::END;
-		lookup["_line_down"] = tscrollbar_::ITEM_FORWARD;
+		lookup["_line_down"] = tscrollbar_::HALF_JUMP_FORWARD;
 		lookup["_half_page_down"] = tscrollbar_::HALF_JUMP_FORWARD;
 		lookup["_page_down"] = tscrollbar_::JUMP_FORWARD;
 	}
