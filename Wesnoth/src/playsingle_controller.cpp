@@ -141,6 +141,9 @@ void playsingle_controller::update_shroud_now(){
 }
 
 void playsingle_controller::end_turn(){
+    if(gui_->get_interaction_mode() == game_display::RIGHT){
+        gui_->toggle_right_click();
+    }
     if(gui_->get_interaction_mode() != game_display::VIEW){
         gui_->toggle_selectmode();
     }
