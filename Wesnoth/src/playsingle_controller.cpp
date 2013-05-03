@@ -93,6 +93,7 @@ void playsingle_controller::init_gui(){
 		gui_->scroll_to_tile(map_.starting_position(first_human_team_ + 1), game_display::WARP);
 	}
 	gui_->scroll_to_tile(map_.starting_position(1), game_display::WARP);
+	eyetracker::interaction_controller::toggle_right_click(false);
     if(preferences::interaction_method() == preferences::DWELL){
         gui_->enable_menu("select", true);
         gui_->addModeText("Viewing Mode");

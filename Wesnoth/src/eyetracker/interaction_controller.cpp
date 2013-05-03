@@ -62,6 +62,7 @@ void interaction_controller::mouse_enter(gui::widget* widget, interaction_contro
     selected_widget_g1_ = widget;
 
     indicator_rect_ = selected_widget_g1_->indicator_rect();
+    remaining_slices_ = 4;
     draw_indicator_ = true;
 
     switch (preferences::interaction_method())
@@ -97,6 +98,7 @@ void interaction_controller::mouse_enter(gui2::twidget* widget,interaction_contr
     selected_widget_g2_ = widget;
 
     indicator_rect_ = selected_widget_g2_->indicator_rect();
+    remaining_slices_ = 4;
     draw_indicator_ = true;
 
     switch (preferences::interaction_method())
@@ -129,6 +131,7 @@ void interaction_controller::mouse_enter(map_location* loc, display* d, interact
     disp = d;
 
     indicator_rect_ = disp->indicator_rect();
+    remaining_slices_ = 4;
     draw_indicator_ = true;
 
     switch (preferences::interaction_method())
@@ -470,7 +473,6 @@ void interaction_controller::start_draw_timer()
 {
     if(draw_timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL || selected_window_ != NULL))
     {
-        remaining_slices_ = 4;
         draw_timer_id_ = SDL_AddTimer(preferences::gaze_length()/4, draw_callback, NULL);
     }
     else

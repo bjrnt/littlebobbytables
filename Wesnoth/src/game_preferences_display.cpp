@@ -287,7 +287,7 @@ preferences_dialog::preferences_dialog(display& disp, const config& game_cfg)
 
     blink_length_slider_.set_min(0);
     blink_length_slider_.set_max(10);
-    blink_length_slider_.set_value(blink_length_base_ + blink_length_step_ * blink_length());
+    blink_length_slider_.set_value((blink_length() - blink_length_base_)/blink_length_step_);
     blink_length_slider_.set_help_string(_("Change the length of blink"));
     blink_length_slider_.enable(true);
 
