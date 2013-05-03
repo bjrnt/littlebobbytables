@@ -59,12 +59,14 @@ gamebrowser::gamebrowser(CVideo& video, const config &map_hashes) :
 	h_padding_(5),
 	header_height_(20),
 	selected_(0),
+	entered_item_(-1),
 	visible_range_(std::pair<size_t,size_t>(0,0)),
 	games_(),
 	redraw_items_(),
 	widths_(),
 	double_clicked_(false),
 	ignore_next_doubleclick_(false),
+	mouse_entered_(false),
 	last_was_doubleclick_(false)
 {
 	set_numeric_keypress_selection(false);
@@ -389,6 +391,36 @@ void gamebrowser::handle_event(const SDL_Event& event)
 			}
 		}
 	}
+	else if(event.type == SDL_MOUSEMOTION) {
+		int x = event.button.x;
+		int y = event.button.y;
+		const SDL_Rect& loc = inner_location();
+
+		if(!games_.empty() && point_in_rect(x, y, loc)) {
+			for(size_t i = visible_range_.first; i != visible_range_.second; ++i) {
+				const SDL_Rect& item_rect = get_item_rect(i);
+
+				if(point_in_rect(x, y, item_rect)) {
+                    if(i != entered_item_){
+                        if(mouse_entered_){
+                            eyetracker::interaction_controller::mouse_leave(this);
+                        }
+                        else{
+                            mouse_entered_ = true;
+                        }
+                        entered_item_ = i;
+                        eyetracker::interaction_controller::mouse_enter(this);
+                    }
+					break;
+				}
+			}
+		}
+		else if(mouse_entered_){
+            mouse_entered_ = false;
+            eyetracker::interaction_controller::mouse_leave(this);
+            entered_item_ = -1;
+		}
+	}
 }
 
 struct minimap_cache_item {
@@ -404,6 +436,10 @@ struct minimap_cache_item {
 	surface mini_map;
 	std::string map_info_size;
 };
+
+SDL_Rect gamebrowser::indicator_rect(){
+    return get_item_rect(entered_item_);
+}
 
 void gamebrowser::set_game_items(const config& cfg, const config& game_config)
 {

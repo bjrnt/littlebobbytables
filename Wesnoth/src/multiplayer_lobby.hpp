@@ -98,6 +98,7 @@ public:
 	void draw_contents();
 	void draw_row(const size_t row_index, const SDL_Rect& rect, ROW_TYPE type);
 	SDL_Rect get_item_rect(size_t index) const;
+	SDL_Rect indicator_rect();
 	bool empty() const { return games_.empty(); }
 	bool selection_is_joinable() const
 	{ return empty() ? false : (games_[selected_].vacant_slots > 0 && !games_[selected_].started && games_[selected_].have_era); }
@@ -127,11 +128,13 @@ private:
 	int minimap_size_;
 	int h_padding_;
 	int header_height_;
+	int entered_item_;
 	size_t selected_;
 	std::pair<size_t, size_t> visible_range_;
 	std::vector<game_item> games_;
 	std::vector<size_t> redraw_items_;
 	std::vector<int> widths_;
+	bool mouse_entered_;
 	bool double_clicked_;
 	bool ignore_next_doubleclick_;
 	bool last_was_doubleclick_;
