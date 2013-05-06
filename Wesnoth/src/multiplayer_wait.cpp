@@ -129,9 +129,9 @@ void wait::leader_preview_pane::draw_contents()
 		const SDL_Rect leader_rect = font::draw_text(&video(),area,font::SIZE_SMALL,font::NORMAL_COLOR,
 				_("Leader: "),area.x, area.y + 110);
 		const SDL_Rect gender_rect = font::draw_text(&video(),area,font::SIZE_SMALL,font::NORMAL_COLOR,
-				_("Gender: "),area.x, leader_rect.y + 30 + (leader_rect.h - leader_combo_.height()) / 2);
+				_("Gender: "),area.x, leader_rect.y + 100 + (leader_rect.h - leader_combo_.height()) / 2);
 		font::draw_wrapped_text(&video(),area,font::SIZE_SMALL,font::NORMAL_COLOR,
-				_("Recruits: ") + recruit_string.str(),area.x, area.y + 132 + 30 + (leader_rect.h - leader_combo_.height()) / 2,
+				_("Recruits: ") + recruit_string.str(),area.x, area.y + 132 + 125 + (leader_rect.h - leader_combo_.height()) / 2,
 				area.w);
 		leader_combo_.set_location(leader_rect.x + leader_rect.w + 16, leader_rect.y + (leader_rect.h - leader_combo_.height()) / 2);
 		gender_combo_.set_location(leader_rect.x + leader_rect.w + 16, gender_rect.y + (gender_rect.h - gender_combo_.height()) / 2);
