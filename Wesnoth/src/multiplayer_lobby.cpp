@@ -847,19 +847,23 @@ void lobby::layout_children(const SDL_Rect& rect)
 	int yborder   = 7;
 
 	// Align to the left border
-	join_game_.set_location(xscale(xborder), yscale(yborder));
-	observe_game_.set_location(join_game_.location().x + join_game_.location().w + btn_space, yscale(yborder));
-	create_game_.set_location(observe_game_.location().x + observe_game_.location().w + btn_space, yscale(yborder));
+	//BOBBY OLD LAYOUT
+	//join_game_.set_location(xscale(xborder), yscale(yborder));
+	//observe_game_.set_location(join_game_.location().x + join_game_.location().w + btn_space, yscale(yborder));
+	//create_game_.set_location(observe_game_.location().x + observe_game_.location().w + btn_space, yscale(yborder));
 
 	// Align 'Quit' to the right border
-	quit_game_.set_location(xscale(xscale_base - xborder) - quit_game_.location().w, yscale(yborder));
+	//quit_game_.set_location(xscale(xscale_base - xborder) - quit_game_.location().w, yscale(yborder));
 
 	// Align in the middle between the right and left buttons
-	int space = (quit_game_.location().x - create_game_.location().x - create_game_.location().w
+	int space = ((xscale(xscale_base - xborder) - quit_game_.location().w)
+                 - (xscale(xborder) + join_game_.location().w + observe_game_.location().w + 2*btn_space)
+                 - create_game_.location().w
 	             - skip_replay_.location().w - game_preferences_.location().w - btn_space) / 2;
 	if (space < btn_space) space = btn_space;
-	skip_replay_.set_location(create_game_.location().x + create_game_.location().w + space, yscale(yborder));
-	game_preferences_.set_location(quit_game_.location().x - game_preferences_.location().w - space, yscale(yborder));
+	//BOBBY OLD LAYOUT
+	//skip_replay_.set_location((xscale(xborder) + join_game_.location().w + observe_game_.location().w + 2*btn_space) + create_game_.location().w + space, yscale(yborder));
+	//game_preferences_.set_location(xscale(xscale_base - xborder) - quit_game_.location().w - game_preferences_.location().w - space, yscale(yborder));
 
 	games_menu_.set_location(client_area().x, client_area().y + title().height());
 	games_menu_.set_measurements(client_area().w, client_area().h
@@ -869,11 +873,19 @@ void lobby::layout_children(const SDL_Rect& rect)
 
     apply_filter_.set_location(client_area().x, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
     invert_filter_.set_location(client_area().x + apply_filter_.location().w + btn_space, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
+    skip_replay_.set_location(client_area().x + invert_filter_.location().w + invert_filter_.location().x + btn_space, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
     vacant_slots_.set_location(client_area().w - apply_filter_.location().w, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
     friends_in_game_.set_location(vacant_slots_.location().x - friends_in_game_.location().w - btn_space, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
     filter_text_.set_location(friends_in_game_.location().x - filter_text_.location().w - btn_space * 4, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding);
     filter_label_.set_location(filter_text_.location().x - filter_label_.location().w - btn_space, games_menu_.location().y + games_menu_.location().h + gui::ButtonVPadding
             + (apply_filter_.location().h - filter_label_.location().h) / 2);
+
+    //BOBBY: new button lauout
+    join_game_.set_location(apply_filter_.location().x, apply_filter_.location().y + gui::ButtonVPadding + apply_filter_.location().h);
+    observe_game_.set_location(invert_filter_.location().x, join_game_.location().y);
+    quit_game_.set_location(vacant_slots_.location().x, join_game_.location().y);
+    create_game_.set_location(friends_in_game_.location().x, join_game_.location().y);
+    game_preferences_.set_location(filter_text_.location().x, join_game_.location().y);
 
 }
 
