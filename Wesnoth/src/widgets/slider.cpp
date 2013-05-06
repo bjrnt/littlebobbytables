@@ -274,7 +274,7 @@ void slider::mouse_motion(const SDL_MouseMotionEvent& event)
                 //xpos_ = prevX;
                 eyetracker::interaction_controller::mouse_leave(this);
                 mouse_entered_ = false;
-                eyetracker::interaction_controller::mouse_enter(this);
+               // eyetracker::interaction_controller::mouse_enter(this);
             }
         }
     }
