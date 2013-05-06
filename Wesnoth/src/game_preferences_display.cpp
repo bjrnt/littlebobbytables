@@ -632,8 +632,7 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 			, 0);
 
 	autosavemax_slider_.set_location(autosavemax_rect);
-	hotkeys_button_.set_location(rect.x, bottom_row_y - hotkeys_button_.height()/4);
-
+	hotkeys_button_.set_location(rect.x, bottom_row_y + 10);
 	// Display tab
 	ypos = rect.y + top_border;
 	fullscreen_button_.set_location(rect.x, ypos);
