@@ -313,6 +313,7 @@ SDL_Rect tslider::indicator_rect(){
 void tslider::signal_handler_mouse_motion(const event::tevent event, bool& handled, bool& halt, const tpoint& coordinate){
     	DBG_GUI_E << LOG_HEADER << ' ' << event << " at " << coordinate << ".\n";
 
+    if(abs(step_size_*(coordinate.x - get_x()) + get_minimum_value()) > get_maximum_value()) return;
 	tpoint mouse = coordinate;
 	mouse.x -= get_x();
 	mouse.y -= get_y();
