@@ -24,6 +24,7 @@
 #include "gui/widgets/window.hpp"
 #include "gui/widgets/settings.hpp"
 #include "sound.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -52,12 +53,26 @@ tslider::tslider():
 		minimum_value_(0),
 		minimum_value_label_(),
 		maximum_value_label_(),
+		xpos_(0),
+		mouse_entered_(false),
+		steps_(0),
 		value_labels_()
 {
 	connect_signal<event::SDL_KEY_DOWN>(boost::bind(
 		&tslider::signal_handler_sdl_key_down, this, _2, _3, _5));
 	connect_signal<event::LEFT_BUTTON_UP>(boost::bind(
 		&tslider::signal_handler_left_button_up, this, _2, _3));
+    	connect_signal<event::MOUSE_MOTION>(boost::bind(
+				  &tslider::signal_handler_mouse_motion
+				, this
+				, _2
+				, _3
+				, _4
+				, _5));
+	connect_signal<event::MOUSE_LEAVE>(boost::bind(
+				&tslider::signal_handler_mouse_leave, this, _2, _3));
+	connect_signal<event::LEFT_BUTTON_DOWN>(boost::bind(
+				&tslider::signal_handler_left_button_down, this, _2, _3));
 
 }
 
@@ -228,7 +243,6 @@ int tslider::on_bar(const tpoint& coordinate) const
 
 void tslider::update_canvas()
 {
-
 	// Inherited.
 	tscrollbar_::update_canvas();
 
@@ -284,6 +298,132 @@ void tslider::signal_handler_left_button_up(
 
 	get_window()->keyboard_capture(this);
 
+	handled = true;
+}
+
+SDL_Rect tslider::indicator_rect(){
+    int x = xpos_ - get_height()/4;
+    int y = get_y();
+    int w = get_height();
+    int h = w;
+    return {x,y,w,h};
+}
+
+//BOBBY - handles mouse motions
+void tslider::signal_handler_mouse_motion(const event::tevent event, bool& handled, bool& halt, const tpoint& coordinate){
+    	DBG_GUI_E << LOG_HEADER << ' ' << event << " at " << coordinate << ".\n";
+
+	tpoint mouse = coordinate;
+	mouse.x -= get_x();
+	mouse.y -= get_y();
+
+	//Bobby | Christoffer | Added eyetracker support
+    if(!mouse_entered_){
+        if(get_maximum_value() - get_minimum_value() < 15){
+            steps_ = get_maximum_value() - get_minimum_value();
+        }
+        else{
+            steps_ = 10;
+        }
+        xpos_ = coordinate.x;
+        eyetracker::interaction_controller::mouse_enter(this);
+        mouse_entered_ = true;
+    }
+    else{
+        //std::cerr<<steps_<<std::endl;//", ";
+        int change = (get_width()/steps_)/2;
+        if(coordinate.x >= xpos_+ change || coordinate.x <= xpos_- change){
+           //std::cerr<<increment_<<std::endl;
+            //xpos_ = prevX;
+            eyetracker::interaction_controller::mouse_leave(this);
+            mouse_entered_ = false;
+            eyetracker::interaction_controller::mouse_enter(this);
+        }
+    }
+
+	switch(state_) {
+		case ENABLED :
+			if(on_positioner(mouse)) {
+				set_state(FOCUSSED);
+			}
+
+			break;
+
+		case PRESSED : {
+				const int distance = get_length_difference(mouse_, mouse);
+				mouse_ = mouse;
+				move_positioner(distance);
+			}
+			break;
+
+		case FOCUSSED :
+			if(!on_positioner(mouse)) {
+				set_state(ENABLED);
+			}
+			break;
+
+		case DISABLED :
+			// Shouldn't be possible, but seems to happen in the lobby
+			// if a resize layout happens during dragging.
+			halt = true;
+			break;
+
+		default :
+			assert(false);
+	}
+	handled = true;
+}
+
+
+void tslider::signal_handler_mouse_leave(
+		const event::tevent event, bool& handled)
+{
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+
+	if(state_ == FOCUSSED) {
+		set_state(ENABLED);
+	}
+	handled = true;
+
+    //If we were over an item, mark that we have left the slider
+    if(mouse_entered_){
+        eyetracker::interaction_controller::mouse_leave(this);
+        mouse_entered_ = false;
+    }
+}
+
+void tslider::signal_handler_left_button_down(
+		const event::tevent event, bool& handled)
+{
+	DBG_GUI_E << LOG_HEADER << ' ' << event << ".\n";
+
+	tpoint mouse = get_mouse_position();
+	mouse.x -= get_x();
+	mouse.y -= get_y();
+
+	if(on_positioner(mouse)) {
+		assert(get_window());
+		mouse_ = mouse;
+		get_window()->mouse_capture();
+		set_state(PRESSED);
+	}
+
+	const int bar = on_bar(mouse);
+
+	if(bar == -1) {
+		scroll(HALF_JUMP_BACKWARDS);
+		fire(event::NOTIFY_MODIFIED, *this, NULL);
+//		positioner_moved_notifier_.notify();
+	} else if(bar == 1) {
+		scroll(HALF_JUMP_FORWARD);
+		fire(event::NOTIFY_MODIFIED, *this, NULL);
+//		positioner_moved_notifier_.notify();
+	} else {
+		assert(bar == 0);
+	}
+
+    //Bobby : Set slider value
+    set_value(step_size_*(xpos_ - get_x()) + get_minimum_value());
 	handled = true;
 }
 

@@ -829,6 +829,8 @@ bool editor_controller::can_execute_command(hotkey::HOTKEY_COMMAND command, int 
 				}
 			}
 			return false;
+        case HOTKEY_CANCEL_MENU:
+        case HOTKEY_MINIMIZE:
 		case HOTKEY_ZOOM_IN:
 		case HOTKEY_ZOOM_OUT:
 		case HOTKEY_ZOOM_DEFAULT:

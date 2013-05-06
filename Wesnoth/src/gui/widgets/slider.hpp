@@ -139,6 +139,12 @@ private:
 	 */
 	t_string maximum_value_label_;
 
+	bool mouse_entered_;
+
+	int xpos_;
+
+	int steps_;
+
 	/**
 	 * This allows the slider to show custom texts instead of the values.
 	 * This vector should have the same amount of items as options for the
@@ -167,6 +173,20 @@ private:
 	// see tscrollbar class for more handling of this event.
 	void signal_handler_left_button_up(
 			const event::tevent event, bool& handled);
+
+    SDL_Rect indicator_rect();
+
+
+	void signal_handler_mouse_motion(
+			  const event::tevent event
+			, bool& handled
+			, bool& halt
+			, const tpoint& coordinate);
+
+	void signal_handler_mouse_leave(const event::tevent event, bool& handled);
+
+	void signal_handler_left_button_down(
+		const event::tevent event, bool& handled);
 };
 
 } // namespace gui2
