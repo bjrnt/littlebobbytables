@@ -16,6 +16,7 @@
 
 #include "editor_display.hpp"
 #include "builder.hpp"
+#include "eyetracker/interaction_controller.hpp"
 
 namespace editor {
 
@@ -95,6 +96,18 @@ void editor_display::draw_hex(const map_location& loc)
 const SDL_Rect& editor_display::get_clip_rect()
 {
 	return map_outside_area();
+}
+
+void editor_display::highlight_hex(map_location hex)
+{
+	invalidate(mouseoverHex_);
+    if(get_map().on_board_with_border(hex) && (get_location_x(hex) != get_location_x(mouseoverHex_)
+        || get_location_y(hex) != get_location_y(mouseoverHex_))){
+        eyetracker::interaction_controller::mouse_leave(&mouseoverHex_,this);
+        mouseoverHex_ = hex;
+        eyetracker::interaction_controller::mouse_enter(&mouseoverHex_, this);
+        invalidate(mouseoverHex_);
+    }
 }
 
 void editor_display::draw_sidebar()

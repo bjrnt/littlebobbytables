@@ -36,6 +36,7 @@ public:
 	const editor_map& map() const { return static_cast<const editor_map&>(get_map()); }
 	void rebuild_terrain(const map_location &loc);
 	void set_toolbar_hint(const std::string& value) { toolbar_hint_ = value; }
+    void highlight_hex(map_location hex);
 
 protected:
 	void pre_draw();
