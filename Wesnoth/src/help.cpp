@@ -2095,17 +2095,12 @@ int help_menu::process()
 			int text_start = style_->item_size(indented_icon(icon_img, sec->level)).w - style_->get_thickness();
 
 			// NOTE: if you want to forbid click to the left of the icon
-			// also check x >= text_start-image_width(icon_img)
-			if (menu::double_clicked() || x < text_start) {
-				// Open or close a section if we double-click on it
-				// or do simple click on the icon.
-				expanded(*sec) ? contract(*sec) : expand(*sec);
-				update_visible_items(toplevel_);
-				display_visible_items();
-			} else if (x >= text_start){
-				// click on title open the topic associated to this section
-				chosen_topic_ = find_topic(toplevel, ".."+sec->id );
-			}
+            // also check x >= text_start-image_width(icon_img)
+            // Open or close a section if we double-click on it
+            // or do simple click on the icon.
+            expanded(*sec) ? contract(*sec) : expand(*sec);
+            update_visible_items(toplevel_);
+            display_visible_items();
 		} else if (selected_item_.t != NULL) {
 			/// Choose a topic if it is clicked.
 			chosen_topic_ = selected_item_.t;
