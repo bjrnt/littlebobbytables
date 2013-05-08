@@ -466,6 +466,7 @@ void interaction_controller::start_timer(interaction_controller::EVENT_TO_SEND e
 }
 void interaction_controller::start_draw_timer()
 {
+    remaining_slices_ = 4;
     if(draw_timer_id_ == NULL && (selected_widget_g1_ != NULL || selected_widget_g2_ != NULL || map_loc_ != NULL || selected_window_ != NULL))
     {
         draw_timer_id_ = SDL_AddTimer(preferences::gaze_length()/4, draw_callback, NULL);
