@@ -35,7 +35,6 @@ SDL_Rect interaction_controller::dialog_rect_ = create_rect(0,0,0,0);
 int interaction_controller::remaining_slices_ = 4;
 surface interaction_controller::restore_ = NULL;
 surface interaction_controller::restore_dialog_ = NULL;
-surface interaction_controller::dialog_indicator_ = NULL;
 surface current_surface = NULL;
 bool draw_indicator_ = false;
 bool show_dialog_indicator_ = false;
@@ -267,31 +266,27 @@ void interaction_controller::toggle_dialog_indicator()
     if(current_surface == NULL || selected_window_ == NULL) return;
     if(show_dialog_indicator_)
     {
-        //Should we create a surface for the dialog indicator?
-        if(dialog_indicator_ == NULL)
+        surface dialog_indicator_ = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
+        unsigned w = dialog_indicator_->w;
+        Uint32 pixel = SDL_MapRGBA(dialog_indicator_->format, 254, 254, 254, 60);
+        ptrdiff_t start = reinterpret_cast<ptrdiff_t>(dialog_indicator_->pixels);
+        for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
         {
-            dialog_indicator_ = create_neutral_surface(dialog_rect_.w,dialog_rect_.h);
-            unsigned w = dialog_indicator_->w;
-            Uint32 pixel = SDL_MapRGBA(dialog_indicator_->format, 254, 254, 254, 60);
-            ptrdiff_t start = reinterpret_cast<ptrdiff_t>(dialog_indicator_->pixels);
-            for(int x = dialog_rect_.x; x < dialog_rect_.w; x++)
+            for(int y = dialog_rect_.y; y < dialog_rect_.h; y++)
             {
-                for(int y = dialog_rect_.y; y < dialog_rect_.h; y++)
-                {
-                    *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
-                }
+                *reinterpret_cast<Uint32*>(start + (y * w * 4) + x * 4) = pixel;
             }
-            font::floating_label flabel("Next");
-            flabel.set_font_size(2*font::SIZE_XLARGE);
-            SDL_Color color = {200,0,0,255};
-            flabel.set_color(color);
-            flabel.set_clip_rect(dialog_rect_);
-            int fontx = dialog_rect_.w/2;
-            int fonty = dialog_rect_.h/2;
-            SDL_Rect font_rect = {fontx,fonty,dialog_rect_.w,dialog_rect_.h};
-            sdl_blit(flabel.create_surface(),NULL,dialog_indicator_,&font_rect);
         }
+        font::floating_label flabel("Next");
+        flabel.set_font_size(2*font::SIZE_XLARGE);
+        SDL_Color color = font::GOOD_COLOR;
+        flabel.set_color(color);
+        flabel.set_clip_rect(dialog_rect_);
+        int fontx = dialog_rect_.w/2 - 2*font::SIZE_XLARGE;
+        int fonty = dialog_rect_.h/2;
+        SDL_Rect font_rect = {fontx,fonty,dialog_rect_.w,dialog_rect_.h};
 
+        sdl_blit(flabel.create_surface(),NULL,dialog_indicator_,&font_rect);
         sdl_blit(dialog_indicator_,NULL,current_surface,&dialog_rect_);
 
         update_rect(dialog_rect_);
