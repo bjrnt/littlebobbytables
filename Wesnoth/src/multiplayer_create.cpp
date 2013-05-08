@@ -755,7 +755,7 @@ void create::layout_children(const SDL_Rect& rect)
 	ypos += map_label_.height() + border_size;
 
 	maps_menu_.set_max_width(maps_menu_width);
-	maps_menu_.set_max_height(ca.h + ca.y - ypos);
+	maps_menu_.set_max_height(ca.h + ca.y - ypos - 40);
 	maps_menu_.set_location(xpos, ypos);
 	// Menu dimensions are only updated when items are set. So do this now.
 	int mapsel_save = maps_menu_.selection();
@@ -841,10 +841,10 @@ void create::layout_children(const SDL_Rect& rect)
 #endif
 
 	// Buttons
-	right_button->set_location(ca.x + ca.w - right_button->width(),
-	                           ca.y + ca.h - right_button->height() + 70);
+	right_button->set_location(ca.x + 3*right_button->width() - 20,
+	                           password_button_.location().y);
 	left_button->set_location(right_button->location().x - left_button->width() -
-	                          gui::ButtonHPadding, ca.y + ca.h - left_button->height() + 70);
+	                          gui::ButtonHPadding,password_button_.location().y);
 }
 
 } // namespace mp
