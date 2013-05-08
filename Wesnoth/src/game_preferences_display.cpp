@@ -623,7 +623,7 @@ void preferences_dialog::update_location(SDL_Rect const &rect)
 	//ypos += short_interline; whiteboard_on_start_button_.set_location(rect.x, ypos);
 	ypos += short_interline; hide_whiteboard_button_.set_location(rect.x, ypos);
 	ypos += short_interline; interrupt_when_ally_sighted_button_.set_location(rect.x, ypos);
-	ypos += item_interline; save_replays_button_.set_location(rect.x, ypos);
+	//ypos += item_interline; save_replays_button_.set_location(rect.x, ypos);
 	ypos += short_interline; delete_saves_button_.set_location(rect.x, ypos);
 	ypos += short_interline; autosavemax_slider_label_.set_location(rect.x + horizontal_padding, ypos);
 	SDL_Rect autosavemax_rect = create_rect(rect.x + horizontal_padding

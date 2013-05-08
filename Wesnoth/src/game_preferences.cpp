@@ -711,7 +711,7 @@ void set_save_replays(bool value)
 
 bool save_replays()
 {
-	return preferences::get("save_replays", true);
+	return preferences::get("save_replays", false);
 }
 
 void set_delete_saves(bool value)

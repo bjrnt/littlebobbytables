@@ -637,12 +637,12 @@ std::string load_game_dialog(display& disp, const config& game_config, bool* sho
 	save_preview_pane save_preview(disp.video(),game_config,&map_obj,games,summaries,*filter);
 	lmenu.add_pane(&save_preview);
 	// create an option for whether the replay should be shown or not
-	if(show_replay != NULL) {
-		lmenu.add_option(_("Show replay"), false,
-			// use smallgui layout as default, otherwise the load screen glitches at low res!
-			//game_config::small_gui ? gui::dialog::BUTTON_CHECKBOX : gui::dialog::BUTTON_STANDARD);
-			gui::dialog::BUTTON_CHECKBOX);
-	}
+//	if(show_replay != NULL) {
+//		lmenu.add_option(_("Show replay"), false,
+//			// use smallgui layout as default, otherwise the load screen glitches at low res!
+//			//game_config::small_gui ? gui::dialog::BUTTON_CHECKBOX : gui::dialog::BUTTON_STANDARD);
+//			gui::dialog::BUTTON_CHECKBOX);
+//	}
 	if(cancel_orders != NULL) {
 		lmenu.add_option(_("Cancel orders"), false,
 			// use smallgui layout as default, otherwise the load screen glitches at low res!
