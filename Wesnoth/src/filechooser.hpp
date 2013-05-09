@@ -53,7 +53,9 @@ private:
 	int last_selection_;
 	std::string last_textbox_text_;
 	std::string chosen_file_;
+	std::string default_filename_;
     bool autocomplete_;
+    bool first_time_;
 };
 
 /// Show a dialog where the user can navigate through files and select a

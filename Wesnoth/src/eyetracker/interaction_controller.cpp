@@ -6,7 +6,6 @@
 #include "map_location.hpp"
 #include "display.hpp"
 #include "video.hpp"
-#include <unistd.h>
 #include "font.hpp"
 
 #define DWELL_BOUNDARY_X 40

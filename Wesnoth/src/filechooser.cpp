@@ -24,6 +24,8 @@
 #include "filechooser.hpp"
 #include "widgets/file_menu.hpp"
 
+#include <ctime>
+#include <boost/lexical_cast.hpp>
 
 namespace dialogs
 {
@@ -65,8 +67,17 @@ file_dialog::file_dialog(display &disp, const std::string& file_path,
 	last_selection_(-1),
 	last_textbox_text_(),
 	chosen_file_(".."),
+	first_time_(true),
     autocomplete_(true)
 {
+    default_filename_ = "My_Map_";
+    time_t t = time(0);   // get time now
+    struct tm * now = localtime( & t );
+    std::string month = boost::lexical_cast<std::string>(now->tm_mon + 1);
+    if(now->tm_mon + 1 < 10) month = "0" + month;
+    std::string day = boost::lexical_cast<std::string>(now->tm_mday);
+    if(now->tm_mday < 10) day = "0" + day;
+    default_filename_ += boost::lexical_cast<std::string>(now->tm_year + 1900) + "-" + month + "-" + day + "_" + boost::lexical_cast<std::string>(now->tm_hour) + "." + boost::lexical_cast<std::string>(now->tm_min);
 	files_list_ = new gui::file_menu(disp.video(), file_path);
 	const unsigned file_list_height = (disp.h() / 2);
 	const unsigned file_list_width = std::min<unsigned>(files_list_->width(), (disp.w() / 4));
@@ -243,6 +254,14 @@ void file_dialog::action(gui::dialog_process_info &dp_info) {
         }
 	}
 
+	//BOBBY Default filename
+	if(first_time_){
+        first_time_ = false;
+        chosen_file_ = unformat_filename(default_filename_);
+        get_textbox().set_text(format_filename(chosen_file_));
+        last_textbox_text_ = textbox_text();
+	}
+
 	if(result() >=0) {
 		//if a directory has been chosen, enter it
 		if(files_list_->is_directory(chosen_file_))
@@ -250,9 +269,8 @@ void file_dialog::action(gui::dialog_process_info &dp_info) {
 			files_list_->change_directory(chosen_file_);
 			get_message().set_text(format_dirname(files_list_->get_directory()));
 
-			//reset the chosen file
-			chosen_file_ = "..";
-			get_textbox().set_text(format_filename(chosen_file_));
+            //reset the chosen file
+            first_time_ = true;
 			set_result(gui::CONTINUE_DIALOG);
 		}
 		//if a file has been chosen, return button index "Ok"
@@ -261,6 +279,7 @@ void file_dialog::action(gui::dialog_process_info &dp_info) {
 			set_result(0);
 		}
 	}
+
 }
 
 } //end namespace dialogs
