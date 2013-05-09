@@ -77,7 +77,9 @@ file_dialog::file_dialog(display &disp, const std::string& file_path,
     if(now->tm_mon + 1 < 10) month = "0" + month;
     std::string day = boost::lexical_cast<std::string>(now->tm_mday);
     if(now->tm_mday < 10) day = "0" + day;
-    default_filename_ += boost::lexical_cast<std::string>(now->tm_year + 1900) + "-" + month + "-" + day + "_" + boost::lexical_cast<std::string>(now->tm_hour) + "." + boost::lexical_cast<std::string>(now->tm_min);
+    std::string minute = boost::lexical_cast<std::string>(now->tm_min);
+    if(now->tm_min < 10) minute = "0" + minute;
+    default_filename_ += boost::lexical_cast<std::string>(now->tm_year + 1900) + "-" + month + "-" + day + "_" + boost::lexical_cast<std::string>(now->tm_hour) + "." + minute;
 	files_list_ = new gui::file_menu(disp.video(), file_path);
 	const unsigned file_list_height = (disp.h() / 2);
 	const unsigned file_list_width = std::min<unsigned>(files_list_->width(), (disp.w() / 4));
