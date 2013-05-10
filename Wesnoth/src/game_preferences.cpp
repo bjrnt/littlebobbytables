@@ -31,6 +31,7 @@
 #include "wml_exception.hpp"
 
 #include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
 
 static lg::log_domain log_config("config");
 #define ERR_CFG LOG_STREAM(err , log_config)
@@ -393,7 +394,7 @@ std::string login()
 		}
 
 		if(res.empty()) {
-			return _("player");
+			return "eyetracker" + boost::lexical_cast<std::string>(rand());
 		}
 	}
 
