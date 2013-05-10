@@ -62,6 +62,8 @@ static void clear_tooltip()
 
 static void show_tooltip(const tooltip& tip)
 {
+    //BOBBY Remove all tooltips
+    return;
 	if(video_ == NULL) {
 		return;
 	}
