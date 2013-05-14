@@ -471,6 +471,8 @@ int CVideo::getBpp()
 
 int CVideo::set_help_string(const std::string& str)
 {
+    //BOBBY Remove preferences tooltips
+    return help_string_;
 	font::remove_floating_label(help_string_);
 
 	const SDL_Color color = { 0, 0, 0, 0xbb };

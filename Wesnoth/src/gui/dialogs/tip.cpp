@@ -141,6 +141,8 @@ void show(CVideo& video
 		, const t_string& message
 		, const tpoint& mouse)
 {
+    //BOBBY Remove title screen tooltips
+    return;
 	/*
 	 * For now allow invalid tip names, might turn them to invalid wml messages
 	 * later on.
